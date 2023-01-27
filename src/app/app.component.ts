@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IPointGps } from './gpx';
-import { GpxService } from './gpx.service';
+import { GpxService, IPointGps } from './gpx.service';
 
 @Component({
   selector: 'app-root',
