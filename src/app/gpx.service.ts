@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { XMLParser } from 'fast-xml-parser';
 
 export interface IPointGps {
   date: string;
@@ -18,7 +19,7 @@ export class GpxService {
 
   constructor(private http: HttpClient) {
     this.litFichier("https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx").subscribe({
-      next: data => console.log(data),
+      next: xml => { console.log(this.litXml(xml)) },
       error: err => console.log(err)
     });
   }
@@ -30,4 +31,11 @@ export class GpxService {
   litFichier(url: string): Observable<string> {
     return this.http.get(url, { responseType: 'text' });
   }
+
+  litXml(xml: string): any {
+    const parser = new XMLParser();
+    let jObj = parser.parse(xml);
+    return jObj;
+  }
+
 }
