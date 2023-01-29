@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface IPointGps {
-  date: string;
+  date: Date;
   lat: number;
   lon: number;
 }
@@ -41,18 +41,15 @@ export class GpxService {
         let lat = elt.getAttribute("lat");
         let lon = elt.getAttribute("lon");
         if (lat != null && lon != null) {
-          let pointGPS = { date: time, lat: parseFloat(lat), lon: parseFloat(lon) }
+          let pointGPS = { date: new Date(time), lat: parseFloat(lat), lon: parseFloat(lon) };
           this.points.push(pointGPS);
         }
       }
     });
     // tri
     this.points.sort(function (a, b) {
-      var t1 = new Date(a.date).getTime();
-      var t2 = new Date(b.date).getTime();
-      return t1 - t2;
+      return a.date.getTime() - b.date.getTime();
     });
-    
   }
 
 }
