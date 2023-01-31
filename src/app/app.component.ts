@@ -9,13 +9,13 @@ import { GpxService, IPointGps } from './gpx.service';
 export class AppComponent implements OnInit {
   title = 'visugpx';
 
-  points!: IPointGps[];
+  pointsGps!: IPointGps[];
 
   constructor(private gpxService: GpxService) {
 
   }
 
   ngOnInit(): void {
-    this.points = this.gpxService.getPoints();
+    this.pointsGps = this.gpxService.pointsGps;
   }
 }
