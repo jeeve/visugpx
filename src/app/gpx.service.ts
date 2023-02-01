@@ -32,7 +32,7 @@ export class GpxService {
 
   constructor(private http: HttpClient) {}
 
-  lit(url: UrlString): Observable<any> {
+  lit(url: UrlString): Observable<void> {
     return this.litFichier(url).pipe(mergeMap(async (xml) => this.litXml(xml)));
   }
 
