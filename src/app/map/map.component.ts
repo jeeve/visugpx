@@ -39,7 +39,7 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private dessineTrace(): any {
+  private dessineTrace(): void {
     let polylignes = [];
 
     var seuil = 12.0;
