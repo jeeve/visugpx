@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { mergeMap, Observable, of } from 'rxjs';
 
 export interface IPointGps {
   date: Date;
@@ -11,9 +11,12 @@ export interface IPointGps {
 export interface IPointCalcule {
   vitesse: number;
   angle: number;
-  deltad : number;
-  deltat : number;
+  deltad: number;
+  deltat: number;
 }
+
+type UrlString = string;
+type XmlString = string;
 
 @Injectable({
   providedIn: 'root',
@@ -22,26 +25,22 @@ export class GpxService {
   pointsGps!: IPointGps[];
   pointsCalcules!: IPointCalcule[];
   distance!: number;
-  vmax! : number;
+  vmax!: number;
   dmax!: number;
+  indiceFenetreMin!: number;
+  indiceFenetreMax!: number;
 
-  constructor(private http: HttpClient) {
-    this.litFichier(
-      'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx'
-    ).subscribe({
-      next: (xml) => {
-        this.litXml(xml);
-        console.log(this.pointsCalcules);
-      },
-      error: (err) => console.log(err),
-    });
+  constructor(private http: HttpClient) {}
+
+  lit(url: UrlString): Observable<any> {
+    return this.litFichier(url).pipe(mergeMap(async (xml) => this.litXml(xml)));
   }
 
-  litFichier(url: string): Observable<string> {
+  private litFichier(url: UrlString): Observable<XmlString> {
     return this.http.get(url, { responseType: 'text' });
   }
 
-  litXml(xml: string): any {
+  litXml(xml: XmlString): void {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xml, 'application/xml');
     this.pointsGps = [];
@@ -81,9 +80,14 @@ export class GpxService {
     let dd = 0;
     for (let i = 0; i < this.pointsGps.length; i++) {
       if (i == 0) {
-        this.pointsCalcules.push({ vitesse: 0.0, angle: 0.0, deltad: 0.0, deltat: 0.0 })
+        this.pointsCalcules.push({
+          vitesse: 0.0,
+          angle: 0.0,
+          deltad: 0.0,
+          deltat: 0.0,
+        });
       } else {
-          dd = this.calculeDistance(
+        dd = this.calculeDistance(
           this.pointsGps[i].lat,
           this.pointsGps[i].lon,
           this.pointsGps[i - 1].lat,
@@ -101,15 +105,27 @@ export class GpxService {
         }
         let t0 = this.pointsGps[0].date.getTime();
         let ti = this.pointsGps[i].date.getTime();
-        this.pointsCalcules.push({ vitesse: vitesse, angle: angle, deltad: dd, deltat: (ti - t0) / 1000 })
+        this.pointsCalcules.push({
+          vitesse: vitesse,
+          angle: angle,
+          deltad: dd,
+          deltat: (ti - t0) / 1000,
+        });
 
         this.distance = this.distance + dd;
       }
     }
     this.dmax = this.distance - dd;
+    this.indiceFenetreMin = 0;
+    this.indiceFenetreMax = this.pointsGps.length - 1;
   }
 
-  private angleFromCoordinate(lat1: number, lon1: number, lat2: number, lon2: number) {
+  private angleFromCoordinate(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) {
     let brng = Math.atan2(lat2 - lat1, lon2 - lon1);
     brng = brng * (180 / Math.PI);
     brng = (brng + 360) % 360;
@@ -177,7 +193,10 @@ export class GpxService {
 
     let a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1r) * Math.cos(lat2r);
+      Math.sin(dLon / 2) *
+        Math.sin(dLon / 2) *
+        Math.cos(lat1r) *
+        Math.cos(lat2r);
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     let d = R * c;
     return d;
