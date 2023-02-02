@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^15.1.0",
     "@angular/router": "^15.1.0",
     "@types/leaflet-rotatedmarker": "^0.2.2",
+    "chart.js": "^4.2.0",
     "leaflet": "^1.9.3",
     "leaflet-rotatedmarker": "^0.2.0",
     "rxjs": "~7.8.0",
