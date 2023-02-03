@@ -28,7 +28,7 @@
               "./node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
             ],
-            "scripts": ["./node_modules/jquery/dist/jquery.js", "./src/assets/js/google.js"]
+            "scripts": ["./node_modules/jquery/dist/jquery.js"]
           },
           "configurations": {
             "production": {
