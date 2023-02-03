@@ -10,40 +10,40 @@ declare var google: any;
 })
 export class ChartComponent implements OnInit {
 
-  private chartxy!: Array<any>;
-
   constructor(private gpxService: GpxService) {
   }
 
   ngOnInit(): void {
     this.gpxService.lit("https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx").subscribe({
       next: () => { 
-        google.load("visualization", "1.0", { packages: ["corechart"] });
-        google.setOnLoadCallback(this.draw);
+        //google.load("visualization", "1.0", { packages: ["corechart"] });
+        //google.setOnLoadCallback(drawChart(this.gpxService));
+        google.charts.load('current', { packages: ['corechart'] }).then(drawChart(this.gpxService));
       },
       error: (err) => console.log(err)
     });
   }
 
-  private draw() {
+}
+  
+function drawChart(gpxService: GpxService) {
 
-    this.chartxy = [];
-    this.chartxy.push(["Distance", "Vitesse"]);
-    for (let i=0 ; i < this.gpxService.pointsCalcules.length; i++) {
-      this.chartxy.push([this.gpxService.pointsCalcules[i].distance, this.gpxService.pointsCalcules[i].vitesse]);
+    let chartxy = [];
+    chartxy.push(["Distance", "Vitesse"]);
+    for (let i=0 ; i < gpxService.pointsCalcules.length; i++) {
+      chartxy.push([gpxService.pointsCalcules[i].distance, gpxService.pointsCalcules[i].vitesse]);
     }
 
-    if (this.chartxy.length == 0) {
+    if (chartxy.length == 0) {
       return;
     }
-    var data = google.visualization.arrayToDataTable(this.chartxy);
 
     var vAxisOptions;
     var enableInteractivityOptions = false;
 
     vAxisOptions = {
       viewWindowMode: "explicit",
-      viewWindow: { min: 0, max: this.gpxService.vmax },
+      viewWindow: { min: 0, max: gpxService.vmax },
     };
 
     var options = {
@@ -55,9 +55,10 @@ export class ChartComponent implements OnInit {
       dataOpacity: 0.0,
     };
 
+    let data = google.visualization.arrayToDataTable(chartxy);
+
     let chart = new google.visualization.LineChart(document.querySelector("#chart"));
   
     chart.draw(data, options);
    }
 
-}
