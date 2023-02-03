@@ -9,6 +9,7 @@ export interface IPointGps {
 }
 
 export interface IPointCalcule {
+  distance: number;
   vitesse: number;
   angle: number;
   deltad: number;
@@ -78,9 +79,11 @@ export class GpxService {
 
     // point calcules
     let dd = 0;
+    let d = 0;
     for (let i = 0; i < this.pointsGps.length; i++) {
       if (i == 0) {
         this.pointsCalcules.push({
+          distance: 0.0,
           vitesse: 0.0,
           angle: 0.0,
           deltad: 0.0,
@@ -106,6 +109,7 @@ export class GpxService {
         let t0 = this.pointsGps[0].date.getTime();
         let ti = this.pointsGps[i].date.getTime();
         this.pointsCalcules.push({
+          distance: d,
           vitesse: vitesse,
           angle: angle,
           deltad: dd,
@@ -113,6 +117,7 @@ export class GpxService {
         });
 
         this.distance = this.distance + dd;
+        d = d + dd;
       }
     }
     this.dmax = this.distance - dd;
