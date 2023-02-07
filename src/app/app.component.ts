@@ -10,7 +10,6 @@ export class AppComponent implements OnInit {
   title = 'visugpx';
 
   constructor(private gpxService: GpxService) {
-
   }
 
   ngOnInit(): void {

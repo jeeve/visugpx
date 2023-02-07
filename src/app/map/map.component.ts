@@ -33,7 +33,7 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.gpxService.lit("https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx").subscribe({
+    this.gpxService.lit().subscribe({
       next: () => this.dessineTrace(),
       error: (err) => console.log(err)
     });

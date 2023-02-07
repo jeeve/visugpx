@@ -23,6 +23,7 @@ type XmlString = string;
   providedIn: 'root',
 })
 export class GpxService {
+  _urlFichier : UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
   pointsGps!: IPointGps[];
   pointsCalcules!: IPointCalcule[];
   distance!: number;
@@ -31,14 +32,29 @@ export class GpxService {
   indiceFenetreMin!: number;
   indiceFenetreMax!: number;
 
+  private aEteCharge = false;
+
   constructor(private http: HttpClient) {}
 
-  lit(url: UrlString): Observable<void> {
-    return this.litFichier(url).pipe(mergeMap(async (xml) => this.litXml(xml)));
+  get urlFichier(): UrlString {
+    return this._urlFichier;
+  }
+  
+  set urlFichier(newUrl : UrlString) {
+    this.aEteCharge = false;
+    this._urlFichier = newUrl;
+  }
+
+  lit(): Observable<void> {
+    return this.litFichier(this.urlFichier).pipe(mergeMap(async (xml) => this.litXml(xml)));
   }
 
   private litFichier(url: UrlString): Observable<XmlString> {
-    return this.http.get(url, { responseType: 'text' });
+    if (!this.aEteCharge) {
+      return this.http.get(url, { responseType: 'text' });
+    } else {
+      return of();
+    }
   }
 
   litXml(xml: XmlString): void {
@@ -123,6 +139,7 @@ export class GpxService {
     this.dmax = this.distance - dd;
     this.indiceFenetreMin = 0;
     this.indiceFenetreMax = this.pointsGps.length - 1;
+    this.aEteCharge = true;
   }
 
   private angleFromCoordinate(

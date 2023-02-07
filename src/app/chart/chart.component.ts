@@ -31,9 +31,7 @@ export class ChartComponent implements OnInit {
       observable.subscribe(() => this.drawChart());
 
       this.gpxService
-        .lit(
-          'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx'
-        )
+        .lit()
         .pipe(mergeMap(() => observable));
     };
   }
