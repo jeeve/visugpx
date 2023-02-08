@@ -20,7 +20,9 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set position(value: number) {
     this.gpxService.indicePosition = value;
-    this.updatePosition();
+    if (value) {
+      this.updatePosition();
+    }
   }
 
   private initMap(): void {

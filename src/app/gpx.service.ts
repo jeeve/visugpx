@@ -34,7 +34,6 @@ export class GpxService {
   indicePosition!: number;
 
   private aEteCharge = false;
-  private _indicePosition!: number;
 
   constructor(private http: HttpClient) {}
 
@@ -138,6 +137,7 @@ export class GpxService {
         d = d + dd;
       }
     }
+    this.indicePosition = 0;
     this.dmax = this.distance - dd;
 
     this.aEteCharge = true;
