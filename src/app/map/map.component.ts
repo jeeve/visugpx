@@ -69,7 +69,7 @@ export class MapComponent implements AfterViewInit {
     const lon = this.gpxService.pointsGps[i].lon;
     this.markerVitesse.setLatLng({ lat: lat, lng: lon });
     this.markerVitesse.setRotationAngle(this.gpxService.pointsCalcules[i].angle);
-    this.markerVitesse.setTooltipContent(this.gpxService.pointsCalcules[i].vitesse.toString());
+    this.markerVitesse.setTooltipContent(this.gpxService.pointsCalcules[i].vitesse.toFixed(2));
   }
 
   private dessineTrace(): void {
