@@ -18,6 +18,8 @@ export class ChartComponent implements OnInit {
     private gpxService: GpxService
   ) {}
 
+  private chart: any;
+
   ngOnInit(): void {
     const scriptElement = this.scriptService.loadJsScript(
       this.renderer,
@@ -51,15 +53,14 @@ export class ChartComponent implements OnInit {
     }
     var data = google.visualization.arrayToDataTable(chartxy);
 
-    var vAxisOptions;
-    var enableInteractivityOptions = false;
+    const enableInteractivityOptions = false;
 
-    vAxisOptions = {
+    const vAxisOptions = {
       viewWindowMode: 'explicit',
       viewWindow: { min: 0, max: this.gpxService.vmax },
     };
 
-    var options = {
+    const options = {
       vAxis: vAxisOptions,
       pointSize: 0,
       legend: { position: 'none' },
@@ -68,10 +69,52 @@ export class ChartComponent implements OnInit {
       dataOpacity: 0.0,
     };
 
-    let chart = new google.visualization.LineChart(
+    this.chart = new google.visualization.LineChart(
       document.querySelector('#chart')
     );
 
-    chart.draw(data, options);
+    this.chart.draw(data, options);
   }
+
+  private createLineVerticaleSVG(x: number, classeName: string, pointille: boolean) {
+    const LARGEUR_LIGNE = 10;
+    const layout = this.chart.getChartLayoutInterface();
+    const chartArea = layout.getChartAreaBoundingBox();
+    const svg = this.chart.getContainer().getElementsByTagName("svg")[0];
+    const xLoc = layout.getXLocation(x) - LARGEUR_LIGNE / 2;
+    const y1 = chartArea.top;
+    const y2 = chartArea.height + chartArea.top;
+
+    var svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg2.setAttribute("class", "ligne " + classeName);
+    svg2.setAttribute("x", xLoc.toString());
+    svg2.setAttribute("y", y1);
+    svg2.setAttribute("width", LARGEUR_LIGNE.toString());
+    svg2.setAttribute("height", (y2 - y1).toString());
+    svg.appendChild(svg2);
+
+    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", "0");
+    rect.setAttribute("y", "0");
+    rect.setAttribute("width", "100%");
+    rect.setAttribute("height", "100%");
+    rect.setAttribute("stroke", "#FF0000");
+    rect.setAttribute("stroke-width", "1");
+    rect.setAttribute("fill-opacity", "0");
+    rect.setAttribute("stroke-opacity", "0");
+    svg2.appendChild(rect);
+
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", (LARGEUR_LIGNE / 2).toString());
+    line.setAttribute("y1", "0");
+    line.setAttribute("x2", (LARGEUR_LIGNE / 2).toString());
+    line.setAttribute("y2", (y2 - y1).toString());
+    line.setAttribute("stroke", "#000000");
+    line.setAttribute("stroke-width", "3");
+    if (pointille) {
+      line.setAttribute("stroke-dasharray", "5, 5");
+    }
+    svg2.appendChild(line);
+  }
+
 }

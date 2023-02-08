@@ -31,8 +31,10 @@ export class GpxService {
   dmax!: number;
   indiceFenetreMin!: number;
   indiceFenetreMax!: number;
+  indicePosition!: number;
 
   private aEteCharge = false;
+  private _indicePosition!: number;
 
   constructor(private http: HttpClient) {}
 
@@ -137,8 +139,7 @@ export class GpxService {
       }
     }
     this.dmax = this.distance - dd;
-    this.indiceFenetreMin = 0;
-    this.indiceFenetreMax = this.pointsGps.length - 1;
+
     this.aEteCharge = true;
   }
 
@@ -201,12 +202,12 @@ export class GpxService {
     return vitesse;
   }
 
-  private calculeDistance(
+  calculeDistance(
     lat1: number,
     lon1: number,
     lat2: number,
     lon2: number
-  ) {
+  ): number {
     let R = 6371; // km
     let dLat = this.toRad(lat2 - lat1);
     let dLon = this.toRad(lon2 - lon1);

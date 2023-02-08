@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { GpxService, IPointGps } from './gpx.service';
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { GpxService } from './gpx.service';
 
 @Component({
   selector: 'app-root',
@@ -14,4 +14,14 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  @Output()
+  get position(): number {
+    return this.gpxService.indicePosition
+  }
+
+  set position(value: number) {
+    this.gpxService.indicePosition = value;
+  }
+
 }
