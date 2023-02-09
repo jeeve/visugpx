@@ -35,9 +35,7 @@ export class ChartComponent implements OnInit {
   @Input()
   set position(value: number) {
     this.gpxService.indicePosition = value;
-    if (value) {
-      this.updatePosition();
-    }
+    this.updatePosition();
   }
 
   private chart: any;
@@ -101,7 +99,7 @@ export class ChartComponent implements OnInit {
     );
 
     this.chart.draw(data, options);
-/*
+    /*
     const c = document.querySelector('#chart');
     if (c) {
       c.addEventListener('click', (e) => {
@@ -178,9 +176,7 @@ export class ChartComponent implements OnInit {
     if (ligne) {
       ligne.setAttribute(
         'x',
-        this.xLoc(
-          Math.round(this.gpxService.x()) - LARGEUR_LIGNE / 2
-        ).toString()
+        this.xLoc(this.gpxService.x() - LARGEUR_LIGNE / 2).toString()
       );
     }
   }
@@ -214,5 +210,4 @@ export class ChartComponent implements OnInit {
   private OnUp(e: Event) {
     this.curseurPosition.element = null;
   }
-
 }
