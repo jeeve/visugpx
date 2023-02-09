@@ -105,10 +105,11 @@ export class ChartComponent implements OnInit {
     const c = document.querySelector('#chart');
     if (c) {
       c.addEventListener('click', (e) => {
+        e.preventDefault();
         const x = this.chartGetx((e as MouseEvent).clientX);
+        console.log(x);
         if (x >= 0 && x <= this.gpxService.dmax) {
           this.position = this.gpxService.getIndiceDistance(x);
-          console.log(this.position);
         }
       });
     }
@@ -166,7 +167,7 @@ export class ChartComponent implements OnInit {
     const L = layout.getChartAreaBoundingBox().width;
     const c = document.querySelector('#chart');
     if (c) {
-      const X2 = X - c.clientLeft - 30;
+      const X2 = X - c.clientLeft - 40;
       return (X2 * this.gpxService.dmax) / L;
     }
     return -1;

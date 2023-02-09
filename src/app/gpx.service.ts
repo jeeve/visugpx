@@ -235,7 +235,7 @@ export class GpxService {
   }
 
   getIndiceDistance(x: number): number {
-    let j = 1;
+    let j = 0;
     let delta = +Infinity;
     let dt;
     for (let i = 0; i < this.pointsCalcules.length; i++) {
