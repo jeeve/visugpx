@@ -44,7 +44,7 @@ export class ChartComponent implements OnInit {
     const layout = this.chart.getChartLayoutInterface();
     const chartArea = layout.getChartAreaBoundingBox();
     const svg = this.chart.getContainer().getElementsByTagName('svg')[0];
-    return layout.getXLocation(Math.round(this.gpxService.x()));
+    return layout.getXLocation(d);
   }
 
   ngOnInit(): void {
@@ -99,13 +99,12 @@ export class ChartComponent implements OnInit {
     );
 
     this.chart.draw(data, options);
-   
+
     const c = document.querySelector('#chart');
     if (c) {
       c.addEventListener('click', (e) => {
         e.preventDefault();
         const x = this.chartGetx((e as MouseEvent).clientX);
-        console.log(x);
         if (x >= 0 && x <= this.gpxService.dmax) {
           this.position = this.gpxService.getIndiceDistance(x);
         }
@@ -172,11 +171,11 @@ export class ChartComponent implements OnInit {
   }
 
   private updatePosition() {
-    const ligne = document.querySelector('.ligne-position');
+    const ligne = document.querySelector('#chart .ligne-position');
     if (ligne) {
       ligne.setAttribute(
         'x',
-        this.xLoc(this.gpxService.x() - LARGEUR_LIGNE / 2).toString()
+        (this.xLoc(this.gpxService.x()) - LARGEUR_LIGNE / 2).toString()
       );
     }
   }
@@ -186,28 +185,24 @@ export class ChartComponent implements OnInit {
   private registerEvtLignePositionSVG() {
     const ligne = document.querySelector('.ligne-position');
     if (ligne) {
-      ligne.addEventListener('mousedown', this.OnDown.bind(this));
-      ligne.addEventListener('mousemove', this.OnMove.bind(this));
-      ligne.addEventListener('mouseup', this.OnUp.bind(this));
+      ligne.addEventListener('mousedown', (e) => {
+        e.stopPropagation()
+        this.curseurPosition.element = e.target as Element;
+      });
+      ligne.addEventListener('mousemove', (e) => {
+        e.stopPropagation()
+        if (this.curseurPosition.element) {
+          const x = this.chartGetx((e as MouseEvent).clientX);
+          if (x >= 0 && x <= this.gpxService.dmax) {
+            this.position = this.gpxService.getIndiceDistance(x);
+          }
+        }
+      });
+      ligne.addEventListener('mouseup', (e) => {
+        e.stopPropagation()
+        this.curseurPosition.element = null;
+      });
       ligne.addEventListener('click', (e) => e.stopPropagation());
     }
-  }
-
-  private OnDown(e: Event) {
-    this.curseurPosition.element = e.target as Element;
-  }
-
-  private OnMove(e: Event) {
-    if (this.curseurPosition.element) {
-      const x = this.chartGetx((e as MouseEvent).clientX);
-      console.log(x);
-      if (x >= 0 && x <= this.gpxService.dmax) {
-        this.position = this.gpxService.getIndiceDistance(x);
-      }
-    }
-  }
-
-  private OnUp(e: Event) {
-    this.curseurPosition.element = null;
   }
 }
