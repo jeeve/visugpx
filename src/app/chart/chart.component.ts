@@ -101,7 +101,7 @@ export class ChartComponent implements OnInit {
     );
 
     this.chart.draw(data, options);
-
+/*
     const c = document.querySelector('#chart');
     if (c) {
       c.addEventListener('click', (e) => {
@@ -113,7 +113,7 @@ export class ChartComponent implements OnInit {
         }
       });
     }
-
+*/
     this.createLineVerticaleSVG(this.gpxService.x(), 'ligne-position', true);
     this.registerEvtLignePositionSVG();
   }
@@ -190,22 +190,29 @@ export class ChartComponent implements OnInit {
   private registerEvtLignePositionSVG() {
     const ligne = document.querySelector('.ligne-position');
     if (ligne) {
-      ligne.addEventListener('mousedown', (e) => {
-        this.curseurPosition.position = (e as MouseEvent).clientX;
-        this.curseurPosition.element = ligne;
-      });
-      ligne.addEventListener('mousemove', (e) => {
-        console.log(this.curseurPosition.position);
-        if (this.curseurPosition.position > 0) {
-          const x = this.chartGetx((e as MouseEvent).clientX);
-          if (x >= 0 && x <= this.gpxService.dmax) {
-            this.position = this.gpxService.getIndiceDistance(x);
-          }
-        }
-      });
-      ligne.addEventListener('mousedown', (e) => {
-        this.curseurPosition.element = null;
-      });
+      ligne.addEventListener('mousedown', this.OnDown.bind(this));
+      ligne.addEventListener('mousemove', this.OnMove.bind(this));
+      ligne.addEventListener('mouseup', this.OnUp.bind(this));
+      ligne.addEventListener('click', (e) => e.stopPropagation());
     }
   }
+
+  private OnDown(e: Event) {
+    this.curseurPosition.element = e.target as Element;
+  }
+
+  private OnMove(e: Event) {
+    if (this.curseurPosition.element) {
+      const x = this.chartGetx((e as MouseEvent).clientX);
+      console.log(x);
+      if (x >= 0 && x <= this.gpxService.dmax) {
+        this.position = this.gpxService.getIndiceDistance(x);
+      }
+    }
+  }
+
+  private OnUp(e: Event) {
+    this.curseurPosition.element = null;
+  }
+
 }
