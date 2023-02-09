@@ -99,7 +99,7 @@ export class ChartComponent implements OnInit {
     );
 
     this.chart.draw(data, options);
-    /*
+   
     const c = document.querySelector('#chart');
     if (c) {
       c.addEventListener('click', (e) => {
@@ -111,7 +111,7 @@ export class ChartComponent implements OnInit {
         }
       });
     }
-*/
+
     this.createLineVerticaleSVG(this.gpxService.x(), 'ligne-position', true);
     this.registerEvtLignePositionSVG();
   }
