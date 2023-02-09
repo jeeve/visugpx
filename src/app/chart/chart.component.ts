@@ -171,7 +171,7 @@ export class ChartComponent implements OnInit {
   }
 
   private updatePosition() {
-    const ligne = document.querySelector('#chart .ligne-position');
+    const ligne = document.querySelector('.ligne-position');
     if (ligne) {
       ligne.setAttribute(
         'x',
