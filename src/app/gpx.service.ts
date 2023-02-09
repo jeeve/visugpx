@@ -23,10 +23,10 @@ type XmlString = string;
   providedIn: 'root',
 })
 export class GpxService {
-  _urlFichier : UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
+  _urlFichier: UrlString =
+    'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
   pointsGps!: IPointGps[];
   pointsCalcules!: IPointCalcule[];
-  distance!: number;
   vmax!: number;
   dmax!: number;
   indiceFenetreMin!: number;
@@ -37,17 +37,23 @@ export class GpxService {
 
   constructor(private http: HttpClient) {}
 
+  x(): number {
+    return this.pointsCalcules[this.indicePosition].distance;
+  }
+
   get urlFichier(): UrlString {
     return this._urlFichier;
   }
-  
-  set urlFichier(newUrl : UrlString) {
+
+  set urlFichier(newUrl: UrlString) {
     this.aEteCharge = false;
     this._urlFichier = newUrl;
   }
 
   lit(): Observable<void> {
-    return this.litFichier(this.urlFichier).pipe(mergeMap(async (xml) => this.litXml(xml)));
+    return this.litFichier(this.urlFichier).pipe(
+      mergeMap(async (xml) => this.litXml(xml))
+    );
   }
 
   private litFichier(url: UrlString): Observable<XmlString> {
@@ -133,12 +139,11 @@ export class GpxService {
           deltat: (ti - t0) / 1000,
         });
 
-        this.distance = this.distance + dd;
         d = d + dd;
       }
     }
     this.indicePosition = 0;
-    this.dmax = this.distance - dd;
+    this.dmax = d - dd;
 
     this.aEteCharge = true;
   }
@@ -228,4 +233,19 @@ export class GpxService {
   private toRad(value: number) {
     return (value * Math.PI) / 180;
   }
+
+  getIndiceDistance(x: number): number {
+    let j = 1;
+    let delta = +Infinity;
+    let dt;
+    for (let i = 0; i < this.pointsCalcules.length; i++) {
+      dt = Math.abs(this.pointsCalcules[i].distance - x);
+      if (dt < delta) {
+        j = i;
+        delta = dt;
+      }
+    }
+    return j;
+  }
+  
 }

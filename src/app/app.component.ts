@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  @Output()
   get position(): number {
     return this.gpxService.indicePosition
   }
