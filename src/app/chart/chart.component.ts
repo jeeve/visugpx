@@ -62,6 +62,7 @@ export class ChartComponent implements OnInit {
   resize(): void {
     if (this.chart && this.data && this.options) {
       this.chart.draw(this.data, this.options);
+      this.updatePosition();
     }
   }
 
@@ -149,30 +150,6 @@ export class ChartComponent implements OnInit {
 
   mouseUp(e: Event): void {
     this.curseurPosition.element = null;
-  }
-
-  private registerEvtLignePositionSVG() {
-    const ligne = document.querySelector('.ligne-position');
-    if (ligne) {
-      ligne.addEventListener('mousedown', (e) => {
-        e.stopPropagation();
-        this.curseurPosition.element = e.target as Element;
-      });
-      ligne.addEventListener('mousemove', (e) => {
-        e.stopPropagation();
-        if (this.curseurPosition.element) {
-          const x = this.chartGetx((e as MouseEvent).clientX);
-          if (x >= 0 && x <= this.gpxService.dmax) {
-            this.position = this.gpxService.getIndiceDistance(x);
-          }
-        }
-      });
-      ligne.addEventListener('mouseup', (e) => {
-        e.stopPropagation();
-        this.curseurPosition.element = null;
-      });
-      ligne.addEventListener('click', (e) => e.stopPropagation());
-    }
   }
 
   private xLoc(d: number): number {
