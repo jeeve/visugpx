@@ -36,10 +36,10 @@ export class ChartComponent implements OnInit {
   @Input()
   set position(value: number) {
     this.gpxService.indicePosition = value;
-    //this.updatePosition();
+    this.updatePosition();
   }
 
-  private chart: any= null;
+  private chart: any = null;
   private data: any = null;
   private options: any = null;
 
@@ -101,17 +101,6 @@ export class ChartComponent implements OnInit {
     );
 
     this.chart.draw(this.data, this.options);
-
-    const c = document.querySelector('#chart');
-    if (c) {
-      c.addEventListener('click', (e) => {
-        e.preventDefault();
-        const x = this.chartGetx((e as MouseEvent).clientX);
-        if (x >= 0 && x <= this.gpxService.dmax) {
-          this.position = this.gpxService.getIndiceDistance(x);
-        }
-      });
-    }
   }
 
   private chartGetx(X: number): number {
@@ -137,15 +126,40 @@ export class ChartComponent implements OnInit {
 
   private curseurPosition: ElementGraphique = { position: -1, element: null };
 
+  clickChart(e: Event): void {
+    e.preventDefault();
+    const x = this.chartGetx((e as MouseEvent).clientX);
+    if (x >= 0 && x <= this.gpxService.dmax) {
+      this.position = this.gpxService.getIndiceDistance(x);
+    }
+  }
+
+  mouseDown(e: Event): void {
+    this.curseurPosition.element = e.target as Element;
+  }
+
+  mouseMove(e: Event): void {
+    if (this.curseurPosition.element) {
+      const x = this.chartGetx((e as MouseEvent).clientX);
+      if (x >= 0 && x <= this.gpxService.dmax) {
+        this.position = this.gpxService.getIndiceDistance(x);
+      }
+    }
+  }
+
+  mouseUp(e: Event): void {
+    this.curseurPosition.element = null;
+  }
+
   private registerEvtLignePositionSVG() {
     const ligne = document.querySelector('.ligne-position');
     if (ligne) {
       ligne.addEventListener('mousedown', (e) => {
-        e.stopPropagation()
+        e.stopPropagation();
         this.curseurPosition.element = e.target as Element;
       });
       ligne.addEventListener('mousemove', (e) => {
-        e.stopPropagation()
+        e.stopPropagation();
         if (this.curseurPosition.element) {
           const x = this.chartGetx((e as MouseEvent).clientX);
           if (x >= 0 && x <= this.gpxService.dmax) {
@@ -154,7 +168,7 @@ export class ChartComponent implements OnInit {
         }
       });
       ligne.addEventListener('mouseup', (e) => {
-        e.stopPropagation()
+        e.stopPropagation();
         this.curseurPosition.element = null;
       });
       ligne.addEventListener('click', (e) => e.stopPropagation());
@@ -167,5 +181,4 @@ export class ChartComponent implements OnInit {
     const svg = this.chart.getContainer().getElementsByTagName('svg')[0];
     return layout.getXLocation(d);
   }
-
 }
