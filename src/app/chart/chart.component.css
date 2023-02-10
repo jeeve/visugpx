@@ -3,12 +3,25 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 140px;
   margin: 10px;
   user-select: none;
 }
 
-#chart .ligne {
+#chart {
+  position: absolute;
+  height: calc(100% - 10px);
+  width: 100%;
+  top: 10px;
+}
+
+#controle-container {
+  position: relative;
+  width: 100%;
+  background-color: blueviolet;
+  opacity: 0.5;
+}
+
+.ligne {
   cursor: col-resize;
   filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
 }

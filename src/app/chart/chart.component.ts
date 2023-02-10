@@ -1,7 +1,9 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
@@ -18,7 +20,6 @@ type ElementGraphique = { position: number; element: Element | null };
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  encapsulation: ViewEncapsulation.None,
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
@@ -35,17 +36,10 @@ export class ChartComponent implements OnInit {
   @Input()
   set position(value: number) {
     this.gpxService.indicePosition = value;
-    this.updatePosition();
+    //this.updatePosition();
   }
 
   private chart: any;
-
-  private xLoc(d: number): number {
-    const layout = this.chart.getChartLayoutInterface();
-    const chartArea = layout.getChartAreaBoundingBox();
-    const svg = this.chart.getContainer().getElementsByTagName('svg')[0];
-    return layout.getXLocation(d);
-  }
 
   ngOnInit(): void {
     const scriptElement = this.scriptService.loadJsScript(
@@ -63,7 +57,11 @@ export class ChartComponent implements OnInit {
     };
   }
 
-  private drawChart() {
+  resize(): void {
+    this.drawChart();
+  }
+
+  private drawChart(): void {
     let chartxy = [];
     chartxy.push(['Distance', 'Vitesse']);
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
@@ -110,53 +108,6 @@ export class ChartComponent implements OnInit {
         }
       });
     }
-
-    this.createLineVerticaleSVG(this.gpxService.x(), 'ligne-position', true);
-    this.registerEvtLignePositionSVG();
-  }
-
-  private createLineVerticaleSVG(
-    x: number,
-    classeName: string,
-    pointille: boolean
-  ) {
-    const layout = this.chart.getChartLayoutInterface();
-    const chartArea = layout.getChartAreaBoundingBox();
-    const svg = this.chart.getContainer().getElementsByTagName('svg')[0];
-    const xLoc = this.xLoc(x - LARGEUR_LIGNE / 2);
-    const y1 = chartArea.top;
-    const y2 = chartArea.height + chartArea.top;
-
-    var svg2 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg2.setAttribute('class', 'ligne ' + classeName);
-    svg2.setAttribute('x', xLoc.toString());
-    svg2.setAttribute('y', y1);
-    svg2.setAttribute('width', LARGEUR_LIGNE.toString());
-    svg2.setAttribute('height', (y2 - y1).toString());
-    svg.appendChild(svg2);
-
-    var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute('x', '0');
-    rect.setAttribute('y', '0');
-    rect.setAttribute('width', '100%');
-    rect.setAttribute('height', '100%');
-    rect.setAttribute('stroke', '#FF0000');
-    rect.setAttribute('stroke-width', '1');
-    rect.setAttribute('fill-opacity', '0');
-    rect.setAttribute('stroke-opacity', '0');
-    svg2.appendChild(rect);
-
-    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', (LARGEUR_LIGNE / 2).toString());
-    line.setAttribute('y1', '0');
-    line.setAttribute('x2', (LARGEUR_LIGNE / 2).toString());
-    line.setAttribute('y2', (y2 - y1).toString());
-    line.setAttribute('stroke', '#000000');
-    line.setAttribute('stroke-width', '3');
-    if (pointille) {
-      line.setAttribute('stroke-dasharray', '5, 5');
-    }
-    svg2.appendChild(line);
   }
 
   private chartGetx(X: number): number {
@@ -205,4 +156,12 @@ export class ChartComponent implements OnInit {
       ligne.addEventListener('click', (e) => e.stopPropagation());
     }
   }
+
+  private xLoc(d: number): number {
+    const layout = this.chart.getChartLayoutInterface();
+    const chartArea = layout.getChartAreaBoundingBox();
+    const svg = this.chart.getContainer().getElementsByTagName('svg')[0];
+    return layout.getXLocation(d);
+  }
+
 }
