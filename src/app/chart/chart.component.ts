@@ -39,7 +39,9 @@ export class ChartComponent implements OnInit {
     //this.updatePosition();
   }
 
-  private chart: any;
+  private chart: any= null;
+  private data: any = null;
+  private options: any = null;
 
   ngOnInit(): void {
     const scriptElement = this.scriptService.loadJsScript(
@@ -58,7 +60,9 @@ export class ChartComponent implements OnInit {
   }
 
   resize(): void {
-    this.drawChart();
+    if (this.chart && this.data && this.options) {
+      this.chart.draw(this.data, this.options);
+    }
   }
 
   private drawChart(): void {
@@ -74,7 +78,7 @@ export class ChartComponent implements OnInit {
     if (chartxy.length == 0) {
       return;
     }
-    const data = google.visualization.arrayToDataTable(chartxy);
+    this.data = google.visualization.arrayToDataTable(chartxy);
 
     const enableInteractivityOptions = false;
 
@@ -83,7 +87,7 @@ export class ChartComponent implements OnInit {
       viewWindow: { min: 0, max: this.gpxService.vmax },
     };
 
-    const options = {
+    this.options = {
       vAxis: vAxisOptions,
       pointSize: 0,
       legend: { position: 'none' },
@@ -96,7 +100,7 @@ export class ChartComponent implements OnInit {
       document.querySelector('#chart')
     );
 
-    this.chart.draw(data, options);
+    this.chart.draw(this.data, this.options);
 
     const c = document.querySelector('#chart');
     if (c) {

@@ -17,8 +17,6 @@
 #controle-container {
   position: relative;
   width: 100%;
-  background-color: blueviolet;
-  opacity: 0.5;
 }
 
 .ligne {
