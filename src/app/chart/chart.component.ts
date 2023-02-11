@@ -15,7 +15,7 @@ const SCRIPT_PATH = 'https://www.google.com/jsapi';
 const LARGEUR_LIGNE = 10;
 declare let google: any;
 
-type ElementGraphique = { position: number; element: Element | null };
+type ElementGraphique = { element: Element | null };
 
 @Component({
   selector: 'app-chart',
@@ -29,6 +29,14 @@ export class ChartComponent implements OnInit {
     private gpxService: GpxService
   ) {}
 
+  get x(): number {
+    if (this.chart && this.gpxService.estOK) {
+      return this.xLoc(this.gpxService.x()) - LARGEUR_LIGNE / 2;
+    } else {
+      return 25;
+    }
+  }
+
   get position(): number {
     return this.gpxService.indicePosition;
   }
@@ -36,7 +44,6 @@ export class ChartComponent implements OnInit {
   @Input()
   set position(value: number) {
     this.gpxService.indicePosition = value;
-    this.updatePosition();
   }
 
   private chart: any = null;
@@ -62,7 +69,6 @@ export class ChartComponent implements OnInit {
   resize(): void {
     if (this.chart && this.data && this.options) {
       this.chart.draw(this.data, this.options);
-      this.updatePosition();
     }
   }
 
@@ -115,17 +121,7 @@ export class ChartComponent implements OnInit {
     return -1;
   }
 
-  private updatePosition() {
-    const ligne = document.querySelector('.ligne-position');
-    if (ligne) {
-      ligne.setAttribute(
-        'x',
-        (this.xLoc(this.gpxService.x()) - LARGEUR_LIGNE / 2).toString()
-      );
-    }
-  }
-
-  private curseurPosition: ElementGraphique = { position: -1, element: null };
+  private curseurPosition: ElementGraphique = { element: null };
 
   clickChart(e: Event): void {
     e.preventDefault();

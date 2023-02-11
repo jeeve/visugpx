@@ -33,7 +33,11 @@ export class GpxService {
   indiceFenetreMax!: number;
   indicePosition!: number;
 
-  private aEteCharge = false;
+  private _estOK = false;
+
+  get estOK(): boolean {
+    return this._estOK;
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -46,7 +50,7 @@ export class GpxService {
   }
 
   set urlFichier(newUrl: UrlString) {
-    this.aEteCharge = false;
+    this._estOK = false;
     this._urlFichier = newUrl;
   }
 
@@ -57,7 +61,7 @@ export class GpxService {
   }
 
   private litFichier(url: UrlString): Observable<XmlString> {
-    if (!this.aEteCharge) {
+    if (!this.estOK) {
       return this.http.get(url, { responseType: 'text' });
     } else {
       return of();
@@ -145,7 +149,7 @@ export class GpxService {
     this.indicePosition = 0;
     this.dmax = d - dd;
 
-    this.aEteCharge = true;
+    this._estOK = true;
   }
 
   private angleFromCoordinate(
