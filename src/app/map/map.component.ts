@@ -18,17 +18,20 @@ export class MapComponent implements AfterViewInit {
   private map!: L.Map;
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
+  private _position = 0;
 
-  get position(): number {
-    return this.gpxService.indicePosition;
-  }
+  @Output()
+  positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
+  get position(): number {
+    return this._position;
+  }
+
   set position(value: number) {
-    this.gpxService.indicePosition = value;
-    if (value) {
-      this.updatePosition();
-    }
+    this._position = value;
+    this.positionChange.emit(value);
+    this.updatePosition();
   }
 
   private initMap(): void {
@@ -55,7 +58,7 @@ export class MapComponent implements AfterViewInit {
     this.map.on('click', (e) => {
       const i = this.calculeIndiceLePlusPresDe(e.latlng.lat, e.latlng.lng);
       if (i != -1) {
-        this.gpxService.indicePosition = i;
+        this.position = i;
       }
     });
   }
@@ -71,16 +74,18 @@ export class MapComponent implements AfterViewInit {
   }
 
   private updatePosition() {
-    const i = this.gpxService.indicePosition;
-    const lat = this.gpxService.pointsGps[i].lat;
-    const lon = this.gpxService.pointsGps[i].lon;
-    this.markerVitesse.setLatLng({ lat: lat, lng: lon });
-    this.markerVitesse.setRotationAngle(
-      this.gpxService.pointsCalcules[i].angle
-    );
-    this.markerVitesse.setTooltipContent(
-      this.gpxService.pointsCalcules[i].vitesse.toFixed(2)
-    );
+    if (this.gpxService.estOK) {
+      const i = this.position;
+      const lat = this.gpxService.pointsGps[i].lat;
+      const lon = this.gpxService.pointsGps[i].lon;
+      this.markerVitesse.setLatLng({ lat: lat, lng: lon });
+      this.markerVitesse.setRotationAngle(
+        this.gpxService.pointsCalcules[i].angle
+      );
+      this.markerVitesse.setTooltipContent(
+        this.gpxService.pointsCalcules[i].vitesse.toFixed(2)
+      );
+    }
   }
 
   private dessineTrace(): void {
@@ -175,13 +180,13 @@ export class MapComponent implements AfterViewInit {
   }
 
   private indiceEndehorsBornes(i: number): boolean {
-    if (
-      i < this.gpxService.indiceFenetreMin ||
-      i > this.gpxService.indiceFenetreMax
-    ) {
-      return true;
-    }
+    // if (
+    //   i < this.gpxService.indiceFenetreMin ||
+    //    i > this.gpxService.indiceFenetreMax
+    // ) {
     return false;
+    //  }
+    //  return false;
   }
 
   private couleurCategorie(cat: number): string {

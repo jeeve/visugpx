@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ChartComponent } from './chart/chart.component';
+import { Component,  OnInit } from '@angular/core';
 import { GpxService } from './gpx.service';
 
 @Component({
@@ -10,18 +9,18 @@ import { GpxService } from './gpx.service';
 export class AppComponent implements OnInit {
   title = 'visugpx';
 
+  indiceFenetreMin!: number;
+  indiceFenetreMax!: number;
+  position = 0;
+
+  receivePosition(position: number): void {
+    this.position = position;
+  }
+
   constructor(private gpxService: GpxService) {
   }
 
   ngOnInit(): void {
-  }
-
-  get position(): number {
-    return this.gpxService.indicePosition
-  }
-
-  set position(value: number) {
-    this.gpxService.indicePosition = value;
   }
 
 }

@@ -5,7 +5,6 @@ import {
   OnInit,
   Output,
   Renderer2,
-  ViewEncapsulation,
 } from '@angular/core';
 import { from, mergeMap } from 'rxjs';
 import { GpxService } from '../gpx.service';
@@ -23,6 +22,22 @@ type ElementGraphique = { element: Element | null };
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
+  
+  private _position = 0;
+
+  @Output()
+  positionChange: EventEmitter<number> = new EventEmitter<number>();
+
+  @Input()
+  get position() : number {
+    return this._position;
+  }
+
+  set position(value: number) {
+    this._position = value;
+    this.positionChange.emit(value);
+  }
+
   constructor(
     private renderer: Renderer2,
     private scriptService: ScriptService,
@@ -31,19 +46,10 @@ export class ChartComponent implements OnInit {
 
   get x(): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.gpxService.x()) - LARGEUR_LIGNE / 2;
+      return this.xLoc(this.gpxService.x(this._position)) - LARGEUR_LIGNE / 2;
     } else {
       return 25;
     }
-  }
-
-  get position(): number {
-    return this.gpxService.indicePosition;
-  }
-
-  @Input()
-  set position(value: number) {
-    this.gpxService.indicePosition = value;
   }
 
   private chart: any = null;

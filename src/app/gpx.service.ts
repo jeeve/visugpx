@@ -29,9 +29,6 @@ export class GpxService {
   pointsCalcules!: IPointCalcule[];
   vmax!: number;
   dmax!: number;
-  indiceFenetreMin!: number;
-  indiceFenetreMax!: number;
-  indicePosition!: number;
 
   private _estOK = false;
 
@@ -41,8 +38,8 @@ export class GpxService {
 
   constructor(private http: HttpClient) {}
 
-  x(): number {
-    return this.pointsCalcules[this.indicePosition].distance;
+  x(i: number): number {
+    return this.pointsCalcules[i].distance;
   }
 
   get urlFichier(): UrlString {
@@ -146,7 +143,7 @@ export class GpxService {
         d = d + dd;
       }
     }
-    this.indicePosition = 0;
+
     this.dmax = d - dd;
 
     this._estOK = true;
@@ -251,5 +248,4 @@ export class GpxService {
     }
     return j;
   }
-  
 }
