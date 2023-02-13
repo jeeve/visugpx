@@ -150,8 +150,6 @@ export class ChartComponent implements OnInit {
 
   private xLoc(d: number): number {
     const layout = this.chart.getChartLayoutInterface();
-    const chartArea = layout.getChartAreaBoundingBox();
-    const svg = this.chart.getContainer().getElementsByTagName('svg')[0];
     return layout.getXLocation(d);
   }
 }

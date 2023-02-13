@@ -1,6 +1,6 @@
 <div class="chart-container" (window:resize)="resize()">
   <div id="chart"></div>
-  <svg id="controle-container" (click)="clickChart($event)">
+  <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)">
     <svg class="ligne ligne-position" [attr.x]="x" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mousemove)="mouseMove($event)" (mouseup)="mouseUp($event)">
         <rect
           x="0"
