@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   indiceFenetreMax!: number;
   position = 0;
 
-  receivePosition(position: number): void {
+  majPosition(position: number): void {
     this.position = position;
   }
 
