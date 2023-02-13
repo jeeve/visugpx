@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, Output, EventEmitter, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Output,
+  EventEmitter,
+  Input,
+} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import { GpxService } from '../gpx.service';
@@ -29,6 +35,7 @@ export class MapComponent implements AfterViewInit {
     this.map = L.map('map', {
       center: [39.8282, -98.5795],
       zoom: 3,
+      zoomControl: false,
     });
 
     const tiles = L.tileLayer(
@@ -43,7 +50,9 @@ export class MapComponent implements AfterViewInit {
 
     tiles.addTo(this.map);
 
-    this.map.on("click", (e) => {
+    L.control.zoom({ position: 'topright' }).addTo(this.map);
+
+    this.map.on('click', (e) => {
       const i = this.calculeIndiceLePlusPresDe(e.latlng.lat, e.latlng.lng);
       if (i != -1) {
         this.gpxService.indicePosition = i;
@@ -51,9 +60,7 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  constructor(private gpxService: GpxService) {
-
-  }
+  constructor(private gpxService: GpxService) {}
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -68,8 +75,12 @@ export class MapComponent implements AfterViewInit {
     const lat = this.gpxService.pointsGps[i].lat;
     const lon = this.gpxService.pointsGps[i].lon;
     this.markerVitesse.setLatLng({ lat: lat, lng: lon });
-    this.markerVitesse.setRotationAngle(this.gpxService.pointsCalcules[i].angle);
-    this.markerVitesse.setTooltipContent(this.gpxService.pointsCalcules[i].vitesse.toFixed(2));
+    this.markerVitesse.setRotationAngle(
+      this.gpxService.pointsCalcules[i].angle
+    );
+    this.markerVitesse.setTooltipContent(
+      this.gpxService.pointsCalcules[i].vitesse.toFixed(2)
+    );
   }
 
   private dessineTrace(): void {
@@ -199,6 +210,5 @@ export class MapComponent implements AfterViewInit {
     } else {
       return -1;
     }
-  }
-
+  };
 }
