@@ -1,5 +1,5 @@
 import { Component,  OnInit } from '@angular/core';
-import { GpxService } from './gpx.service';
+import { GpxService, UrlString } from './gpx.service';
 
 export type Fenetre = {
   gauche: number;
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
 
   position: number = 0;
   fenetre: Fenetre = { gauche: 0, droite: 0 };
+  urlFichier: UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
 
   majPosition(position: number): void {
     this.position = position;
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.fenetre = { gauche: 0, droite: 1000 };
+    this.gpxService.urlFichier = this.urlFichier;
   }
 
 }

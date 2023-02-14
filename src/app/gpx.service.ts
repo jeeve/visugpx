@@ -16,15 +16,14 @@ export interface IPointCalcule {
   deltat: number;
 }
 
-type UrlString = string;
-type XmlString = string;
+export type UrlString = string;
+export type XmlString = string;
 
 @Injectable({
   providedIn: 'root',
 })
 export class GpxService {
-  _urlFichier: UrlString =
-    'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
+  _urlFichier!: UrlString;
   pointsGps!: IPointGps[];
   pointsCalcules!: IPointCalcule[];
   vmax!: number;
