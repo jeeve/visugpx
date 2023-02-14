@@ -20,6 +20,21 @@
 }
 
 .ligne {
-  cursor: col-resize;
   filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
+}
+
+.ligne-seuil {
+  cursor: row-resize;
+}
+
+.ligne-position {
+  cursor: col-resize;
+}
+
+.ligne-gauche {
+  cursor: col-resize;
+}
+
+.ligne-droite {
+  cursor: col-resize;
 }

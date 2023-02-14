@@ -2,18 +2,38 @@
   <div id="chart"></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)">
     <svg>
-      <rect x="30" y="0" [attr.width]="xFenetreGauche-25" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
+      <rect x="30" y="0" [attr.width]="XFenetreGauche-25" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
     <svg>
-      <rect [attr.x]="xFenetreDroite+5" y="0" [attr.width]="largeur-xFenetreDroite" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
+      <rect [attr.x]="XFenetreDroite+5" y="0" [attr.width]="largeur-XFenetreDroite" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
-    <svg class="ligne ligne-position" [attr.x]="xPosition" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+    <svg class="ligne ligne-horizontale ligne-seuil" x="30" [attr.y]="YSeuil" width="100%" height="10" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)">
+      <rect
+        x="0"
+        y="0"
+        width="100%"
+        height="10"
+        strocke="FF0000"
+        stroke-width="1"
+        fill-opacity="0"
+        stroke-opacity="0"
+      ></rect>
+      <line
+        x1="0"
+        y1="5"
+        x2="100%"
+        y2="5"
+        stroke="#FF0000"
+        stroke-width="2"
+      ></line>
+    </svg>
+    <svg class="ligne ligne-verticale ligne-position" [attr.x]="XPosition" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
-          width="100%"
+          width="10"
           height="100%"
           strocke="FF0000"
           stroke-width="1"
@@ -30,11 +50,11 @@
           stroke-dasharray="5, 5"
         ></line>
       </svg>
-      <svg class="ligne ligne-gauche" [attr.x]="xFenetreGauche" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+      <svg class="ligne ligne-verticale ligne-gauche" [attr.x]="XFenetreGauche" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
-          width="100%"
+          width="10"
           height="100%"
           strocke="FF0000"
           stroke-width="1"
@@ -50,11 +70,11 @@
           stroke-width="3"
         ></line>
       </svg>
-      <svg class="ligne ligne-droite" [attr.x]="xFenetreDroite" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+      <svg class="ligne ligne-verticale ligne-droite" [attr.x]="XFenetreDroite" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
-          width="100%"
+          width="10"
           height="100%"
           strocke="FF0000"
           stroke-width="1"

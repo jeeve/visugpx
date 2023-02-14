@@ -21,6 +21,21 @@ declare let google: any;
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
+  private _seuil = 0;
+
+  @Output()
+  seuilChange: EventEmitter<number> = new EventEmitter<number>();
+
+  @Input()
+  get seuil(): number {
+    return this._seuil;
+  }
+
+  set seuil(value: number) {
+    this._seuil = value;
+    this.seuilChange.emit(value);
+  }
+
   private _position = 0;
 
   @Output()
@@ -36,9 +51,17 @@ export class ChartComponent implements OnInit {
     this.positionChange.emit(value);
   }
 
-  get xPosition(): number {
+  get XPosition(): number {
     if (this.chart && this.gpxService.estOK) {
       return this.xLoc(this.gpxService.x(this._position)) - LARGEUR_LIGNE / 2;
+    } else {
+      return 0;
+    }
+  }
+
+  get YSeuil(): number {
+    if (this.chart && this.gpxService.estOK) {
+      return this.yLoc(this._seuil) - LARGEUR_LIGNE / 2;
     } else {
       return 0;
     }
@@ -59,24 +82,32 @@ export class ChartComponent implements OnInit {
     this.fenetreChange.emit(value);
   }
 
-  get xFenetreGauche(): number {
+  get XFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this._fenetre.gauche <= this._fenetre.droite) {
-        return this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2;
+        return (
+          this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2
+        );
       } else {
-        return this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2;
+        return (
+          this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2
+        );
       }
     } else {
       return 0;
     }
   }
 
-  get xFenetreDroite(): number {
+  get XFenetreDroite(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this._fenetre.gauche <= this._fenetre.droite) {
-        return this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2;
+        return (
+          this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2
+        );
       } else {
-        return this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2;
+        return (
+          this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2
+        );
       }
     } else {
       return 0;
@@ -163,19 +194,8 @@ export class ChartComponent implements OnInit {
 
     const c = document.querySelector('#chart');
     if (c) {
-      this.fenetre.droite = this.gpxService.pointsGps.length-1;
+      this.fenetre.droite = this.gpxService.pointsGps.length - 1;
     }
-  }
-
-  private chartGetx(X: number): number {
-    const layout = this.chart.getChartLayoutInterface();
-    const L = layout.getChartAreaBoundingBox().width;
-    const c = document.querySelector('#chart');
-    if (c) {
-      const X2 = X - c.clientLeft - 40;
-      return (X2 * this.gpxService.dmax) / L;
-    }
-    return -1;
   }
 
   private elementSelectionne: Element | null = null;
@@ -194,16 +214,26 @@ export class ChartComponent implements OnInit {
 
   mouseMove(e: Event): void {
     if (this.elementSelectionne) {
-      const x = this.chartGetx((e as MouseEvent).clientX);
-      if (x >= 0 && x <= this.gpxService.dmax) {
-        if (this.elementSelectionne.classList.contains('ligne-position')) {
-          this.position = this.gpxService.getIndiceDistance(x);
+      if (this.elementSelectionne.classList.contains('ligne-verticale')) {
+        const x = this.chartGetx((e as MouseEvent).clientX);
+        if (x >= 0 && x <= this.gpxService.dmax) {
+          if (this.elementSelectionne.classList.contains('ligne-position')) {
+            this.position = this.gpxService.getIndiceDistance(x);
+          }
+          if (this.elementSelectionne.classList.contains('ligne-gauche')) {
+            this.fenetre.gauche = this.gpxService.getIndiceDistance(x);
+          }
+          if (this.elementSelectionne.classList.contains('ligne-droite')) {
+            this.fenetre.droite = this.gpxService.getIndiceDistance(x);
+          }
         }
-        if (this.elementSelectionne.classList.contains('ligne-gauche')) {
-          this.fenetre.gauche = this.gpxService.getIndiceDistance(x);
-        }
-        if (this.elementSelectionne.classList.contains('ligne-droite')) {
-          this.fenetre.droite = this.gpxService.getIndiceDistance(x);
+      } else {
+        if (this.elementSelectionne.classList.contains('ligne-horizontale')) {
+          const y = this.chartGety((e as MouseEvent).clientY);
+          if (y >= 0 && y <= this.gpxService.vmax) {
+            if (this.elementSelectionne.classList.contains('ligne-seuil'))
+              this.seuil = y;
+          }
         }
       }
     }
@@ -217,8 +247,35 @@ export class ChartComponent implements OnInit {
     e.stopPropagation();
   }
 
+  private chartGetx(X: number): number {
+    const layout = this.chart.getChartLayoutInterface();
+    const L = layout.getChartAreaBoundingBox().width;
+    const c = document.querySelector('#chart');
+    if (c) {
+      const X2 = X - c.clientLeft - 40;
+      return (X2 * this.gpxService.dmax) / L;
+    }
+    return -1;
+  }
+
+  private chartGety(Y: number): number {
+    const layout = this.chart.getChartLayoutInterface();
+    const H = layout.getChartAreaBoundingBox().height;
+    const c = document.querySelector('#chart');
+    if (c) {
+      const Y2 = 800 + H - Y;
+      return (Y2 * this.gpxService.vmax) / H;
+    }
+    return -1;
+  }
+
   private xLoc(d: number): number {
     const layout = this.chart.getChartLayoutInterface();
     return layout.getXLocation(d);
+  }
+
+  private yLoc(d: number): number {
+    const layout = this.chart.getChartLayoutInterface();
+    return layout.getYLocation(d);
   }
 }

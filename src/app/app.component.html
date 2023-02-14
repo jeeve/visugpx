@@ -1,3 +1,3 @@
 <app-map [position]="position" (positionChange)=majPosition($event)></app-map>
-<app-chart [position]="position" (positionChange)=majPosition($event) (fenetreChange)=majFenetre($event)></app-chart>
+<app-chart [position]="position" [seuil]="seuil" (positionChange)=majPosition($event) (seuilChange)=majSeuil($event) (fenetreChange)=majFenetre($event)></app-chart>
 <app-control></app-control>
