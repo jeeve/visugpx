@@ -8,13 +8,12 @@ import {
 } from '@angular/core';
 import { from, mergeMap } from 'rxjs';
 import { GpxService } from '../gpx.service';
+import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
 const LARGEUR_LIGNE = 10;
 declare let google: any;
-
-type ElementGraphique = { element: Element | null };
 
 @Component({
   selector: 'app-chart',
@@ -22,14 +21,13 @@ type ElementGraphique = { element: Element | null };
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
-  
   private _position = 0;
 
   @Output()
   positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
-  get position() : number {
+  get position(): number {
     return this._position;
   }
 
@@ -38,23 +36,58 @@ export class ChartComponent implements OnInit {
     this.positionChange.emit(value);
   }
 
-  constructor(
-    private renderer: Renderer2,
-    private scriptService: ScriptService,
-    private gpxService: GpxService
-  ) {}
-
-  get x(): number {
+  get xPosition(): number {
     if (this.chart && this.gpxService.estOK) {
       return this.xLoc(this.gpxService.x(this._position)) - LARGEUR_LIGNE / 2;
     } else {
-      return 25;
+      return 0;
+    }
+  }
+
+  private _fenetre = { gauche: 0, droite: 0 };
+
+  @Output()
+  fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
+
+  @Input()
+  get fenetre(): Fenetre {
+    return this._fenetre;
+  }
+
+  set fenetre(value: Fenetre) {
+    this._fenetre = value;
+    this.fenetreChange.emit(value);
+  }
+
+  get xFenetreGauche(): number {
+    if (this.chart && this.gpxService.estOK) {
+      return (
+        this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2
+      );
+    } else {
+      return 0;
+    }
+  }
+
+  get xFenetreDroite(): number {
+    if (this.chart && this.gpxService.estOK) {
+      return (
+        this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2
+      );
+    } else {
+      return 0;
     }
   }
 
   private chart: any = null;
   private data: any = null;
   private options: any = null;
+
+  constructor(
+    private renderer: Renderer2,
+    private scriptService: ScriptService,
+    private gpxService: GpxService
+  ) {}
 
   ngOnInit(): void {
     const scriptElement = this.scriptService.loadJsScript(
@@ -127,7 +160,7 @@ export class ChartComponent implements OnInit {
     return -1;
   }
 
-  private curseurPosition: ElementGraphique = { element: null };
+  private elementSelectionne: Element | null = null;
 
   clickChart(e: Event): void {
     e.preventDefault();
@@ -138,20 +171,32 @@ export class ChartComponent implements OnInit {
   }
 
   mouseDown(e: Event): void {
-    this.curseurPosition.element = e.target as Element;
+    this.elementSelectionne = (e.target as Element).parentElement;
   }
 
   mouseMove(e: Event): void {
-    if (this.curseurPosition.element) {
+    if (this.elementSelectionne) {
       const x = this.chartGetx((e as MouseEvent).clientX);
       if (x >= 0 && x <= this.gpxService.dmax) {
-        this.position = this.gpxService.getIndiceDistance(x);
+        if (this.elementSelectionne.classList.contains('ligne-position')) {
+          this.position = this.gpxService.getIndiceDistance(x);
+        }
+        if (this.elementSelectionne.classList.contains('ligne-gauche')) {
+          this.fenetre.gauche = this.gpxService.getIndiceDistance(x);
+        }
+        if (this.elementSelectionne.classList.contains('ligne-droite')) {
+          this.fenetre.droite = this.gpxService.getIndiceDistance(x);
+        }
       }
     }
   }
 
   mouseUp(e: Event): void {
-    this.curseurPosition.element = null;
+    this.elementSelectionne = null;
+  }
+
+  ligneClick(e: Event): void {
+    e.stopPropagation();
   }
 
   private xLoc(d: number): number {

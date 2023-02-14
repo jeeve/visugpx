@@ -1,7 +1,7 @@
 <div class="chart-container" (window:resize)="resize()">
   <div id="chart"></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)">
-    <svg class="ligne ligne-position" [attr.x]="x" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)">
+    <svg class="ligne ligne-position" [attr.x]="xPosition" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
@@ -20,6 +20,46 @@
           stroke="#000000"
           stroke-width="3"
           stroke-dasharray="5, 5"
+        ></line>
+      </svg>
+      <svg class="ligne ligne-gauche" [attr.x]="xFenetreGauche" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+        <rect
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          strocke="FF0000"
+          stroke-width="1"
+          fill-opacity="0"
+          stroke-opacity="0"
+        ></rect>
+        <line
+          x1="5"
+          y1="0"
+          x2="5"
+          y2="140"
+          stroke="#000000"
+          stroke-width="3"
+        ></line>
+      </svg>
+      <svg class="ligne ligne-droite" [attr.x]="xFenetreDroite" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+        <rect
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          strocke="FF0000"
+          stroke-width="1"
+          fill-opacity="0"
+          stroke-opacity="0"
+        ></rect>
+        <line
+          x1="5"
+          y1="0"
+          x2="5"
+          y2="140"
+          stroke="#000000"
+          stroke-width="3"
         ></line>
       </svg>
   </svg>
