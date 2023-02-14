@@ -1,6 +1,14 @@
 <div class="chart-container" (window:resize)="resize()">
   <div id="chart"></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)">
+    <svg>
+      <rect x="30" y="0" [attr.width]="xFenetreGauche-25" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
+      </rect>
+    </svg>
+    <svg>
+      <rect [attr.x]="xFenetreDroite+5" y="0" [attr.width]="largeur-xFenetreDroite" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
+      </rect>
+    </svg>
     <svg class="ligne ligne-position" [attr.x]="xPosition" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"

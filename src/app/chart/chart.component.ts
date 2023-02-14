@@ -61,9 +61,11 @@ export class ChartComponent implements OnInit {
 
   get xFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
-      return (
-        this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2
-      );
+      if (this._fenetre.gauche <= this._fenetre.droite) {
+        return this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2;
+      } else {
+        return this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2;
+      }
     } else {
       return 0;
     }
@@ -71,9 +73,20 @@ export class ChartComponent implements OnInit {
 
   get xFenetreDroite(): number {
     if (this.chart && this.gpxService.estOK) {
-      return (
-        this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2
-      );
+      if (this._fenetre.gauche <= this._fenetre.droite) {
+        return this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2;
+      } else {
+        return this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2;
+      }
+    } else {
+      return 0;
+    }
+  }
+
+  get largeur(): number {
+    const c = document.querySelector('#chart');
+    if (c) {
+      return c.clientWidth;
     } else {
       return 0;
     }
@@ -147,6 +160,11 @@ export class ChartComponent implements OnInit {
     );
 
     this.chart.draw(this.data, this.options);
+
+    const c = document.querySelector('#chart');
+    if (c) {
+      this.fenetre.droite = this.fenetre.droite = this.gpxService.getIndiceDistance(this.chartGetx(c.clientWidth+10));
+    }
   }
 
   private chartGetx(X: number): number {
