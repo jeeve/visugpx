@@ -163,7 +163,7 @@ export class ChartComponent implements OnInit {
 
     const c = document.querySelector('#chart');
     if (c) {
-      this.fenetre.droite = this.fenetre.droite = this.gpxService.getIndiceDistance(this.chartGetx(c.clientWidth+10));
+      this.fenetre.droite = this.gpxService.pointsGps.length-1;
     }
   }
 
