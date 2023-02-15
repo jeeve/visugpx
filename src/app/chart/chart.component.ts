@@ -131,6 +131,8 @@ export class ChartComponent implements OnInit {
 
       this.gpxService.lit().pipe(mergeMap(() => observable));
     };
+
+  //  this.gpxService.lit().subscribe(() => { this.iFenetre = { gauche: 0, droite: 0.1*(this.gpxService.pointsCalcules.length-1) }; });
   }
 
   resize(): void {
@@ -175,11 +177,7 @@ export class ChartComponent implements OnInit {
     );
 
     this.chart.draw(this.data, this.options);
-
-    const c = document.querySelector('#chart');
-    if (c) {
-      this.iFenetre.droite = this.gpxService.pointsGps.length - 1;
-    }
+    
   }
 
   private elementSelectionne: HTMLElement | null = null;
@@ -205,10 +203,10 @@ export class ChartComponent implements OnInit {
             this.iPosition = this.gpxService.getIndiceDistance(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
-            this.iFenetre.gauche = this.gpxService.getIndiceDistance(x);
+            this.iFenetre = { gauche: this.gpxService.getIndiceDistance(x), droite: this._iFenetre.droite };
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
-            this.iFenetre.droite = this.gpxService.getIndiceDistance(x);
+            this.iFenetre = { gauche: this._iFenetre.gauche, droite: this.gpxService.getIndiceDistance(x) };
           }
         }
       } else {

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
+import { Fenetre } from '../app.component';
 import { GpxService } from '../gpx.service';
 
 @Component({
@@ -19,6 +20,7 @@ export class MapComponent implements AfterViewInit {
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
+  private _iFenetre!: Fenetre;
 
   @Output()
   positionChange: EventEmitter<number> = new EventEmitter<number>();
@@ -32,6 +34,18 @@ export class MapComponent implements AfterViewInit {
     this._iPosition = value;
     this.positionChange.emit(value);
     this.updatePosition();
+  }
+
+  @Input()
+  get iFenetre(): Fenetre {
+    return this._iFenetre;
+  }
+
+  set iFenetre(value: Fenetre) {
+    this._iFenetre = value;
+    if (this.gpxService.estOK) {
+      this.dessineTrace();
+    }
   }
 
   private initMap(): void {
@@ -180,13 +194,13 @@ export class MapComponent implements AfterViewInit {
   }
 
   private indiceEndehorsBornes(i: number): boolean {
-    // if (
-    //   i < this.gpxService.indiceFenetreMin ||
-    //    i > this.gpxService.indiceFenetreMax
-    // ) {
+    if (
+      i < this._iFenetre.gauche ||
+      i > this._iFenetre.droite
+    ) {
+      return true;
+    }
     return false;
-    //  }
-    //  return false;
   }
 
   private couleurCategorie(cat: number): string {
