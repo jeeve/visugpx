@@ -231,6 +231,10 @@ export class ChartComponent implements OnInit {
     e.stopPropagation();
   }
 
+  mouseLeave(): void {
+    this.elementSelectionne = null;
+  }
+
   private chartGetx(X: number): number {
     const layout = this.chart.getChartLayoutInterface();
     const L = layout.getChartAreaBoundingBox().width;
