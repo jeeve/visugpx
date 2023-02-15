@@ -189,9 +189,8 @@ export class ChartComponent implements OnInit {
     if (chartxy.length == 0) {
       return;
     }
-    this.data = google.visualization.arrayToDataTable(chartxy);
 
-    const enableInteractivityOptions = false;
+    this.data = google.visualization.arrayToDataTable(chartxy);
 
     const vAxisOptions = {
       viewWindowMode: 'explicit',
@@ -203,8 +202,9 @@ export class ChartComponent implements OnInit {
       pointSize: 0,
       legend: { position: 'none' },
       chartArea: { left: '30', right: '0', top: '10', bottom: '20' },
-      enableInteractivity: enableInteractivityOptions,
+      enableInteractivity: false,
       dataOpacity: 0.0,
+      lineWidth: 1
     };
 
     this.chart = new google.visualization.LineChart(
@@ -237,18 +237,18 @@ export class ChartComponent implements OnInit {
             this.iPosition = this.gpxService.getIndiceDistance(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
+            this._fenetreAuto = false;
             this.iFenetre = {
               gauche: this.gpxService.getIndiceDistance(x),
               droite: this._iFenetre.droite,
             };
-            this._fenetreAuto = false;
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
+            this._fenetreAuto = false;
             this.iFenetre = {
               gauche: this._iFenetre.gauche,
               droite: this.gpxService.getIndiceDistance(x),
             };
-            this._fenetreAuto = false;
           }
         }
       } else {
