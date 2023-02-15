@@ -51,22 +51,6 @@ export class ChartComponent implements OnInit {
     this.positionChange.emit(value);
   }
 
-  get XPosition(): number {
-    if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.gpxService.x(this._position)) - LARGEUR_LIGNE / 2;
-    } else {
-      return 0;
-    }
-  }
-
-  get YSeuil(): number {
-    if (this.chart && this.gpxService.estOK) {
-      return this.yLoc(this._seuil) - LARGEUR_LIGNE / 2;
-    } else {
-      return 0;
-    }
-  }
-
   private _fenetre = { gauche: 0, droite: 0 };
 
   @Output()
@@ -198,7 +182,7 @@ export class ChartComponent implements OnInit {
     }
   }
 
-  private elementSelectionne: Element | null = null;
+  private elementSelectionne: HTMLElement | null = null;
 
   clickChart(e: Event): void {
     e.preventDefault();
@@ -261,12 +245,28 @@ export class ChartComponent implements OnInit {
   private chartGety(Y: number): number {
     const layout = this.chart.getChartLayoutInterface();
     const H = layout.getChartAreaBoundingBox().height;
-    const c = document.querySelector('#chart');
+    const c = document.querySelector('#chart') as HTMLElement;
     if (c) {
-      const Y2 = 800 + H - Y;
+      const Y2 = c.getBoundingClientRect().top + H - Y + 10;
       return (Y2 * this.gpxService.vmax) / H;
     }
     return -1;
+  }
+
+  get XPosition(): number {
+    if (this.chart && this.gpxService.estOK) {
+      return this.xLoc(this.gpxService.x(this._position)) - LARGEUR_LIGNE / 2;
+    } else {
+      return 0;
+    }
+  }
+
+  get YSeuil(): number {
+    if (this.chart && this.gpxService.estOK) {
+      return this.yLoc(this._seuil) - LARGEUR_LIGNE / 2 + 10;
+    } else {
+      return 0;
+    }
   }
 
   private xLoc(d: number): number {
