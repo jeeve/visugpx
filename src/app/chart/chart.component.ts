@@ -21,76 +21,76 @@ declare let google: any;
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
-  private _seuil = 0;
+  private _vSeuil = 0;
 
   @Output()
   seuilChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
-  get seuil(): number {
-    return this._seuil;
+  get vSeuil(): number {
+    return this._vSeuil;
   }
 
-  set seuil(value: number) {
-    this._seuil = value;
+  set vSeuil(value: number) {
+    this._vSeuil = value;
     this.seuilChange.emit(value);
   }
 
-  private _position = 0;
+  private _iPosition = 0;
 
   @Output()
   positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
-  get position(): number {
-    return this._position;
+  get iPosition(): number {
+    return this._iPosition;
   }
 
-  set position(value: number) {
-    this._position = value;
+  set iPosition(value: number) {
+    this._iPosition = value;
     this.positionChange.emit(value);
   }
 
-  private _fenetre = { gauche: 0, droite: 0 };
+  private _iFenetre = { gauche: 0, droite: 0 };
 
   @Output()
   fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
 
   @Input()
-  get fenetre(): Fenetre {
-    return this._fenetre;
+  get iFenetre(): Fenetre {
+    return this._iFenetre;
   }
 
-  set fenetre(value: Fenetre) {
-    this._fenetre = value;
+  set iFenetre(value: Fenetre) {
+    this._iFenetre = value;
     this.fenetreChange.emit(value);
   }
 
   get XFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
-      if (this._fenetre.gauche <= this._fenetre.droite) {
+      if (this._iFenetre.gauche <= this._iFenetre.droite) {
         return (
-          this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2
+          this.xLoc(this.gpxService.x(this._iFenetre.gauche)) - LARGEUR_LIGNE / 2
         );
       } else {
         return (
-          this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2
+          this.xLoc(this.gpxService.x(this._iFenetre.droite)) - LARGEUR_LIGNE / 2
         );
       }
     } else {
-      return 0;
+      return 25;
     }
   }
 
   get XFenetreDroite(): number {
     if (this.chart && this.gpxService.estOK) {
-      if (this._fenetre.gauche <= this._fenetre.droite) {
+      if (this._iFenetre.gauche <= this._iFenetre.droite) {
         return (
-          this.xLoc(this.gpxService.x(this._fenetre.droite)) - LARGEUR_LIGNE / 2
+          this.xLoc(this.gpxService.x(this._iFenetre.droite)) - LARGEUR_LIGNE / 2
         );
       } else {
         return (
-          this.xLoc(this.gpxService.x(this._fenetre.gauche)) - LARGEUR_LIGNE / 2
+          this.xLoc(this.gpxService.x(this._iFenetre.gauche)) - LARGEUR_LIGNE / 2
         );
       }
     } else {
@@ -178,7 +178,7 @@ export class ChartComponent implements OnInit {
 
     const c = document.querySelector('#chart');
     if (c) {
-      this.fenetre.droite = this.gpxService.pointsGps.length - 1;
+      this.iFenetre.droite = this.gpxService.pointsGps.length - 1;
     }
   }
 
@@ -188,7 +188,7 @@ export class ChartComponent implements OnInit {
     e.preventDefault();
     const x = this.chartGetx((e as MouseEvent).clientX);
     if (x >= 0 && x <= this.gpxService.dmax) {
-      this.position = this.gpxService.getIndiceDistance(x);
+      this.iPosition = this.gpxService.getIndiceDistance(x);
     }
   }
 
@@ -202,13 +202,13 @@ export class ChartComponent implements OnInit {
         const x = this.chartGetx((e as MouseEvent).clientX);
         if (x >= 0 && x <= this.gpxService.dmax) {
           if (this.elementSelectionne.classList.contains('ligne-position')) {
-            this.position = this.gpxService.getIndiceDistance(x);
+            this.iPosition = this.gpxService.getIndiceDistance(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
-            this.fenetre.gauche = this.gpxService.getIndiceDistance(x);
+            this.iFenetre.gauche = this.gpxService.getIndiceDistance(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
-            this.fenetre.droite = this.gpxService.getIndiceDistance(x);
+            this.iFenetre.droite = this.gpxService.getIndiceDistance(x);
           }
         }
       } else {
@@ -216,7 +216,7 @@ export class ChartComponent implements OnInit {
           const y = this.chartGety((e as MouseEvent).clientY);
           if (y >= 0 && y <= this.gpxService.vmax) {
             if (this.elementSelectionne.classList.contains('ligne-seuil'))
-              this.seuil = y;
+              this.vSeuil = y;
           }
         }
       }
@@ -259,7 +259,7 @@ export class ChartComponent implements OnInit {
 
   get XPosition(): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.gpxService.x(this._position)) - LARGEUR_LIGNE / 2;
+      return this.xLoc(this.gpxService.x(this._iPosition)) - LARGEUR_LIGNE / 2;
     } else {
       return 0;
     }
@@ -267,7 +267,7 @@ export class ChartComponent implements OnInit {
 
   get YSeuil(): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.yLoc(this._seuil) - LARGEUR_LIGNE / 2 + 10;
+      return this.yLoc(this._vSeuil) - LARGEUR_LIGNE / 2 + 10;
     } else {
       return 0;
     }

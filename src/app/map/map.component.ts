@@ -18,18 +18,18 @@ export class MapComponent implements AfterViewInit {
   private map!: L.Map;
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
-  private _position = 0;
+  private _iPosition = 0;
 
   @Output()
   positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
-  get position(): number {
-    return this._position;
+  get iPosition(): number {
+    return this._iPosition;
   }
 
-  set position(value: number) {
-    this._position = value;
+  set iPosition(value: number) {
+    this._iPosition = value;
     this.positionChange.emit(value);
     this.updatePosition();
   }
@@ -58,7 +58,7 @@ export class MapComponent implements AfterViewInit {
     this.map.on('click', (e) => {
       const i = this.calculeIndiceLePlusPresDe(e.latlng.lat, e.latlng.lng);
       if (i != -1) {
-        this.position = i;
+        this.iPosition = i;
       }
     });
   }
@@ -75,7 +75,7 @@ export class MapComponent implements AfterViewInit {
 
   private updatePosition() {
     if (this.gpxService.estOK) {
-      const i = this.position;
+      const i = this.iPosition;
       const lat = this.gpxService.pointsGps[i].lat;
       const lon = this.gpxService.pointsGps[i].lon;
       this.markerVitesse.setLatLng({ lat: lat, lng: lon });

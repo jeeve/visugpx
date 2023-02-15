@@ -14,21 +14,21 @@ export type Fenetre = {
 export class AppComponent implements OnInit {
   title = 'visugpx';
 
-  position: number = 0;
-  seuil: number = 12;
-  fenetre: Fenetre = { gauche: 0, droite: 0 };
+  iPosition: number = 0;
+  vSeuil: number = 12;
+  iFenetre: Fenetre = { gauche: 0, droite: 0 };
   urlFichier: UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
 
   majPosition(position: number): void {
-    this.position = position;
+    this.iPosition = position;
   }
 
   majSeuil(seuil: number): void {
-    this.seuil = seuil;
+    this.vSeuil = seuil;
   }
 
   majFenetre(fenetre: Fenetre): void {
-    this.fenetre = fenetre;
+    this.iFenetre = fenetre;
   }
 
   constructor(private gpxService: GpxService) {
