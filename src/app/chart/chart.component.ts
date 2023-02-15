@@ -241,6 +241,7 @@ export class ChartComponent implements OnInit {
               gauche: this.gpxService.getIndiceDistance(x),
               droite: this._iFenetre.droite,
             };
+            this._fenetreAuto = false;
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
             this.iFenetre = {
