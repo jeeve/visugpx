@@ -48,6 +48,7 @@ export class ChartComponent implements OnInit {
 
   set iPosition(value: number) {
     this._iPosition = value;
+    this.majFenetre();
     this.positionChange.emit(value);
   }
 
@@ -64,6 +65,30 @@ export class ChartComponent implements OnInit {
   set iFenetre(value: Fenetre) {
     this._iFenetre = value;
     this.fenetreChange.emit(value);
+  }
+
+  _largeurFenetre = 2;
+
+  get largeurFenetre(): number {
+    return this._largeurFenetre;
+  }
+
+  set largeurFenetre(value: number) {
+    this._largeurFenetre = value;
+  }
+
+  private majFenetre() {
+    if (!this.gpxService.estOK) return;
+    const delta = this.gpxService.getIndiceDistance(this._largeurFenetre / 2);
+    let a = this._iPosition - delta;
+    let b = this._iPosition + delta;
+    if (a < 0) {
+      a = 0;
+    }
+    if (b > this.gpxService.pointsCalcules.length-1) {
+      b = this.gpxService.pointsCalcules.length-1;
+    }
+    this.iFenetre = { gauche: a, droite: b };
   }
 
   get XFenetreGauche(): number {
@@ -111,7 +136,7 @@ export class ChartComponent implements OnInit {
   private data: any = null;
   private options: any = null;
 
-  constructor(
+  constructor (
     private renderer: Renderer2,
     private scriptService: ScriptService,
     private gpxService: GpxService
@@ -127,12 +152,10 @@ export class ChartComponent implements OnInit {
       const observable = from(
         google.charts.load('current', { packages: ['corechart'] })
       );
-      observable.subscribe(() => this.drawChart());
+      observable.subscribe(() => { this.largeurFenetre = 2; this.majFenetre(); this.drawChart() });
 
       this.gpxService.lit().pipe(mergeMap(() => observable));
     };
-
-  //  this.gpxService.lit().subscribe(() => { this.iFenetre = { gauche: 0, droite: 0.1*(this.gpxService.pointsCalcules.length-1) }; });
   }
 
   resize(): void {
