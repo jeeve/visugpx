@@ -8,6 +8,21 @@ import { GpxService } from '../gpx.service';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
+  private _vSeuil = 0;
+
+  @Output()
+  seuilChange: EventEmitter<number> = new EventEmitter<number>();
+
+  @Input()
+  get vSeuil(): number {
+    return this._vSeuil;
+  }
+
+  set vSeuil(value: number) {
+    this._vSeuil = value;
+    this.seuilChange.emit(value);
+  }
+  
   private _iPosition = 0;
 
   @Output()
