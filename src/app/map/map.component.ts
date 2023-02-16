@@ -115,7 +115,7 @@ export class MapComponent implements AfterViewInit {
     const txy = this.gpxService.pointsGps;
     let tc = this.gpxService.pointsCalcules;
     for (let i = 0; i < txy.length; i++) {
-      let coord = new L.LatLng(txy[i].lat, txy[i].lon);
+      const coord = new L.LatLng(txy[i].lat, txy[i].lon);
       txy2.push(coord);
       if (tc[i].vitesse > seuil) {
         cat = 1;
@@ -135,7 +135,7 @@ export class MapComponent implements AfterViewInit {
           })
         );
         txy2 = [];
-        let coord = new L.LatLng(txy[i].lat, txy[i].lon);
+        const coord = new L.LatLng(txy[i].lat, txy[i].lon);
         txy2.push(coord);
         opacite0 = opacite;
       } else {
@@ -147,7 +147,7 @@ export class MapComponent implements AfterViewInit {
             })
           );
           txy2 = [];
-          let coord = new L.LatLng(txy[i].lat, txy[i].lon);
+          const coord = new L.LatLng(txy[i].lat, txy[i].lon);
           txy2.push(coord);
           cat0 = cat;
         }
@@ -178,9 +178,9 @@ export class MapComponent implements AfterViewInit {
     if (this.markerVitesse) {
       this.markerVitesse.remove();
     }
-    let xy0 = new L.LatLng(txy[0].lat, txy[0].lon);
-    this.markerVitesse = L.marker(xy0, { icon: myIcon, rotationAngle: 0.0 })
-      .bindTooltip('0', { permanent: true })
+    let xy0 = new L.LatLng(txy[this._iPosition].lat, txy[this._iPosition].lon);
+    this.markerVitesse = L.marker(xy0, { icon: myIcon, rotationAngle: this.gpxService.pointsCalcules[this._iPosition].angle })
+      .bindTooltip(this.gpxService.pointsCalcules[this._iPosition].vitesse.toFixed(2), { permanent: true })
       .addTo(this.map);
     this.markerVitesse.openTooltip();
 

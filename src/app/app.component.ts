@@ -14,10 +14,10 @@ export type Fenetre = {
 export class AppComponent implements OnInit {
   title = 'visugpx';
 
+  urlFichier: UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
   iPosition: number = 0;
   vSeuil: number = 12;
   iFenetre: Fenetre = { gauche: 0, droite: 0 };
-  urlFichier: UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
 
   majPosition(position: number): void {
     this.iPosition = position;
