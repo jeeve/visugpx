@@ -1,3 +1,3 @@
 <app-map [iPosition]="iPosition" [iFenetre]="iFenetre" [vSeuil]="vSeuil" (positionChange)="majPosition($event)"></app-map>
 <app-chart [iPosition]="iPosition" [vSeuil]="vSeuil" (positionChange)="majPosition($event)" (seuilChange)="majSeuil($event)" (fenetreChange)="majFenetre($event)"></app-chart>
-<app-control></app-control>
+<app-control [iPosition]="iPosition" (positionChange)="majPosition($event)"></app-control>

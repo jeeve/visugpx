@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td><label>Distance</label></td>
-                    <td><input type="text" class="position"></td>
+                    <td><input type="text" class="position" [ngModel]="xPosition | number: '1.0-3'" (ngModelChange)="xPosition = $event"></td>
                     <td>km</td>
                 </tr>
                 <tr class="ligne-temps" style="display: none;">
