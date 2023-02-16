@@ -20,7 +20,6 @@ export class MapComponent implements AfterViewInit {
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
-  private _iFenetre!: Fenetre;
 
   @Output()
   positionChange: EventEmitter<number> = new EventEmitter<number>();
@@ -36,6 +35,8 @@ export class MapComponent implements AfterViewInit {
     this.updatePosition();
   }
 
+  private _iFenetre!: Fenetre;
+
   @Input()
   get iFenetre(): Fenetre {
     return this._iFenetre;
@@ -43,6 +44,20 @@ export class MapComponent implements AfterViewInit {
 
   set iFenetre(value: Fenetre) {
     this._iFenetre = value;
+    if (this.gpxService.estOK) {
+      this.dessineTrace();
+    }
+  }
+
+  private _vSeuil!: number;
+  
+  @Input()
+  get vSeuil(): number {
+    return this._vSeuil;
+  }
+
+  set vSeuil(value: number) {
+    this._vSeuil = value;
     if (this.gpxService.estOK) {
       this.dessineTrace();
     }
@@ -105,8 +120,6 @@ export class MapComponent implements AfterViewInit {
   private dessineTrace(): void {
     let polylignes = [];
 
-    var seuil = 12.0;
-
     let txy2: L.LatLng[] = [];
     let opacite0, opacite;
     opacite0 = 1.0;
@@ -117,7 +130,7 @@ export class MapComponent implements AfterViewInit {
     for (let i = 0; i < txy.length; i++) {
       const coord = new L.LatLng(txy[i].lat, txy[i].lon);
       txy2.push(coord);
-      if (tc[i].vitesse > seuil) {
+      if (tc[i].vitesse > this._vSeuil) {
         cat = 1;
       } else {
         cat = 0;
