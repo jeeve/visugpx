@@ -11,8 +11,6 @@ export class ControlComponent implements OnInit {
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
-  fenetreAuto = true;
-  largeurFenetre = 2;
 
   private _vSeuil = 0;
 
@@ -63,6 +61,21 @@ export class ControlComponent implements OnInit {
     }
   }
 
+  private _fenetre: Fenetre = { gauche: 0, droite: 0, auto: true, largeur: 2 };
+
+  @Output()
+  fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
+
+  @Input()
+  get fenetre(): Fenetre {
+    return this._fenetre;
+  }
+
+  set fenetre(value: Fenetre) {
+    this._fenetre = value;
+    this.fenetreChange.emit(value);
+  }
+
   constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {
@@ -74,14 +87,18 @@ export class ControlComponent implements OnInit {
   }
 
   private calculeDistanceSeuil() {
-    let distance = 0;
-    let delta;
-    for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
-      if (this.gpxService.pointsCalcules[i].vitesse >= this._vSeuil) {
-        delta = this.gpxService.pointsCalcules[i].deltad;
-        distance += delta;
+    if (this.gpxService.estOK) {
+      let distance = 0;
+      let delta;
+      for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
+        if (this.gpxService.pointsCalcules[i].vitesse >= this._vSeuil) {
+          delta = this.gpxService.pointsCalcules[i].deltad;
+          distance += delta;
+        }
       }
+      return distance;
+    } else {
+      return 0;
     }
-    return distance;
   }
 }

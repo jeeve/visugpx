@@ -23,9 +23,6 @@ declare let google: any;
 export class ChartComponent implements OnInit {
   private _vSeuil = 0;
   
-  @Input()
-  largeurFenetre = 2;
-
   @Output()
   seuilChange: EventEmitter<number> = new EventEmitter<number>();
 
@@ -55,7 +52,7 @@ export class ChartComponent implements OnInit {
     this.positionChange.emit(value);
   }
 
-  private _iFenetre = { gauche: 0, droite: 0 };
+  private _iFenetre: Fenetre = { gauche: 0, droite: 0, auto: true, largeur: 2 };
 
   @Output()
   fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
@@ -67,24 +64,35 @@ export class ChartComponent implements OnInit {
 
   set iFenetre(value: Fenetre) {
     this._iFenetre = value;
-    this.fenetreChange.emit(value);
-  }
-
-  private _fenetreAuto = true;
-
-  private majFenetre() {
-    if (this._fenetreAuto) {
+    if (this._iFenetre.auto) {
       if (!this.gpxService.estOK) return;
       const d = this.gpxService.pointsCalcules[this._iPosition].distance;
-      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre);
-      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre);
+      let a = this.gpxService.getIndiceDistance(d - this._iFenetre.largeur/2);
+      let b = this.gpxService.getIndiceDistance(d + this._iFenetre.largeur/2);
       if (a < 0) {
         a = 0;
       }
       if (b > this.gpxService.pointsCalcules.length - 1) {
         b = this.gpxService.pointsCalcules.length - 1;
       }
-      this.iFenetre = { gauche: a, droite: b };
+      this._iFenetre = { gauche: a, droite: b, auto: value.auto, largeur: value.largeur };
+    }
+    this.fenetreChange.emit(this._iFenetre);
+  }
+
+  private majFenetre() {
+    if (this._iFenetre.auto) {
+      if (!this.gpxService.estOK) return;
+      const d = this.gpxService.pointsCalcules[this._iPosition].distance;
+      let a = this.gpxService.getIndiceDistance(d - this._iFenetre.largeur/2);
+      let b = this.gpxService.getIndiceDistance(d + this._iFenetre.largeur/2);
+      if (a < 0) {
+        a = 0;
+      }
+      if (b > this.gpxService.pointsCalcules.length - 1) {
+        b = this.gpxService.pointsCalcules.length - 1;
+      }
+      this.iFenetre = { gauche: a, droite: b, auto: this._iFenetre.auto, largeur: this._iFenetre.largeur };
     }
   }
 
@@ -154,7 +162,7 @@ export class ChartComponent implements OnInit {
         google.charts.load('current', { packages: ['corechart'] })
       );
       observable.subscribe(() => {
-        this.largeurFenetre = 2;
+        this._iFenetre.largeur = 2;
         this.majFenetre();
         this.drawChart();
       });
@@ -230,17 +238,19 @@ export class ChartComponent implements OnInit {
             this.iPosition = this.gpxService.getIndiceDistance(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
-            this._fenetreAuto = false;
             this.iFenetre = {
               gauche: this.gpxService.getIndiceDistance(x),
               droite: this._iFenetre.droite,
+              auto: false,
+              largeur: this._iFenetre.largeur
             };
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
-            this._fenetreAuto = false;
             this.iFenetre = {
               gauche: this._iFenetre.gauche,
               droite: this.gpxService.getIndiceDistance(x),
+              auto: false,
+              largeur: this._iFenetre.largeur
             };
           }
         }

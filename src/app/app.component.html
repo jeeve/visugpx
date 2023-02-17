@@ -1,3 +1,23 @@
-<app-map [iPosition]="iPosition" [iFenetre]="iFenetre" [vSeuil]="vSeuil" (positionChange)="majPosition($event)"></app-map>
-<app-chart [iPosition]="iPosition" [vSeuil]="vSeuil" (positionChange)="majPosition($event)" (seuilChange)="majSeuil($event)" (fenetreChange)="majFenetre($event)"></app-chart>
-<app-control [iPosition]="iPosition" [vSeuil]="vSeuil" (positionChange)="majPosition($event)" (seuilChange)="majSeuil($event)"></app-control>
+<app-map
+  [iPosition]="iPosition"
+  [iFenetre]="iFenetre"
+  [vSeuil]="vSeuil"
+  (positionChange)="majPosition($event)"
+></app-map>
+<app-chart
+  [iPosition]="iPosition"
+  [iFenetre]="iFenetre"
+  [vSeuil]="vSeuil"
+  [iFenetre]="iFenetre"
+  (positionChange)="majPosition($event)"
+  (seuilChange)="majSeuil($event)"
+  (fenetreChange)="majFenetre($event)"
+></app-chart>
+<app-control
+  [iPosition]="iPosition"
+  [fenetre]="iFenetre"
+  [vSeuil]="vSeuil"
+  (positionChange)="majPosition($event)"
+  (seuilChange)="majSeuil($event)"
+  (fenetreChange)="majFenetre($event)"
+></app-control>

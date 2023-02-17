@@ -2,8 +2,10 @@ import { Component,  OnInit } from '@angular/core';
 import { GpxService, UrlString } from './gpx.service';
 
 export type Fenetre = {
-  gauche: number;
-  droite: number;
+  gauche: number,
+  droite: number,
+  auto: boolean,
+  largeur: number
 }; 
 
 @Component({
@@ -17,7 +19,7 @@ export class AppComponent implements OnInit {
   urlFichier: UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
   iPosition: number = 0;
   vSeuil: number = 12;
-  iFenetre: Fenetre = { gauche: 0, droite: 0 };
+  iFenetre: Fenetre = { gauche: 0, droite: 0, auto: true, largeur: 2 };
 
   majPosition(position: number): void {
     this.iPosition = position;
