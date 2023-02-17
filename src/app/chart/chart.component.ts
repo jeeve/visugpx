@@ -22,9 +22,34 @@ declare let google: any;
 })
 export class ChartComponent implements OnInit {
   private _vSeuil = 0;
-  
+
+  private _largeurFenetre = 2;
+
   @Input()
-  largeurFenetre = 2;
+  get largeurFenetre(): number {
+    return this._largeurFenetre;
+  }
+
+  set largeurFenetre(value: number) {
+    this._largeurFenetre = value;
+    this.majFenetre();
+  }
+
+  private _fenetreAuto = true;
+
+  @Output()
+  fenetreAutoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  @Input()
+  get fenetreAuto(): boolean {
+    return this._fenetreAuto;
+  }
+
+  set fenetreAuto(value: boolean) {
+    this._fenetreAuto = value;
+    this.majFenetre();
+    this.fenetreAutoChange.emit(value);
+  }
 
   @Output()
   seuilChange: EventEmitter<number> = new EventEmitter<number>();
@@ -70,14 +95,12 @@ export class ChartComponent implements OnInit {
     this.fenetreChange.emit(value);
   }
 
-  private _fenetreAuto = true;
-
   private majFenetre() {
     if (this._fenetreAuto) {
       if (!this.gpxService.estOK) return;
       const d = this.gpxService.pointsCalcules[this._iPosition].distance;
-      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre);
-      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre);
+      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre/2);
+      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre/2);
       if (a < 0) {
         a = 0;
       }
@@ -230,14 +253,14 @@ export class ChartComponent implements OnInit {
             this.iPosition = this.gpxService.getIndiceDistance(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
-            this._fenetreAuto = false;
+            this.fenetreAuto = false;
             this.iFenetre = {
               gauche: this.gpxService.getIndiceDistance(x),
               droite: this._iFenetre.droite,
             };
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
-            this._fenetreAuto = false;
+            this.fenetreAuto = false;
             this.iFenetre = {
               gauche: this._iFenetre.gauche,
               droite: this.gpxService.getIndiceDistance(x),

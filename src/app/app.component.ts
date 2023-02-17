@@ -18,6 +18,8 @@ export class AppComponent implements OnInit {
   iPosition: number = 0;
   vSeuil: number = 12;
   iFenetre: Fenetre = { gauche: 0, droite: 0 };
+  largeurFenetre = 2;
+  fenetreAuto = true;
 
   majPosition(position: number): void {
     this.iPosition = position;
@@ -29,6 +31,14 @@ export class AppComponent implements OnInit {
 
   majFenetre(fenetre: Fenetre): void {
     this.iFenetre = fenetre;
+  }
+
+  majFenetreAuto(value: boolean): void {
+    this.fenetreAuto = value;
+  }
+
+  majLargeurFenetre(value: number): void {
+    this.largeurFenetre = value;
   }
 
   constructor(private gpxService: GpxService) {

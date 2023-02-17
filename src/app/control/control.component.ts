@@ -11,8 +11,6 @@ export class ControlComponent implements OnInit {
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
-  fenetreAuto = true;
-  largeurFenetre = 2;
 
   private _vSeuil = 0;
 
@@ -63,6 +61,35 @@ export class ControlComponent implements OnInit {
     }
   }
 
+  private _largeurFenetre = 2;
+
+  @Output()
+  largeurFenetreChange: EventEmitter<number> = new EventEmitter<number>();
+
+  get largeurFenetre(): number {
+    return this._largeurFenetre;
+  }
+
+  set largeurFenetre(value: number) {
+    this._largeurFenetre = value;
+    this.largeurFenetreChange.emit(value);
+  }
+
+  private _fenetreAuto = true;
+
+  @Output()
+  fenetreAutoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  @Input()
+  get fenetreAuto(): boolean {
+    return this._fenetreAuto;
+  }
+
+  set fenetreAuto(value: boolean) {
+    this._fenetreAuto = value;
+    this.fenetreAutoChange.emit(value);
+  }
+
   constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {
@@ -73,15 +100,20 @@ export class ControlComponent implements OnInit {
     });
   }
 
-  private calculeDistanceSeuil() {
-    let distance = 0;
-    let delta;
-    for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
-      if (this.gpxService.pointsCalcules[i].vitesse >= this._vSeuil) {
-        delta = this.gpxService.pointsCalcules[i].deltad;
-        distance += delta;
+  private calculeDistanceSeuil(): number {
+    if (this.gpxService.estOK) {
+      let distance = 0;
+      let delta;
+      for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
+        if (this.gpxService.pointsCalcules[i].vitesse >= this._vSeuil) {
+          delta = this.gpxService.pointsCalcules[i].deltad;
+          distance += delta;
+        }
       }
+
+      return distance;
+    } else {
+      return 0;
     }
-    return distance;
   }
 }
