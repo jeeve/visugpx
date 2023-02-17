@@ -7,6 +7,18 @@
   padding: 5px;
 }
 
+::ng-deep label {
+  padding: 5px;
+}
+
+::ng-deep button {
+  margin-left: 5px;
+}
+
+.stop {
+  margin-left: 15px;
+}
+
 .lire-gpx {
   padding-top: 10px;
   padding-left: 10px;

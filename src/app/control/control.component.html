@@ -11,7 +11,7 @@
 
     <div class="reglages">
         <div class="slider-wrapper">
-            <input type="range" class="curseur" min="0" max="100" step="any">
+            <input type="range" class="curseur" min="0" [max]="vmax" step="any" [(ngModel)]="vSeuil">
         </div>
         <div class="div-seuil">
             <table>
@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td><label>Distance</label></td>
-                    <td><input type="text" class="position" [ngModel]="xPosition | number: '1.0-3'" (ngModelChange)="xPosition=$event"></td>
+                    <td><input type="text" class="position" [ngModel]="xPosition | number: '1.3-3'" (ngModelChange)="xPosition=$event"></td>
                     <td>km</td>
                 </tr>
                 <tr class="ligne-temps" style="display: none;">

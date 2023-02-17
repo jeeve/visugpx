@@ -8,6 +8,7 @@ import { GpxService } from '../gpx.service';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
+  vmax!: number;
   private _vSeuil = 0;
 
   @Output()
@@ -55,5 +56,9 @@ export class ControlComponent implements OnInit {
 
   constructor(private gpxService: GpxService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.gpxService.lit().subscribe(() => {
+      this.vmax = this.gpxService.vmax;
+    })
+  }
 }
