@@ -10,6 +10,7 @@ import { GpxService } from '../gpx.service';
 export class ControlComponent implements OnInit {
   vmax!: number;
   vitesse!: number;
+  distanceSeuil!: number;
   private _vSeuil = 0;
 
   @Output()
@@ -23,8 +24,9 @@ export class ControlComponent implements OnInit {
   set vSeuil(value: number) {
     this._vSeuil = value;
     this.seuilChange.emit(value);
+    this.distanceSeuil = this.calculeDistanceSeuil();
   }
-  
+
   private _iPosition = 0;
 
   @Output()
@@ -64,6 +66,19 @@ export class ControlComponent implements OnInit {
     this.gpxService.lit().subscribe(() => {
       this.vmax = this.gpxService.vmax;
       this.iPosition = 0;
-    })
+      this.distanceSeuil = this.calculeDistanceSeuil();
+    });
+  }
+
+  private calculeDistanceSeuil() {
+    let distance = 0;
+    let delta;
+    for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
+      if (this.gpxService.pointsCalcules[i].vitesse >= this._vSeuil) {
+        delta = this.gpxService.pointsCalcules[i].deltad;
+        distance += delta;
+      }
+    }
+    return distance;
   }
 }
