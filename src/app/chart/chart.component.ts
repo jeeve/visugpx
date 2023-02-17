@@ -85,7 +85,6 @@ export class ChartComponent implements OnInit {
   @Output()
   fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
 
-  @Input()
   get iFenetre(): Fenetre {
     return this._iFenetre;
   }
