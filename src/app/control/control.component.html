@@ -50,10 +50,10 @@
 
 
     <div class="fenetre">
-        <input type="checkbox" class="fenetre-auto">
+        <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetreAuto">
         <label class="label-fenetre-auto">Fenêtre auto</label>
-        <div class="div-fenetre-largeur">
-            <input type="text" class="fenetre-largeur"> km
+        <div *ngIf="fenetreAuto" class="div-fenetre-largeur">
+            <input type="text" class="fenetre-largeur" [ngModel]="largeurFenetre| number: '1.3-3'" (ngModelChange)="largeurFenetre=$event"> km
         </div>
     </div>
     <div class="magneto">

@@ -11,6 +11,9 @@ export class ControlComponent implements OnInit {
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
+  fenetreAuto = true;
+  largeurFenetre = 2;
+
   private _vSeuil = 0;
 
   @Output()

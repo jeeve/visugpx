@@ -22,6 +22,9 @@ declare let google: any;
 })
 export class ChartComponent implements OnInit {
   private _vSeuil = 0;
+  
+  @Input()
+  largeurFenetre = 2;
 
   @Output()
   seuilChange: EventEmitter<number> = new EventEmitter<number>();
@@ -67,24 +70,14 @@ export class ChartComponent implements OnInit {
     this.fenetreChange.emit(value);
   }
 
-  _fenetreAuto = true;
-
-  _largeurFenetre = 2;
-
-  get largeurFenetre(): number {
-    return this._largeurFenetre;
-  }
-
-  set largeurFenetre(value: number) {
-    this._largeurFenetre = value;
-  }
+  private _fenetreAuto = true;
 
   private majFenetre() {
     if (this._fenetreAuto) {
       if (!this.gpxService.estOK) return;
       const d = this.gpxService.pointsCalcules[this._iPosition].distance;
-      let a = this.gpxService.getIndiceDistance(d - this._largeurFenetre);
-      let b = this.gpxService.getIndiceDistance(d + this._largeurFenetre);
+      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre);
+      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre);
       if (a < 0) {
         a = 0;
       }
