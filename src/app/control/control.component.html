@@ -17,7 +17,7 @@
             <table>
                 <tr>
                     <td><label>Seuil ></label></td>
-                    <td><input type="text" class="seuil" [ngModel]="vSeuil | number: '1.0-0'" (ngModelChange)="vSeuil=$event"></td>
+                    <td><input type="text" class="seuil" [ngModel]="vSeuil | number: '1.2-2'" (ngModelChange)="vSeuil=$event"></td>
                     <td>kts</td>
                 </tr>
                 <tr>
@@ -40,7 +40,7 @@
                 <tr>
                     <td><label>Vitesse</label></td>
                     <td>
-                        <div class="vitesse"></div>
+                        <div class="vitesse">{{ vitesse | number: '1.2-2' }}</div>
                     </td>
                     <td>kts</td>
                 </tr>

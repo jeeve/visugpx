@@ -9,6 +9,7 @@ import { GpxService } from '../gpx.service';
 })
 export class ControlComponent implements OnInit {
   vmax!: number;
+  vitesse!: number;
   private _vSeuil = 0;
 
   @Output()
@@ -36,6 +37,9 @@ export class ControlComponent implements OnInit {
 
   set iPosition(value: number) {
     this._iPosition = value;
+    if (this.gpxService.estOK) {
+      this.vitesse = this.gpxService.pointsCalcules[this._iPosition].vitesse;
+    }
     this.positionChange.emit(value);
   }
 
@@ -59,6 +63,7 @@ export class ControlComponent implements OnInit {
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
       this.vmax = this.gpxService.vmax;
+      this.iPosition = 0;
     })
   }
 }
