@@ -1,20 +1,20 @@
-import { Component,  OnInit } from '@angular/core';
-import { GpxService, UrlString } from './gpx.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { GpxService } from './gpx.service';
 
 export type Fenetre = {
   gauche: number;
   droite: number;
-}; 
+};
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   title = 'visugpx';
 
-  urlFichier: UrlString = 'https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx';
   iPosition: number = 0;
   vSeuil: number = 12;
   iFenetre: Fenetre = { gauche: 0, droite: 0 };
@@ -42,10 +42,23 @@ export class AppComponent implements OnInit {
   }
 
   constructor(private gpxService: GpxService) {
-  }
 
+  }
+ 
   ngOnInit(): void {
-    this.gpxService.urlFichier = this.urlFichier;
+    const url = this.getParameterByName("url");
+    if (url) {
+      this.gpxService.urlFichier = url;
+    }
   }
 
+  private getParameterByName(name: string) {
+    const url = window.location.href;
+    const n = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + n + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return "";
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 }

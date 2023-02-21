@@ -1,8 +1,8 @@
 <div class="control">
 
 
-    <div class="lire-gpx">Lire fichier GPX</div>
-    <form class="upload" enctype="multipart/form-data" action="fileupload.php" method="post">
+    <div class="lire-gpx" (click)="clickUploadGpx()">Lire fichier GPX</div>
+    <form *ngIf="uploadGpx" class="upload" enctype="multipart/form-data" action="fileupload.php" method="post">
         <input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
         <input type="file" name="monfichier" accept=".gpx" />
         <input type="submit" />

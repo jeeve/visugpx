@@ -23,7 +23,7 @@ export type XmlString = string;
   providedIn: 'root',
 })
 export class GpxService {
-  _urlFichier!: UrlString;
+  private _urlFichier!: UrlString;
   pointsGps!: IPointGps[];
   pointsCalcules!: IPointCalcule[];
   vmax!: number;

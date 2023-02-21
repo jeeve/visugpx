@@ -9,11 +9,16 @@ import { GpxService } from '../gpx.service';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
+  uploadGpx = false;
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
   rapidite = 10;
   private intervalSubscription!: Subscription;
+
+  clickUploadGpx(): void {
+    this.uploadGpx = !this.uploadGpx;
+  }
 
   private _vSeuil = 0;
 
