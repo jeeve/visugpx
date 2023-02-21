@@ -235,30 +235,52 @@ export class GpxService {
   }
 
   getIndiceDistance(x: number): number {
-    let j = 0;
-    let delta = +Infinity;
-    let dt;
-    for (let i = 0; i < this.pointsCalcules.length; i++) {
-      dt = Math.abs(this.pointsCalcules[i].distance - x);
-      if (dt < delta) {
-        j = i;
-        delta = dt;
+    const arr = this.pointsCalcules;
+    let minIndex = 0;
+    let maxIndex = arr.length - 1;
+
+    while (maxIndex - minIndex > 1) {
+      const midIndex = Math.floor((minIndex + maxIndex) / 2);
+      if (arr[midIndex].distance === x) {
+        return midIndex;
+      } else if (arr[midIndex].distance > x) {
+        maxIndex = midIndex;
+      } else {
+        minIndex = midIndex;
       }
     }
-    return j;
+
+    if (
+      Math.abs(arr[minIndex].distance - x) <
+      Math.abs(arr[maxIndex].distance - x)
+    ) {
+      return minIndex;
+    } else {
+      return maxIndex;
+    }
   }
 
   getIndiceTemps(d: Date): number {
-    let j = 0;
-    let delta = +Infinity;
-    let dt;
-    for (let i = this.pointsGps.length-1; i >= 0; i--) {
-      dt = Math.abs(this.pointsGps[i].date.getTime() - d.getTime());
-      if (dt < delta) {
-        j = i;
-        delta = dt;
+    const t = d.getTime();
+    const arr = this.pointsGps;
+    let minIndex = 0;
+    let maxIndex = arr.length - 1;
+
+    while (maxIndex - minIndex > 1) {
+      const midIndex = Math.floor((minIndex + maxIndex) / 2);
+      if (arr[midIndex].date.getTime() <= t) {
+        minIndex = midIndex;
+      } else {
+        maxIndex = midIndex;
       }
     }
-    return j;
+
+    if (arr[minIndex].date.getTime() >= t) {
+      return minIndex;
+    } else if (arr[maxIndex].date.getTime() >= t) {
+      return maxIndex;
+    } else {
+      return arr.length;
+    }
   }
 }
