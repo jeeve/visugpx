@@ -234,7 +234,7 @@ export class GpxService {
     return (value * Math.PI) / 180;
   }
 
-  getIndiceDistance(x: number): number {
+  getIndiceDistance(x: number): number { // findClosestIndex
     const arr = this.pointsCalcules;
     let minIndex = 0;
     let maxIndex = arr.length - 1;
@@ -260,7 +260,7 @@ export class GpxService {
     }
   }
 
-  getIndiceTemps(d: Date): number {
+  getIndiceTemps(d: Date): number { // findClosestUpperIndex
     const t = d.getTime();
     const arr = this.pointsGps;
     let minIndex = 0;
