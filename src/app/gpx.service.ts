@@ -18,7 +18,7 @@ export interface IPointCalcule {
 
 export type UrlString = string;
 export type XmlString = string;
-type Vitesse = { v: number, a: number, b: number };
+export type Vitesse = { v: number, a: number, b: number };
 export type Stats = { vMax: Vitesse, v100m: Vitesse, v500m: Vitesse, v2s: Vitesse, v5s: Vitesse, v10s: Vitesse };
 
 @Injectable({

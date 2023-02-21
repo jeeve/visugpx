@@ -7,7 +7,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { from, mergeMap } from 'rxjs';
-import { GpxService } from '../gpx.service';
+import { GpxService, Vitesse } from '../gpx.service';
 import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
 
@@ -22,8 +22,12 @@ declare let google: any;
 })
 export class ChartComponent implements OnInit {
   private _vSeuil = 0;
-
   private _largeurFenetre = 2;
+  ivmax!: number
+  stats!: Vitesse[];
+
+  @Input()
+  visuStats = false;
 
   @Input()
   get largeurFenetre(): number {
@@ -179,6 +183,10 @@ export class ChartComponent implements OnInit {
         this.largeurFenetre = 2;
         this.majFenetre();
         this.drawChart();
+        this.gpxService.calculeStats();
+        this.ivmax = this.gpxService.ivmax;
+        const s = this.gpxService.stats;
+        this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
       });
 
       this.gpxService.lit().pipe(mergeMap(() => observable));
@@ -336,5 +344,13 @@ export class ChartComponent implements OnInit {
   private yLoc(d: number): number {
     const layout = this.chart.getChartLayoutInterface();
     return layout.getYLocation(d);
+  }
+
+  X(i: number): number {
+    if (this.chart && this.gpxService.estOK) {
+      return this.xLoc(this.gpxService.x(i)) - 5;
+    } else {
+      return 25;
+    }
   }
 }

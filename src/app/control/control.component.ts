@@ -10,12 +10,12 @@ import { GpxService, Stats } from '../gpx.service';
 })
 export class ControlComponent implements OnInit {
   uploadGpx = false;
-  visuStats = false;
+  _visuStats = false;
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
   rapidite = 10;
-  stats!: Stats
+  stats!: Stats;
   private intervalSubscription!: Subscription;
 
   clickUploadGpx(): void {
@@ -23,6 +23,18 @@ export class ControlComponent implements OnInit {
   }
 
   private _vSeuil = 0;
+
+  @Output()
+  visuSatsChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  get visuStats(): boolean {
+    return this._visuStats;
+  }
+
+  set visuStats(value: boolean) {
+      this._visuStats = value;
+      this.visuSatsChange.emit(value);
+  }
 
   @Output()
   seuilChange: EventEmitter<number> = new EventEmitter<number>();

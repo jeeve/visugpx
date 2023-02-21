@@ -9,6 +9,7 @@
   [vSeuil]="vSeuil"
   [largeurFenetre]="largeurFenetre"
   [fenetreAuto]="fenetreAuto"
+  [visuStats]="visuStats"
   (positionChange)="majPosition($event)"
   (seuilChange)="majSeuil($event)"
   (fenetreChange)="majFenetre($event)"
@@ -22,4 +23,5 @@
   (seuilChange)="majSeuil($event)"
   (fenetreAutoChange)="majFenetreAuto($event)"
   (largeurFenetreChange)="majLargeurFenetre($event)"
+  (visuSatsChange)="majVisuStats($event)"
 ></app-control>
