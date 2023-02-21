@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 import { Fenetre } from '../app.component';
 import { GpxService } from '../gpx.service';
 
@@ -11,6 +12,8 @@ export class ControlComponent implements OnInit {
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
+  rapidite = 10;
+  private intervalSubscription!: Subscription;
 
   private _vSeuil = 0;
 
@@ -100,6 +103,28 @@ export class ControlComponent implements OnInit {
     });
   }
 
+  lecture(): void {
+    this.intervalSubscription = interval(1000/this.rapidite).subscribe(() => { 
+      let d = this.gpxService.pointsGps[this._iPosition].date;
+      d.setTime(d.getTime() + 1000);
+      const i = this.gpxService.getIndiceTemps(d);
+      if (i < this.gpxService.pointsGps.length) {
+        this.iPosition = i;
+      }
+    });
+  }
+
+  stop(): void {
+    this.intervalSubscription.unsubscribe();
+  }
+  
+  rapiditeChange(): void {
+    if (!this.intervalSubscription.closed) {
+      this.intervalSubscription.unsubscribe();
+      this.lecture();
+    }
+  }
+
   private calculeDistanceSeuil(): number {
     if (this.gpxService.estOK) {
       let distance = 0;
@@ -110,7 +135,6 @@ export class ControlComponent implements OnInit {
           distance += delta;
         }
       }
-
       return distance;
     } else {
       return 0;

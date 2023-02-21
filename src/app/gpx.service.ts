@@ -247,4 +247,18 @@ export class GpxService {
     }
     return j;
   }
+
+  getIndiceTemps(d: Date): number {
+    let j = 0;
+    let delta = +Infinity;
+    let dt;
+    for (let i = this.pointsGps.length-1; i >= 0; i--) {
+      dt = Math.abs(this.pointsGps[i].date.getTime() - d.getTime());
+      if (dt < delta) {
+        j = i;
+        delta = dt;
+      }
+    }
+    return j;
+  }
 }

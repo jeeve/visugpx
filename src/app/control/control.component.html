@@ -57,10 +57,10 @@
         </div>
     </div>
     <div class="magneto">
-        <button class="lecture" type="button">Lecture</button>
+        <button class="lecture" type="button" (click)="lecture()">Lecture</button>
         <label>x</label>
-        <input type="text" class="rapidite">
-        <button class="stop" type="button">Stop</button>
+        <input type="text" class="rapidite" [(ngModel)]="rapidite" (ngModelChange)="rapiditeChange()">
+        <button class="stop" type="button" (click)="stop()">Stop</button>
     </div>
 
     <div class="stats">
