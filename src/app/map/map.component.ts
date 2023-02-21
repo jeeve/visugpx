@@ -21,6 +21,15 @@ export class MapComponent implements AfterViewInit {
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
 
+  get date(): string {
+    if (this.gpxService.estOK) {
+      const d = this.gpxService.pointsGps[this._iPosition].date;
+      return d.toLocaleString();
+    } else {
+      return "";
+    }
+  }
+
   @Output()
   positionChange: EventEmitter<number> = new EventEmitter<number>();
 

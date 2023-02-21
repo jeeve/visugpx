@@ -15,4 +15,16 @@
   #map {
     height: 100%;
   }
+
+  .time {
+    display: inline-block;
+    position: absolute;
+    bottom: -2px;
+    z-index: 100000;
+    margin-right: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: silver;
+  }
   
