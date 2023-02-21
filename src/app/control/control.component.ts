@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Fenetre } from '../app.component';
-import { GpxService } from '../gpx.service';
+import { GpxService, Stats } from '../gpx.service';
 
 @Component({
   selector: 'app-control',
@@ -10,10 +10,12 @@ import { GpxService } from '../gpx.service';
 })
 export class ControlComponent implements OnInit {
   uploadGpx = false;
+  visuStats = false;
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
   rapidite = 10;
+  stats!: Stats
   private intervalSubscription!: Subscription;
 
   clickUploadGpx(): void {
@@ -105,6 +107,8 @@ export class ControlComponent implements OnInit {
       this.vmax = this.gpxService.vmax;
       this.iPosition = 0;
       this.distanceSeuil = this.calculeDistanceSeuil();
+      this.gpxService.calculeStats();
+      this.stats = this.gpxService.stats;
     });
   }
 

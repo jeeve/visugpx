@@ -64,43 +64,43 @@
     </div>
 
     <div class="stats">
-        <input class="calcule" type="checkbox">
+        <input class="calcule" type="checkbox" [(ngModel)]="visuStats">
         <label>Statistiques</label>
-        <table>
+        <table *ngIf="visuStats">
             <tr>
                 <td><input class="affiche-vmax" type="checkbox"></td>
                 <td>VMax</td>
-                <td class="vmax"></td>
+                <td class="vmax">{{ stats.vMax.v | number: '1.2-2' }}</td>
                 <td>kts</td>
             </tr>
             <tr>
                 <td><input class="affiche-v100m" type="checkbox"></td>
                 <td>V100m</td>
-                <td class="v100m"></td>
+                <td class="v100m">{{ stats.v100m.v | number: '1.2-2' }}</td>
                 <td>kts</td>
             </tr>
             <tr>
                 <td><input class="affiche-v500m" type="checkbox"></td>
                 <td>V500m</td>
-                <td class="v500m"></td>
+                <td class="v500m">{{ stats.v500m.v | number: '1.2-2' }}</td>
                 <td>kts</td>
             </tr>
             <tr>
                 <td><input class="affiche-v2s" type="checkbox"></td>
                 <td>V2s</td>
-                <td class="v2s"></td>
+                <td class="v2s">{{ stats.v2s.v | number: '1.2-2' }}</td>
                 <td>kts</td>
             </tr>
             <tr>
                 <td><input class="affiche-v5s" type="checkbox"></td>
                 <td>V5s</td>
-                <td class="v5s"></td>
+                <td class="v5s">{{ stats.v5s.v | number: '1.2-2' }}</td>
                 <td>kts</td>
             </tr>
             <tr>
                 <td><input class="affiche-v10s" type="checkbox"></td>
                 <td>V10s</td>
-                <td class="v10s"></td>
+                <td class="v10s">{{ stats.v10s.v | number: '1.2-2' }}</td>
                 <td>kts</td>
             </tr>
         </table>

@@ -98,8 +98,8 @@ export class ChartComponent implements OnInit {
     if (this._fenetreAuto) {
       if (!this.gpxService.estOK) return;
       const d = this.gpxService.pointsCalcules[this._iPosition].distance;
-      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre/2);
-      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre/2);
+      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre / 2);
+      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre / 2);
       if (a < 0) {
         a = 0;
       }
@@ -219,7 +219,7 @@ export class ChartComponent implements OnInit {
       chartArea: { left: '30', right: '0', top: '10', bottom: '20' },
       enableInteractivity: false,
       dataOpacity: 0.0,
-      lineWidth: 1
+      lineWidth: 1,
     };
 
     this.chart = new google.visualization.LineChart(
