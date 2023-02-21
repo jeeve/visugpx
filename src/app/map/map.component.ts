@@ -8,7 +8,7 @@ import {
 import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import { Fenetre } from '../app.component';
-import { GpxService } from '../gpx.service';
+import { GpxService, Vitesse } from '../gpx.service';
 
 @Component({
   selector: 'app-map',
@@ -16,17 +16,53 @@ import { GpxService } from '../gpx.service';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements AfterViewInit {
+  private _visuStats = false;
   private map!: L.Map;
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
+  ivmax!: number;
+  stats!: Vitesse[];
+  private tracesStats!: L.Polyline[];
+  private markerVmax!: L.Marker;
+
+  get visuStats(): boolean {
+    return this._visuStats;
+  }
+
+  @Input()
+  set visuStats(value: boolean) {
+    if (this.gpxService.estOK) {
+      this._visuStats = value;
+      if (value) {
+        const ivmax = this.gpxService.ivmax;
+        const coord = new L.LatLng(
+          this.gpxService.pointsGps[ivmax].lat,
+          this.gpxService.pointsGps[ivmax].lon
+        );
+        this.markerVmax = L.marker(coord)
+          .bindTooltip('VMax : ' + this.gpxService.vmax.toFixed(2) + ' kts')
+          .addTo(this.map);
+        this.tracesStats = [];
+        for (let s of this.stats) {
+          this.tracesStats.push(this.afficheTraceVitesse(s));
+        }
+      } else {
+        this.markerVmax.remove();
+        for (let s of this.tracesStats) {
+          s.remove();
+        }
+        this.tracesStats = [];
+      }
+    }
+  }
 
   get date(): string {
     if (this.gpxService.estOK) {
       const d = this.gpxService.pointsGps[this._iPosition].date;
       return d.toLocaleString();
     } else {
-      return "";
+      return '';
     }
   }
 
@@ -59,7 +95,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private _vSeuil!: number;
-  
+
   @Input()
   get vSeuil(): number {
     return this._vSeuil;
@@ -106,7 +142,13 @@ export class MapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.initMap();
     this.gpxService.lit().subscribe({
-      next: () => this.dessineTrace(),
+      next: () => {
+        this.dessineTrace();
+        this.gpxService.calculeStats();
+        this.ivmax = this.gpxService.ivmax;
+        const s = this.gpxService.stats;
+        this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
+      },
       error: (err) => console.log(err),
     });
   }
@@ -201,8 +243,14 @@ export class MapComponent implements AfterViewInit {
       this.markerVitesse.remove();
     }
     let xy0 = new L.LatLng(txy[this._iPosition].lat, txy[this._iPosition].lon);
-    this.markerVitesse = L.marker(xy0, { icon: myIcon, rotationAngle: this.gpxService.pointsCalcules[this._iPosition].angle })
-      .bindTooltip(this.gpxService.pointsCalcules[this._iPosition].vitesse.toFixed(2), { permanent: true })
+    this.markerVitesse = L.marker(xy0, {
+      icon: myIcon,
+      rotationAngle: this.gpxService.pointsCalcules[this._iPosition].angle,
+    })
+      .bindTooltip(
+        this.gpxService.pointsCalcules[this._iPosition].vitesse.toFixed(2),
+        { permanent: true }
+      )
       .addTo(this.map);
     this.markerVitesse.openTooltip();
 
@@ -216,10 +264,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private indiceEndehorsBornes(i: number): boolean {
-    if (
-      i < this._iFenetre.gauche ||
-      i > this._iFenetre.droite
-    ) {
+    if (i < this._iFenetre.gauche || i > this._iFenetre.droite) {
       return true;
     }
     return false;
@@ -252,4 +297,23 @@ export class MapComponent implements AfterViewInit {
       return -1;
     }
   };
+
+  private afficheTraceVitesse(s: Vitesse) {
+    let xy2: L.LatLng[] = [];
+    const a = s.a;
+    const b = s.b;
+    const txy = this.gpxService.pointsGps;
+    for (let i = a; i <= b; i++) {
+      const coord = new L.LatLng(txy[i].lat, txy[i].lon);
+      xy2.push(coord);
+    }
+    return L.polyline(xy2, {
+      color: 'green',
+      opacity: 1.0,
+      dashArray: '5, 5',
+      dashOffset: '0',
+    })
+      .bindTooltip(s.v.toFixed(2))
+      .addTo(this.map);
+  }
 }
