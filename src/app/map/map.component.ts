@@ -17,6 +17,7 @@ import { GpxService, Vitesse } from '../gpx.service';
 })
 export class MapComponent implements AfterViewInit {
   private _visuStats = false;
+  private _tabVisuStats: boolean[] = [true, true, true, true, true, true];
   private map!: L.Map;
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
@@ -32,38 +33,32 @@ export class MapComponent implements AfterViewInit {
 
   @Input()
   set visuStats(value: boolean) {
-    if (this.gpxService.estOK) {
-      this._visuStats = value;
-      if (value) {
-        const ivmax = this.gpxService.ivmax;
-        const coord = new L.LatLng(
-          this.gpxService.pointsGps[ivmax].lat,
-          this.gpxService.pointsGps[ivmax].lon
-        );
-        const defaultIcon = L.icon({
-          iconUrl: 'assets/marker-icon.png', 
-          shadowUrl: 'assets/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          tooltipAnchor: [16, -28],
-          shadowSize: [41, 41]
-        });
-        this.markerVmax = L.marker(coord,  {icon: defaultIcon})
-          .bindTooltip('VMax : ' + this.gpxService.vmax.toFixed(2) + ' kts')
-          .addTo(this.map);
-        this.tracesStats = [];
-        for (let s of this.stats) {
-          this.tracesStats.push(this.afficheTraceVitesse(s));
-        }
-      } else {
-        this.markerVmax.remove();
-        for (let s of this.tracesStats) {
-          s.remove();
-        }
-        this.tracesStats = [];
+    this._visuStats = value;
+    if (this.markerVmax) {
+      this.markerVmax.remove();
+    }
+    if (value && this._tabVisuStats[0]) {
+      if (this.tabVisuStats[0]) {
+        this.dessineMarkerVmax();
       }
     }
+    this.dessineTracesStats();
+  }
+
+  get tabVisuStats(): boolean[] {
+    return this._tabVisuStats;
+  }
+
+  @Input()
+  set tabVisuStats(value: boolean[]) {
+    this._tabVisuStats = value;
+    if (this.markerVmax) {
+      this.markerVmax.remove();
+    }
+    if (this._visuStats && value[0]) {
+      this.dessineMarkerVmax();
+    }
+    this.dessineTracesStats();
   }
 
   get date(): string {
@@ -114,6 +109,51 @@ export class MapComponent implements AfterViewInit {
     this._vSeuil = value;
     if (this.gpxService.estOK) {
       this.dessineTrace();
+    }
+  }
+
+  private dessineMarkerVmax(): void {
+    if (this.markerVmax) {
+      this.markerVmax.remove();
+    }
+    if (this.gpxService.estOK) {
+      const ivmax = this.gpxService.ivmax;
+      const coord = new L.LatLng(
+        this.gpxService.pointsGps[ivmax].lat,
+        this.gpxService.pointsGps[ivmax].lon
+      );
+      const defaultIcon = L.icon({
+        iconUrl: 'assets/marker-icon.png',
+        shadowUrl: 'assets/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+        shadowSize: [41, 41],
+      });
+      this.markerVmax = L.marker(coord, { icon: defaultIcon })
+        .bindTooltip('VMax : ' + this.gpxService.vmax.toFixed(2) + ' kts')
+        .addTo(this.map);
+    }
+  }
+
+  private dessineTracesStats(): void {
+    if (this.tracesStats) {
+      for (let t of this.tracesStats) {
+        if (t) {
+          t.remove();
+        }
+      }
+    }
+    if (this._visuStats) {
+      this.tracesStats = [];
+      let i = 1;
+      for (let s of this.stats) {
+        if (this._tabVisuStats[i]) {
+          this.tracesStats.push(this.afficheTraceVitesse(s));
+        }
+        i++;
+      }
     }
   }
 

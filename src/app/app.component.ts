@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { GpxService } from './gpx.service';
 
 export type Fenetre = {
@@ -21,6 +20,7 @@ export class AppComponent implements OnInit {
   largeurFenetre = 2;
   fenetreAuto = true;
   visuStats = false;
+  tabVisuStats: boolean[] = [true, true, true, true, true, true];
 
   majPosition(position: number): void {
     this.iPosition = position;
@@ -44,6 +44,10 @@ export class AppComponent implements OnInit {
 
   majVisuStats(value: boolean): void {
     this.visuStats = value;
+  }
+
+  majTabVisuStats(value: boolean[]): void {
+    this.tabVisuStats = [...value];
   }
 
   constructor(private gpxService: GpxService) {

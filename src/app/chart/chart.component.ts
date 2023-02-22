@@ -30,6 +30,9 @@ export class ChartComponent implements OnInit {
   visuStats = false;
 
   @Input()
+  tabVisuStats!: boolean[];
+
+  @Input()
   get largeurFenetre(): number {
     return this._largeurFenetre;
   }

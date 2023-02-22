@@ -17,12 +17,18 @@ export class ControlComponent implements OnInit {
   rapidite = 10;
   stats!: Stats;
   private intervalSubscription!: Subscription;
+  _tabVisuStats: boolean[] = [true, true, true, true, true, true];
 
   clickUploadGpx(): void {
     this.uploadGpx = !this.uploadGpx;
   }
 
   private _vSeuil = 0;
+
+  @Input()
+  changeTabVisuStats() {
+    this.tabVisuStatsChange.emit(this._tabVisuStats);
+  }
 
   @Output()
   visuSatsChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -34,6 +40,18 @@ export class ControlComponent implements OnInit {
   set visuStats(value: boolean) {
       this._visuStats = value;
       this.visuSatsChange.emit(value);
+  }
+
+  @Output()
+  tabVisuStatsChange: EventEmitter<boolean[]> = new EventEmitter<boolean[]>();
+
+  get tabVisuStats(): boolean[] {
+    return this._tabVisuStats;
+  }
+
+  set tabVisuStats(value: boolean[]) {
+      this._tabVisuStats = value;
+      this.tabVisuStatsChange.emit(value);
   }
 
   @Output()

@@ -90,14 +90,17 @@
           stroke-width="3"
         ></line>
       </svg>
-      <svg *ngIf="visuStats" class="indicateur position" [attr.x]="X(ivmax)" y="10" width="10" height="5">
+      <svg *ngIf="visuStats && tabVisuStats[0]" class="indicateur position" [attr.x]="X(ivmax)" y="10" width="10" height="5">
         <polygon points="0,0 10,0 5,5" fill="green" stroke="green"></polygon>
       </svg>
-  <svg *ngIf="visuStats"> 
-      <svg class="indicateur plage" *ngFor="let s of stats" [attr.x]="X(s.a)" y="10" [attr.width]="X(s.b)-X(s.a)" height="5">
-        <line [attr.x1]="0" y1="0" x2="0" y2="5" stroke="green" stroke-width="3"></line>
-        <line [attr.x1]="X(s.b)-X(s.a)" y1="0" [attr.x2]="X(s.b)-X(s.a)" y2="5" stroke="green" stroke-width="3"></line>
-        <line [attr.x1]="0" y1="0" [attr.x2]="X(s.b)-X(s.a)" y2="0" stroke="green" stroke-width="3"></line>
+      <svg *ngIf="visuStats"> 
+        <svg *ngFor="let s of stats; let i = index">
+          <svg *ngIf="tabVisuStats[i+1]" class="indicateur plage" [attr.x]="X(s.a)" y="10" [attr.width]="X(s.b)-X(s.a)" height="5">
+            <line [attr.x1]="0" y1="0" x2="0" y2="5" stroke="green" stroke-width="3"></line>
+            <line [attr.x1]="X(s.b)-X(s.a)" y1="0" [attr.x2]="X(s.b)-X(s.a)" y2="5" stroke="green" stroke-width="3"></line>
+            <line [attr.x1]="0" y1="0" [attr.x2]="X(s.b)-X(s.a)" y2="0" stroke="green" stroke-width="3"></line>
+          </svg>
+        </svg>
       </svg>
-  </svg></svg>
+    </svg>
 </div>
