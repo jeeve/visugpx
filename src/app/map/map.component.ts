@@ -40,7 +40,16 @@ export class MapComponent implements AfterViewInit {
           this.gpxService.pointsGps[ivmax].lat,
           this.gpxService.pointsGps[ivmax].lon
         );
-        this.markerVmax = L.marker(coord)
+        const defaultIcon = L.icon({
+          iconUrl: 'assets/marker-icon.png', 
+          shadowUrl: 'assets/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowSize: [41, 41]
+        });
+        this.markerVmax = L.marker(coord,  {icon: defaultIcon})
           .bindTooltip('VMax : ' + this.gpxService.vmax.toFixed(2) + ' kts')
           .addTo(this.map);
         this.tracesStats = [];
