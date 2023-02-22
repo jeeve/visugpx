@@ -41,7 +41,7 @@
   width: 290px;
 }
 
-.upload input[type="submit"] {
+.upload button {
   margin-top: 10px;
 }
 

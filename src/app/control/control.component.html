@@ -1,16 +1,10 @@
 <div class="control">
   <div [ngClass]="{'lire-gpx-lien': estOK, 'lire-gpx': !estOK }" (click)="clickUploadGpx()">Lire fichier GPX</div>
-  <form
-    *ngIf="uploadGpx || !estOK"
-    class="upload"
-    enctype="multipart/form-data"
-    action="fileupload.php"
-    method="post"
-  >
-    <input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
-    <input type="file" name="monfichier" accept=".gpx" />
-    <input type="submit" />
-  </form>
+
+  <div *ngIf="uploadGpx || !estOK" class="upload">
+    <input (change)="this.onFilechange($event)" class="form-control" type="file" id="formFile">
+    <button (click)="this.upload()" type="button">Envoyer</button>
+  </div>
 
   <div *ngIf="estOK">
     <div class="reglages">

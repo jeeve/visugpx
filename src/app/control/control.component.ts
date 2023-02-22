@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
-import { Fenetre } from '../app.component';
 import { GpxService, Stats } from '../gpx.service';
+import { UploadService } from '../upload.service';
 
 @Component({
   selector: 'app-control',
@@ -133,7 +133,9 @@ export class ControlComponent implements OnInit {
     this.fenetreAutoChange.emit(value);
   }
 
-  constructor(private gpxService: GpxService) {}
+  file!: File;
+
+  constructor(private gpxService: GpxService, private uploadService: UploadService) {}
 
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
@@ -145,6 +147,21 @@ export class ControlComponent implements OnInit {
         this.stats = this.gpxService.stats;
       }
     });
+  }
+
+  onFilechange(event: any) {
+    console.log(event.target.files[0])
+    this.file = event.target.files[0]
+  }
+  
+  upload() {
+    if (this.file) {
+      this.uploadService.uploadfile(this.file).subscribe(resp => {
+       
+      })
+    } else {
+      
+    }
   }
 
   lecture(): void {
