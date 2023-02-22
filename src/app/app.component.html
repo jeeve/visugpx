@@ -1,4 +1,4 @@
-<app-map
+<app-map *ngIf="estOK"
   [iPosition]="iPosition"
   [iFenetre]="iFenetre"
   [vSeuil]="vSeuil"
@@ -6,7 +6,7 @@
   [tabVisuStats]="tabVisuStats"
   (positionChange)="majPosition($event)"
 ></app-map>
-<app-chart
+<app-chart *ngIf="estOK"
   [iPosition]="iPosition"
   [vSeuil]="vSeuil"
   [largeurFenetre]="largeurFenetre"
@@ -19,6 +19,7 @@
   (fenetreAutoChange)="majFenetreAuto($event)"
 ></app-chart>
 <app-control
+  [estOK]="estOK"
   [iPosition]="iPosition"
   [vSeuil]="vSeuil"
   [fenetreAuto]="fenetreAuto"

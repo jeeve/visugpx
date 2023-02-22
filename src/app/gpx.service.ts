@@ -25,7 +25,7 @@ export type Stats = { vMax: Vitesse, v100m: Vitesse, v500m: Vitesse, v2s: Vitess
   providedIn: 'root',
 })
 export class GpxService {
-  private _urlFichier: UrlString = "https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx";
+  private _urlFichier: UrlString = ""; // "https://greduvent.000webhostapp.com/sensations/gpx/2023_01_07_jablines.gpx";
   pointsGps!: IPointGps[];
   pointsCalcules!: IPointCalcule[];
   vmax!: number;
@@ -39,7 +39,8 @@ export class GpxService {
     return this._estOK;
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   x(i: number): number {
     return this.pointsCalcules[i].distance;
@@ -61,7 +62,7 @@ export class GpxService {
   }
 
   private litFichier(url: UrlString): Observable<XmlString> {
-    if (!this.estOK) {
+    if (!this.estOK && url != "") {
       return this.http.get(url, { responseType: 'text' });
     } else {
       return of();

@@ -14,6 +14,7 @@ export type Fenetre = {
 export class AppComponent implements OnInit {
   title = 'visugpx';
 
+  estOK = false;
   iPosition: number = 0;
   vSeuil: number = 12;
   iFenetre: Fenetre = { gauche: 0, droite: 0 };
@@ -50,24 +51,25 @@ export class AppComponent implements OnInit {
     this.tabVisuStats = [...value];
   }
 
-  constructor(private gpxService: GpxService) {
+  constructor(private gpxService: GpxService) {}
 
-  }
- 
   ngOnInit(): void {
-    const url = this.getParameterByName("url");
+    const url = this.getParameterByName('url');
     if (url) {
-      this.gpxService.urlFichier = url;
+      if (url != '') {
+        this.gpxService.urlFichier = url;
+        this.estOK = true;
+      }
     }
   }
 
   private getParameterByName(name: string) {
     const url = window.location.href;
-    const n = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + n + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
+    const n = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + n + '(=([^&#]*)|&|#|$)'),
+      results = regex.exec(url);
     if (!results) return null;
-    if (!results[2]) return "";
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
 }

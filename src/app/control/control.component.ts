@@ -9,6 +9,9 @@ import { GpxService, Stats } from '../gpx.service';
   styleUrls: ['./control.component.css'],
 })
 export class ControlComponent implements OnInit {
+  @Input()
+  estOK = false;
+
   uploadGpx = false;
   _visuStats = false;
   vmax!: number;
@@ -38,8 +41,8 @@ export class ControlComponent implements OnInit {
   }
 
   set visuStats(value: boolean) {
-      this._visuStats = value;
-      this.visuSatsChange.emit(value);
+    this._visuStats = value;
+    this.visuSatsChange.emit(value);
   }
 
   @Output()
@@ -50,8 +53,8 @@ export class ControlComponent implements OnInit {
   }
 
   set tabVisuStats(value: boolean[]) {
-      this._tabVisuStats = value;
-      this.tabVisuStatsChange.emit(value);
+    this._tabVisuStats = value;
+    this.tabVisuStatsChange.emit(value);
   }
 
   @Output()
@@ -134,16 +137,18 @@ export class ControlComponent implements OnInit {
 
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
-      this.vmax = this.gpxService.vmax;
-      this.iPosition = 0;
-      this.distanceSeuil = this.calculeDistanceSeuil();
-      this.gpxService.calculeStats();
-      this.stats = this.gpxService.stats;
+      if (this.gpxService.estOK) {
+        this.vmax = this.gpxService.vmax;
+        this.iPosition = 0;
+        this.distanceSeuil = this.calculeDistanceSeuil();
+        this.gpxService.calculeStats();
+        this.stats = this.gpxService.stats;
+      }
     });
   }
 
   lecture(): void {
-    this.intervalSubscription = interval(1000/this.rapidite).subscribe(() => { 
+    this.intervalSubscription = interval(1000 / this.rapidite).subscribe(() => {
       let d = this.gpxService.pointsGps[this._iPosition].date;
       d.setTime(d.getTime() + 1000);
       const i = this.gpxService.getIndiceTemps(d);
@@ -156,7 +161,7 @@ export class ControlComponent implements OnInit {
   stop(): void {
     this.intervalSubscription.unsubscribe();
   }
-  
+
   rapiditeChange(): void {
     if (!this.intervalSubscription.closed) {
       this.intervalSubscription.unsubscribe();

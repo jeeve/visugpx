@@ -1,109 +1,187 @@
 <div class="control">
+  <div [ngClass]="{'lire-gpx-lien': estOK, 'lire-gpx': !estOK }" (click)="clickUploadGpx()">Lire fichier GPX</div>
+  <form
+    *ngIf="uploadGpx || !estOK"
+    class="upload"
+    enctype="multipart/form-data"
+    action="fileupload.php"
+    method="post"
+  >
+    <input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
+    <input type="file" name="monfichier" accept=".gpx" />
+    <input type="submit" />
+  </form>
 
-
-    <div class="lire-gpx" (click)="clickUploadGpx()">Lire fichier GPX</div>
-    <form *ngIf="uploadGpx" class="upload" enctype="multipart/form-data" action="fileupload.php" method="post">
-        <input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
-        <input type="file" name="monfichier" accept=".gpx" />
-        <input type="submit" />
-    </form>
-
-
+  <div *ngIf="estOK">
     <div class="reglages">
-        <div class="slider-wrapper">
-            <input type="range" class="curseur" min="0" [max]="vmax" step="any" [(ngModel)]="vSeuil">
-        </div>
-        <div class="div-seuil">
-            <table>
-                <tr>
-                    <td><label>Seuil ></label></td>
-                    <td><input type="text" class="seuil" [ngModel]="vSeuil | number: '1.2-2'" (ngModelChange)="vSeuil=$event"></td>
-                    <td>kts</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <div class="distance-seuil">{{ distanceSeuil | number: '1.3-3' }}</div>
-                    </td>
-                    <td>km</td>
-                </tr>
-                <tr>
-                    <td><label>Distance</label></td>
-                    <td><input type="text" class="position" [ngModel]="xPosition | number: '1.3-3'" (ngModelChange)="xPosition=$event"></td>
-                    <td>km</td>
-                </tr>
-                <tr class="ligne-temps" style="display: none;">
-                    <td><label>Temps</label></td>
-                    <td><input type="text" class="temps"></td>
-                    <td>s</td>
-                </tr>
-                <tr>
-                    <td><label>Vitesse</label></td>
-                    <td>
-                        <div class="vitesse">{{ vitesse | number: '1.2-2' }}</div>
-                    </td>
-                    <td>kts</td>
-                </tr>
-            </table>
-        </div>
+      <div class="slider-wrapper">
+        <input
+          type="range"
+          class="curseur"
+          min="0"
+          [max]="vmax"
+          step="any"
+          [(ngModel)]="vSeuil"
+        />
+      </div>
+      <div class="div-seuil">
+        <table>
+          <tr>
+            <td><label>Seuil ></label></td>
+            <td>
+              <input
+                type="text"
+                class="seuil"
+                [ngModel]="vSeuil | number : '1.2-2'"
+                (ngModelChange)="vSeuil = $event"
+              />
+            </td>
+            <td>kts</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <div class="distance-seuil">
+                {{ distanceSeuil | number : "1.3-3" }}
+              </div>
+            </td>
+            <td>km</td>
+          </tr>
+          <tr>
+            <td><label>Distance</label></td>
+            <td>
+              <input
+                type="text"
+                class="position"
+                [ngModel]="xPosition | number : '1.3-3'"
+                (ngModelChange)="xPosition = $event"
+              />
+            </td>
+            <td>km</td>
+          </tr>
+          <tr class="ligne-temps" style="display: none">
+            <td><label>Temps</label></td>
+            <td><input type="text" class="temps" /></td>
+            <td>s</td>
+          </tr>
+          <tr>
+            <td><label>Vitesse</label></td>
+            <td>
+              <div class="vitesse">{{ vitesse | number : "1.2-2" }}</div>
+            </td>
+            <td>kts</td>
+          </tr>
+        </table>
+      </div>
     </div>
-
 
     <div class="fenetre">
-        <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetreAuto">
-        <label class="label-fenetre-auto">Fenêtre auto</label>
-        <div *ngIf="fenetreAuto" class="div-fenetre-largeur">
-            <input type="text" class="fenetre-largeur" [(ngModel)]="largeurFenetre"> km
-        </div>
+      <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetreAuto" />
+      <label class="label-fenetre-auto">Fenêtre auto</label>
+      <div *ngIf="fenetreAuto" class="div-fenetre-largeur">
+        <input
+          type="text"
+          class="fenetre-largeur"
+          [(ngModel)]="largeurFenetre"
+        />
+        km
+      </div>
     </div>
     <div class="magneto">
-        <button class="lecture" type="button" (click)="lecture()">Lecture</button>
-        <label>x</label>
-        <input type="text" class="rapidite" [(ngModel)]="rapidite" (ngModelChange)="rapiditeChange()">
-        <button class="stop" type="button" (click)="stop()">Stop</button>
+      <button class="lecture" type="button" (click)="lecture()">Lecture</button>
+      <label>x</label>
+      <input
+        type="text"
+        class="rapidite"
+        [(ngModel)]="rapidite"
+        (ngModelChange)="rapiditeChange()"
+      />
+      <button class="stop" type="button" (click)="stop()">Stop</button>
     </div>
 
     <div class="stats">
-        <input class="calcule" type="checkbox" [(ngModel)]="visuStats">
-        <label>Statistiques</label>
-        <table *ngIf="visuStats">
-            <tr>
-                <td><input class="affiche-vmax" type="checkbox" [(ngModel)]="tabVisuStats[0]" (ngModelChange)="changeTabVisuStats()"></td>
-                <td>VMax</td>
-                <td class="vmax">{{ stats.vMax.v | number: '1.2-2' }}</td>
-                <td>kts</td>
-            </tr>
-            <tr>
-                <td><input class="affiche-v100m" type="checkbox" [(ngModel)]="tabVisuStats[1]" (ngModelChange)="changeTabVisuStats()"></td>
-                <td>V100m</td>
-                <td class="v100m">{{ stats.v100m.v | number: '1.2-2' }}</td>
-                <td>kts</td>
-            </tr>
-            <tr>
-                <td><input class="affiche-v500m" type="checkbox" [(ngModel)]="tabVisuStats[2]" (ngModelChange)="changeTabVisuStats()"></td>
-                <td>V500m</td>
-                <td class="v500m">{{ stats.v500m.v | number: '1.2-2' }}</td>
-                <td>kts</td>
-            </tr>
-            <tr>
-                <td><input class="affiche-v2s" type="checkbox" [(ngModel)]="tabVisuStats[3]" (ngModelChange)="changeTabVisuStats()"></td>
-                <td>V2s</td>
-                <td class="v2s">{{ stats.v2s.v | number: '1.2-2' }}</td>
-                <td>kts</td>
-            </tr>
-            <tr>
-                <td><input class="affiche-v5s" type="checkbox" [(ngModel)]="tabVisuStats[4]" (ngModelChange)="changeTabVisuStats()"></td>
-                <td>V5s</td>
-                <td class="v5s">{{ stats.v5s.v | number: '1.2-2' }}</td>
-                <td>kts</td>
-            </tr>
-            <tr>
-                <td><input class="affiche-v10s" type="checkbox" [(ngModel)]="tabVisuStats[5]" (ngModelChange)="changeTabVisuStats()"></td>
-                <td>V10s</td>
-                <td class="v10s">{{ stats.v10s.v | number: '1.2-2' }}</td>
-                <td>kts</td>
-            </tr>
-        </table>
+      <input class="calcule" type="checkbox" [(ngModel)]="visuStats" />
+      <label>Statistiques</label>
+      <table *ngIf="visuStats">
+        <tr>
+          <td>
+            <input
+              class="affiche-vmax"
+              type="checkbox"
+              [(ngModel)]="tabVisuStats[0]"
+              (ngModelChange)="changeTabVisuStats()"
+            />
+          </td>
+          <td>VMax</td>
+          <td class="vmax">{{ stats.vMax.v | number : "1.2-2" }}</td>
+          <td>kts</td>
+        </tr>
+        <tr>
+          <td>
+            <input
+              class="affiche-v100m"
+              type="checkbox"
+              [(ngModel)]="tabVisuStats[1]"
+              (ngModelChange)="changeTabVisuStats()"
+            />
+          </td>
+          <td>V100m</td>
+          <td class="v100m">{{ stats.v100m.v | number : "1.2-2" }}</td>
+          <td>kts</td>
+        </tr>
+        <tr>
+          <td>
+            <input
+              class="affiche-v500m"
+              type="checkbox"
+              [(ngModel)]="tabVisuStats[2]"
+              (ngModelChange)="changeTabVisuStats()"
+            />
+          </td>
+          <td>V500m</td>
+          <td class="v500m">{{ stats.v500m.v | number : "1.2-2" }}</td>
+          <td>kts</td>
+        </tr>
+        <tr>
+          <td>
+            <input
+              class="affiche-v2s"
+              type="checkbox"
+              [(ngModel)]="tabVisuStats[3]"
+              (ngModelChange)="changeTabVisuStats()"
+            />
+          </td>
+          <td>V2s</td>
+          <td class="v2s">{{ stats.v2s.v | number : "1.2-2" }}</td>
+          <td>kts</td>
+        </tr>
+        <tr>
+          <td>
+            <input
+              class="affiche-v5s"
+              type="checkbox"
+              [(ngModel)]="tabVisuStats[4]"
+              (ngModelChange)="changeTabVisuStats()"
+            />
+          </td>
+          <td>V5s</td>
+          <td class="v5s">{{ stats.v5s.v | number : "1.2-2" }}</td>
+          <td>kts</td>
+        </tr>
+        <tr>
+          <td>
+            <input
+              class="affiche-v10s"
+              type="checkbox"
+              [(ngModel)]="tabVisuStats[5]"
+              (ngModelChange)="changeTabVisuStats()"
+            />
+          </td>
+          <td>V10s</td>
+          <td class="v10s">{{ stats.v10s.v | number : "1.2-2" }}</td>
+          <td>kts</td>
+        </tr>
+      </table>
     </div>
-
+  </div>
 </div>
