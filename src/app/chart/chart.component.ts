@@ -6,7 +6,7 @@ import {
   Output,
   Renderer2,
 } from '@angular/core';
-import { from, mergeMap } from 'rxjs';
+import { from, mergeMap, Observable, of } from 'rxjs';
 import { GpxService, Vitesse } from '../gpx.service';
 import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
@@ -23,7 +23,7 @@ declare let google: any;
 export class ChartComponent implements OnInit {
   private _vSeuil = 0;
   private _largeurFenetre = 2;
-  ivmax!: number
+  ivmax!: number;
   stats!: Vitesse[];
 
   @Input()
@@ -179,14 +179,10 @@ export class ChartComponent implements OnInit {
     );
 
     scriptElement.onload = () => {
-      const obs = from(
-        google.charts.load('current', { packages: ['corechart'] })
-      );
-      obs.subscribe(() => {
-        this.initChart();
+      this.gpxService.lit().subscribe(() => {
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(this.initChart.bind(this));
       });
-
-      this.gpxService.lit().pipe(mergeMap(() => obs));
     };
   }
 
