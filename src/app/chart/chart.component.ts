@@ -179,21 +179,25 @@ export class ChartComponent implements OnInit {
     );
 
     scriptElement.onload = () => {
-      const observable = from(
+      const obs = from(
         google.charts.load('current', { packages: ['corechart'] })
       );
-      observable.subscribe(() => {
-        this.largeurFenetre = 2;
-        this.majFenetre();
-        this.drawChart();
-        this.gpxService.calculeStats();
-        this.ivmax = this.gpxService.ivmax;
-        const s = this.gpxService.stats;
-        this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
+      obs.subscribe(() => {
+        this.initChart();
       });
 
-      this.gpxService.lit().pipe(mergeMap(() => observable));
+      this.gpxService.lit().pipe(mergeMap(() => obs));
     };
+  }
+
+  private initChart() {
+    this.largeurFenetre = 2;
+    this.majFenetre();
+    this.drawChart();
+    this.gpxService.calculeStats();
+    this.ivmax = this.gpxService.ivmax;
+    const s = this.gpxService.stats;
+    this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
   }
 
   resize(): void {
