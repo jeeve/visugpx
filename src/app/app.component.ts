@@ -20,8 +20,7 @@ export class AppComponent implements OnInit {
   iFenetre: Fenetre = { gauche: 0, droite: 0 };
   largeurFenetre = 2;
   fenetreAuto = true;
-  visuStats = false;
-  tabVisuStats: boolean[] = [true, true, true, true, true, true];
+  visuStats = true;
 
   majPosition(position: number): void {
     this.iPosition = position;

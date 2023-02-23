@@ -25,5 +25,6 @@
   (largeurFenetreChange)="majLargeurFenetre($event)"
   (visuSatsChange)="majVisuStats($event)"
 ></app-control>
-<app-stat>
-</app-stat>
+<app-stat
+  [visuStats]="visuStats"
+></app-stat>

@@ -13,14 +13,12 @@ export class ControlComponent implements OnInit {
   estOK = false;
 
   uploadGpx = false;
-  _visuStats = false;
+  _visuStats = true;
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
   rapidite = 10;
-//  stats!: Stats;
   private intervalSubscription!: Subscription;
-  _tabVisuStats: boolean[] = [true, true, true, true, true, true];
 
   clickUploadGpx(): void {
     this.uploadGpx = !this.uploadGpx;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GpxService, Vitesse } from '../gpx.service';
 
 type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
@@ -9,6 +9,9 @@ type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
   styleUrls: ['./stat.component.css']
 })
 export class StatComponent implements OnInit {
+
+  @Input()
+  visuStats!: boolean;
 
   stats: Stat[] = [];
 
