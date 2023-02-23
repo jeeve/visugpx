@@ -21,9 +21,6 @@ export class MapComponent implements AfterViewInit {
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
-  ivmax!: number;
-  stats!: Vitesse[];
-  private tracesStats!: L.Polyline[];
   private markerVmax!: L.Marker;
 
   get visuStats(): boolean {
@@ -158,10 +155,16 @@ export class MapComponent implements AfterViewInit {
     this.gpxService.lit().subscribe({
       next: () => {
         this.dessineTrace();
-        //this.gpxService.calculeStats();
-        //this.ivmax = this.gpxService.ivmax;
-        //const s = this.gpxService.stats;
-        //this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
+
+        // zoom sur zone
+        let xy = [];
+        const txy = this.gpxService.pointsGps;
+        for (let i = 0; i < txy.length; i++) {
+          let coord = new L.LatLng(txy[i].lat, txy[i].lon);
+          xy.push(coord);
+        }
+        let polyline = L.polyline(xy, { color: 'black' });
+        this.map.fitBounds(polyline.getBounds());
       },
       error: (err) => console.log(err),
     });
@@ -267,14 +270,6 @@ export class MapComponent implements AfterViewInit {
       )
       .addTo(this.map);
     this.markerVitesse.openTooltip();
-
-    let xy = [];
-    for (let i = 0; i < txy.length; i++) {
-      let coord = new L.LatLng(txy[i].lat, txy[i].lon);
-      xy.push(coord);
-    }
-    let polyline = L.polyline(xy, { color: 'black' });
-    this.map.fitBounds(polyline.getBounds());
   }
 
   private indiceEndehorsBornes(i: number): boolean {
