@@ -144,7 +144,7 @@ export class ControlComponent implements OnInit {
     if (this.file) {
       this.uploadService.uploadfile(this.file).subscribe((res: any) => {
         console.log(res);
-        document.location.pathname = res;
+        window.location.href = res;
       })
     }
   }
