@@ -47,10 +47,6 @@ export class AppComponent implements OnInit {
     this.visuStats = value;
   }
 
-  majTabVisuStats(value: boolean[]): void {
-    this.tabVisuStats = [...value];
-  }
-
   constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {

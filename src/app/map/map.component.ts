@@ -17,7 +17,6 @@ import { GpxService, Vitesse } from '../gpx.service';
 })
 export class MapComponent implements AfterViewInit {
   private _visuStats = false;
-  private _tabVisuStats: boolean[] = [true, true, true, true, true, true];
   private map!: L.Map;
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
@@ -34,6 +33,7 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set visuStats(value: boolean) {
     this._visuStats = value;
+    /*
     if (this.markerVmax) {
       this.markerVmax.remove();
     }
@@ -43,22 +43,7 @@ export class MapComponent implements AfterViewInit {
       }
     }
     this.dessineTracesStats();
-  }
-
-  get tabVisuStats(): boolean[] {
-    return this._tabVisuStats;
-  }
-
-  @Input()
-  set tabVisuStats(value: boolean[]) {
-    this._tabVisuStats = value;
-    if (this.markerVmax) {
-      this.markerVmax.remove();
-    }
-    if (this._visuStats && value[0]) {
-      this.dessineMarkerVmax();
-    }
-    this.dessineTracesStats();
+    */
   }
 
   get date(): string {
@@ -137,26 +122,6 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  private dessineTracesStats(): void {
-    if (this.tracesStats) {
-      for (let t of this.tracesStats) {
-        if (t) {
-          t.remove();
-        }
-      }
-    }
-    if (this._visuStats) {
-      this.tracesStats = [];
-      let i = 1;
-      for (let s of this.stats) {
-        if (this._tabVisuStats[i]) {
-          this.tracesStats.push(this.afficheTraceVitesse(s));
-        }
-        i++;
-      }
-    }
-  }
-
   private initMap(): void {
     this.map = L.map('map', {
       center: [39.8282, -98.5795],
@@ -176,7 +141,7 @@ export class MapComponent implements AfterViewInit {
 
     tiles.addTo(this.map);
 
-    L.control.zoom({ position: 'topright' }).addTo(this.map);
+    L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
     this.map.on('click', (e) => {
       const i = this.calculeIndiceLePlusPresDe(e.latlng.lat, e.latlng.lng);

@@ -23,14 +23,6 @@ declare let google: any;
 export class ChartComponent implements OnInit {
   private _vSeuil = 0;
   private _largeurFenetre = 2;
-  ivmax!: number;
-  stats!: Vitesse[];
-
-  @Input()
-  visuStats = false;
-
-  @Input()
-  tabVisuStats!: boolean[];
 
   @Input()
   get largeurFenetre(): number {
