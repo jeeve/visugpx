@@ -193,10 +193,10 @@ export class MapComponent implements AfterViewInit {
     this.gpxService.lit().subscribe({
       next: () => {
         this.dessineTrace();
-        this.gpxService.calculeStats();
-        this.ivmax = this.gpxService.ivmax;
-        const s = this.gpxService.stats;
-        this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
+        //this.gpxService.calculeStats();
+        //this.ivmax = this.gpxService.ivmax;
+        //const s = this.gpxService.stats;
+        //this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
       },
       error: (err) => console.log(err),
     });

@@ -16,21 +16,28 @@ export class StatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+
   }
 
   calcule(): void {
     const stat: Stat = { nom: "2s", x5: 0, x10: 0, v: [] };
+    let v0 = +Infinity;
+    for (let i = 0; i < 10; i++) {
+      const v = this.calculeVmaxPendant(v0, 2);
+      v0 = v.v;
+      stat.v.push(v);
+    }
+    console.log(stat);
     this.stats.push(stat);
   }
 
-  private calculeVSur(distanceReference: number): Vitesse {
+  private calculeVmaxSur(vReference: number, distanceReference: number): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v) {
+        if (vitesse.v > vmax.v && vitesse.v < vReference) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -40,13 +47,13 @@ export class StatComponent implements OnInit {
     return vmax;
   }
 
-  private calculeVPendant(dureeeReference: number): Vitesse {
+  private calculeVmaxPendant(vReference: number, dureeeReference: number): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v) {
+        if (vitesse.v > vmax.v && vitesse.v < vReference) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;

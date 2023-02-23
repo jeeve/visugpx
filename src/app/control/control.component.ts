@@ -18,7 +18,7 @@ export class ControlComponent implements OnInit {
   vitesse!: number;
   distanceSeuil!: number;
   rapidite = 10;
-  stats!: Stats;
+//  stats!: Stats;
   private intervalSubscription!: Subscription;
   _tabVisuStats: boolean[] = [true, true, true, true, true, true];
 
@@ -157,8 +157,8 @@ export class ControlComponent implements OnInit {
         this.vmax = this.gpxService.vmax;
         this.iPosition = 0;
         this.distanceSeuil = this.calculeDistanceSeuil();
-        this.gpxService.calculeStats();
-        this.stats = this.gpxService.stats;
+        //this.gpxService.calculeStats();
+        //this.stats = this.gpxService.stats;
       }
     });
   }
