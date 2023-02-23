@@ -135,6 +135,20 @@ export class ControlComponent implements OnInit {
 
   file!: File;
 
+  onFilechange(event: any) {
+    console.log(event.target.files[0])
+    this.file = event.target.files[0]
+  }
+  
+  upload() {
+    if (this.file) {
+      this.uploadService.uploadfile(this.file).subscribe((res: any) => {
+        console.log(res);
+        document.location.pathname = res;
+      })
+    }
+  }
+
   constructor(private gpxService: GpxService, private uploadService: UploadService) {}
 
   ngOnInit(): void {
@@ -147,21 +161,6 @@ export class ControlComponent implements OnInit {
         this.stats = this.gpxService.stats;
       }
     });
-  }
-
-  onFilechange(event: any) {
-    console.log(event.target.files[0])
-    this.file = event.target.files[0]
-  }
-  
-  upload() {
-    if (this.file) {
-      this.uploadService.uploadfile(this.file).subscribe(resp => {
-       
-      })
-    } else {
-      
-    }
   }
 
   lecture(): void {
