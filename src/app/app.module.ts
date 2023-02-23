@@ -7,13 +7,15 @@ import { MapComponent } from './map/map.component';
 import { ChartComponent } from './chart/chart.component';
 import { ControlComponent } from './control/control.component';
 import { FormsModule } from '@angular/forms';
+import { StatComponent } from './stat/stat.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     ChartComponent,
-    ControlComponent
+    ControlComponent,
+    StatComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, FormsModule

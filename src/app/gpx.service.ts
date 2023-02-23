@@ -155,15 +155,6 @@ export class GpxService {
     this._estOK = true;
   }
 
-  calculeStats(): void {
-    this.stats.vMax = { v: this.vmax, a: this.ivmax, b: this.ivmax };
-    this.stats.v100m = this.calculeVSur(0.1);
-    this.stats.v500m = this.calculeVSur(0.5);
-    this.stats.v2s = this.calculeVPendant(2);
-    this.stats.v5s = this.calculeVPendant(5);
-    this.stats.v10s = this.calculeVPendant(10);
-  }
-
   private angleFromCoordinate(
     lat1: number,
     lon1: number,
@@ -298,81 +289,5 @@ export class GpxService {
     } else {
       return arr.length;
     }
-  }
-
-  private calculeVSur(distanceReference: number): Vitesse {
-    let vmax: Vitesse = { v: 0, a: 0, b: 0 };
-    let vitesse: Vitesse;
-    for (let i = 0; i < this.pointsCalcules.length; i++) {
-      vitesse = this.calculeVIndiceSur(i, distanceReference);
-      if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v) {
-          vmax.v = vitesse.v;
-          vmax.a = vitesse.a;
-          vmax.b = vitesse.b;
-        }
-      }
-    }
-    return vmax;
-  }
-
-  private calculeVPendant(dureeeReference: number): Vitesse {
-    let vmax: Vitesse = { v: 0, a: 0, b: 0 };
-    let vitesse: Vitesse;
-    for (let i = 0; i < this.pointsCalcules.length; i++) {
-      vitesse = this.calculeVIndicePendant(i, dureeeReference);
-      if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v) {
-          vmax.v = vitesse.v;
-          vmax.a = vitesse.a;
-          vmax.b = vitesse.b;
-        }
-      }
-    }
-    return vmax;
-  }
-
-  private calculeVIndiceSur(n: number, distanceReference: number): Vitesse {
-    let t1 = this.pointsGps[n].date;
-    let t2, dt, vitesse;
-    let distance = 0;
-    for (let i = n; i < this.pointsCalcules.length; i++) {
-      if (distance >= distanceReference) {
-        t2 = this.pointsGps[i].date;
-        dt = (t2.getTime() - t1.getTime()) / 1000;
-        if (dt != 0) {
-          vitesse = ((distance * 1000) / dt) * 1.94384;
-        } else {
-          vitesse = 0;
-        }
-        return { v: vitesse, a: n, b: i };
-      }
-      if (i + 1 < this.pointsCalcules.length) {
-        distance = distance + this.pointsCalcules[i+1].deltad;
-      }
-    }
-    return { v: 0, a: -1, b: -1 };
-  }
-
-  private calculeVIndicePendant(n: number, dureeReference: number): Vitesse {
-    let t1 = this.pointsGps[n].date;
-    let t2, dt, vitesse;
-    let distance = 0;
-    for (let i = n; i < this.pointsCalcules.length; i++) {
-      t2 = this.pointsGps[i].date;
-      dt = (t2.getTime() - t1.getTime()) / 1000;
-      if (dt >= dureeReference) {
-        if (dt != 0) {
-          vitesse = ((distance * 1000) / dt) * 1.94384;
-        } else {
-          vitesse = 0;
-        }
-        return { v: vitesse, a: n, b: i };
-      }
-      if (i + 1 < this.pointsCalcules.length) {
-        distance = distance + this.pointsCalcules[i+1].deltad;
-      }
-    }
-    return { v: 0, a: -1, b: -1 };
   }
 }
