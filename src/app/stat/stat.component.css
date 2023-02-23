@@ -1,10 +1,20 @@
 .stat {
-    position: absolute;
-    top: 300px;
-    left: 10px;
-    z-index: 20000;
-    background-color: rgba(255, 255, 255, 0.75);
-    /*border: 3px solid rgb(110, 110, 112);*/
-    border: 2px solid;
-    padding: 10px;
-  }
+  position: absolute;
+  top: 300px;
+  left: 20px;
+  z-index: 20000;
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 2px solid;
+}
+
+.valeur {
+  text-align: right;
+}
+
+.first {
+  font-weight: bold;
+}
+
+.ligne {
+  border: 1px solid;
+}

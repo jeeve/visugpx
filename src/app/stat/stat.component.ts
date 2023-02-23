@@ -10,25 +10,49 @@ type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
 })
 export class StatComponent implements OnInit {
 
-  stats!: Stat[];
+  stats: Stat[] = [];
 
   constructor(private gpxService: GpxService) {
   }
 
   ngOnInit(): void {
-
+    this.gpxService.lit().subscribe(() => {
+      this.calcule();
+    });
   }
 
   calcule(): void {
-    const stat: Stat = { nom: "2s", x5: 0, x10: 0, v: [] };
+    this.calculeStat('2s', this.calculeVmaxPendant.bind(this), 2);
+    this.calculeStat('5s', this.calculeVmaxPendant.bind(this), 5);
+    this.calculeStat('10s', this.calculeVmaxPendant.bind(this), 10);
+    this.calculeStat('100m', this.calculeVmaxSur.bind(this), 0.1);
+    this.calculeStat('500m', this.calculeVmaxSur.bind(this), 0.5);
+    this.calculeStat('1km', this.calculeVmaxSur.bind(this), 1);
+  }
+
+  private calculeStat(nom: string, methode: Function, parametre: number) {
+    const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [] };
     let v0 = +Infinity;
     for (let i = 0; i < 10; i++) {
-      const v = this.calculeVmaxPendant(v0, 2);
+      const v = methode(v0, parametre);
       v0 = v.v;
       stat.v.push(v);
     }
-    console.log(stat);
-    this.stats.push(stat);
+    this.calculeMoyennes(stat);
+    this.stats.push(stat);  
+  }
+
+  private calculeMoyennes(stat : Stat): void {
+    let s = 0;
+    for (let i = 0; i < 5; i++) {
+      s += stat.v[i].v;
+    }
+    stat.x5 = s / 5;
+    s = 0;
+    for (let i = 0; i < 10; i++) {
+      s += stat.v[i].v;
+    }
+    stat.x10 = s / 10;  
   }
 
   private calculeVmaxSur(vReference: number, distanceReference: number): Vitesse {

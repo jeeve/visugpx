@@ -1,7 +1,27 @@
 <div class="stat">
-    <p>stat works!</p>
+    <p>Statistiques</p>
     <table>
-        <tr>
-        </tr>
+        <tr *ngFor="let s of stats">
+            <td>
+                <table class="ligne">
+                    <th colspan="2" style="text-align: left">
+                        {{ s.nom }}
+                    </th>
+                    <th colspan="3" style="text-align: right">
+                        5x {{ s.x5 | number : '1.2-2' }} 10x {{ s.x10 | number : '1.2-2' }}
+                    </th>
+                    <tr>
+                        <td *ngFor="let v of s.v | slice:0:5; let isFirst = first" class="valeur">
+                            <span [ngClass]="{'first': isFirst }">{{ v.v | number : '1.2-2' }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td *ngFor="let v of s.v | slice:5:10" class="valeur">
+                            {{ v.v | number : '1.2-2' }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>   
     </table>
 </div>
