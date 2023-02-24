@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GpxService, Vitesse } from '../gpx.service';
 
 export type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
-export const couleursStat = ["blueviolet", "blue", "chartreuse", "crimson", "gold", "crimson", "greenyellow", "darkorange", "cornsilk", "lawngreen"];
+export const couleursStat = ["blue", "blueviolet", "chartreuse", "cyan", "coral", "crimson", "darksalmon", "darkseagreen", "deeppink", "darkgreen"];
 
 @Component({
   selector: 'app-stat',

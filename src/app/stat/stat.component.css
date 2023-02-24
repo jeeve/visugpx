@@ -26,10 +26,6 @@ h3 {
   color: black;
 } 
 
-.valeur {
-  text-align: right;
-}
-
 .first {
   font-weight: bold;
 }
@@ -42,3 +38,45 @@ h3 {
   background-color: white;
   color: black;
 }
+
+.ligne:hover .valeur {
+  color: black;
+} 
+
+.valeur {
+  color: white;
+  text-align: right;
+} 
+
+.c1 {
+  color:blue;
+}
+.c2 {
+  color:blueviolet;
+}
+.c3 {
+  color:chartreuse;
+}
+.c4 {
+  color:cyan;
+}
+.c5 {
+  color:coral;
+}
+.c6 {
+  color:crimson;
+}
+.c7 {
+  color:darksalmon;
+}
+.c8 {
+  color:darkseagreen;
+}
+.c9 {
+  color:deeppink;
+}
+.c10 {
+  color:darkgreen;
+}
+
+
