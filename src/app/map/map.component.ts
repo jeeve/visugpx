@@ -31,9 +31,14 @@ export class MapComponent implements AfterViewInit {
     return this._stat;
   }
 
+  @Output()
+  statChange: EventEmitter<Stat | null> = new EventEmitter<Stat | null>();
+
   @Input()
   set stat(value: Stat | null) {
     this._stat = value;
+    this.statChange.emit(value);
+
     if (value == null) {
       if (this.markerVmax) {
         this.markerVmax.remove();
@@ -54,12 +59,13 @@ export class MapComponent implements AfterViewInit {
     if (value) {
       this.dessineMarkerVmax();
       if (this._stat) {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
           const L = this.dessineTraceVitesse(this._stat.v[i], couleursStat[i]);
           this.dessinTracesStat.push(L);
         }
       }
     }
+    this.dessineTrace();
   }
 
   get visuStats(): boolean {
@@ -173,6 +179,7 @@ export class MapComponent implements AfterViewInit {
       if (i != -1) {
         this.iPosition = i;
       }
+      this.stat = null;
     });
   }
 
@@ -214,6 +221,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private dessineTrace(): void {
+    if (!this.gpxService.estOK) return;
     let polylignes = [];
 
     let txy2: L.LatLng[] = [];
@@ -301,7 +309,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private indiceEndehorsBornes(i: number): boolean {
-    if (i < this._iFenetre.gauche || i > this._iFenetre.droite) {
+    if (i < this._iFenetre.gauche || i > this._iFenetre.droite || (this.stat != null)) {
       return true;
     }
     return false;

@@ -4,6 +4,7 @@
   [vSeuil]="vSeuil"
   [stat]="stat"
   (positionChange)="majPosition($event)"
+  (statChange)="majStat($event)"
 ></app-map>
 <app-chart *ngIf="estOK"
   [iPosition]="iPosition"
@@ -28,5 +29,6 @@
 ></app-control>
 <app-stat *ngIf="estOK"
   [visuStats]="visuStats"
+  [stat]="stat"
   (statChange)="majStat($event)"
 ></app-stat>

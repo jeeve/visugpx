@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GpxService, Vitesse } from '../gpx.service';
 
 export type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
-export const couleursStat = ["blueviolet", "blue", "chartreuse", "crimson", "gold"];
+export const couleursStat = ["blueviolet", "blue", "chartreuse", "crimson", "gold", "crimson", "greenyellow", "darkorange", "cornsilk", "lawngreen"];
 
 @Component({
   selector: 'app-stat',
@@ -26,6 +26,13 @@ export class StatComponent implements OnInit {
       return this.stats[this.iStat];
     } else {
       return null;
+    }
+  }
+
+  @Input()
+  set stat(value: Stat | null) {
+    if (value == null) {
+      this._iStat = -1;
     }
   }
 
@@ -64,10 +71,10 @@ export class StatComponent implements OnInit {
 
   private calculeStat(nom: string, methode: Function, parametre: number) {
     const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [] };
-    let v0 = +Infinity;
+    let v0: Vitesse = { v: +Infinity, a: -1, b: -1 };
     for (let i = 0; i < 10; i++) {
       const v = methode(v0, parametre);
-      v0 = v.v;
+      v0 = v;
       stat.v.push(v);
     }
     this.calculeMoyennes(stat);
@@ -87,13 +94,14 @@ export class StatComponent implements OnInit {
     stat.x10 = s / 10;  
   }
 
-  private calculeVmaxSur(vReference: number, distanceReference: number): Vitesse {
+  private calculeVmaxSur(vReference: Vitesse, distanceReference: number): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v && vitesse.v < vReference) {
+        const deltai = Math.abs(vitesse.a - vReference.a);
+        if (vitesse.v > vmax.v && deltai> 50 && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -103,13 +111,14 @@ export class StatComponent implements OnInit {
     return vmax;
   }
 
-  private calculeVmaxPendant(vReference: number, dureeeReference: number): Vitesse {
+  private calculeVmaxPendant(vReference: Vitesse, dureeeReference: number): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v && vitesse.v < vReference) {
+        const deltai = Math.abs(vitesse.a - vReference.a);
+        if (vitesse.v > vmax.v && deltai> 50 && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
