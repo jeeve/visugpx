@@ -145,6 +145,8 @@ export class ControlComponent implements OnInit {
   }
 
   lecture(): void {
+    if (this.intervalSubscription) 
+      if (!this.intervalSubscription.closed) return;
     this.intervalSubscription = interval(1000 / this.rapidite).subscribe(() => {
       let d = this.gpxService.pointsGps[this._iPosition].date;
       d.setTime(d.getTime() + 1000);
