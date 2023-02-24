@@ -9,6 +9,7 @@ import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import { Fenetre } from '../app.component';
 import { GpxService, Vitesse } from '../gpx.service';
+import { couleursStat, Stat } from '../stat/stat.component';
 
 @Component({
   selector: 'app-map',
@@ -22,6 +23,44 @@ export class MapComponent implements AfterViewInit {
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
   private markerVmax!: L.Marker;
+  private dessinTracesStat: L.Polyline[] = [];
+
+  _stat: Stat | null = null;
+
+  get stat(): Stat | null {
+    return this._stat;
+  }
+
+  @Input()
+  set stat(value: Stat | null) {
+    this._stat = value;
+    if (value == null) {
+      if (this.markerVmax) {
+        this.markerVmax.remove();
+      }
+      for (let ligne of this.dessinTracesStat) {
+        ligne.remove();
+      }
+      this.dessinTracesStat = [];
+    } else {
+      if (this.markerVmax) {
+        this.markerVmax.remove();
+      }
+      for (let ligne of this.dessinTracesStat) {
+        ligne.remove();
+      }
+      this.dessinTracesStat = [];
+    }
+    if (value) {
+      this.dessineMarkerVmax();
+      if (this._stat) {
+        for (let i = 0; i < 5; i++) {
+          const L = this.dessineTraceVitesse(this._stat.v[i], couleursStat[i]);
+          this.dessinTracesStat.push(L);
+        }
+      }
+    }
+  }
 
   get visuStats(): boolean {
     return this._visuStats;
@@ -30,17 +69,6 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set visuStats(value: boolean) {
     this._visuStats = value;
-    /*
-    if (this.markerVmax) {
-      this.markerVmax.remove();
-    }
-    if (value && this._tabVisuStats[0]) {
-      if (this.tabVisuStats[0]) {
-        this.dessineMarkerVmax();
-      }
-    }
-    this.dessineTracesStats();
-    */
   }
 
   get date(): string {
@@ -307,22 +335,20 @@ export class MapComponent implements AfterViewInit {
     }
   };
 
-  private afficheTraceVitesse(s: Vitesse) {
+  private dessineTraceVitesse(v: Vitesse, couleur: string) {
     let xy2: L.LatLng[] = [];
-    const a = s.a;
-    const b = s.b;
+    const a = v.a;
+    const b = v.b;
     const txy = this.gpxService.pointsGps;
     for (let i = a; i <= b; i++) {
       const coord = new L.LatLng(txy[i].lat, txy[i].lon);
       xy2.push(coord);
     }
     return L.polyline(xy2, {
-      color: 'green',
-      opacity: 1.0,
-      dashArray: '5, 5',
-      dashOffset: '0',
+      color: couleur,
+      opacity: 1.0
     })
-      .bindTooltip(s.v.toFixed(2))
+      .bindTooltip(v.v.toFixed(2))
       .addTo(this.map);
   }
 }

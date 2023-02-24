@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GpxService, Vitesse } from '../gpx.service';
 
-type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
+export type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
+export const couleursStat = ["blueviolet", "blue", "chartreuse", "crimson", "gold"];
 
 @Component({
   selector: 'app-stat',
@@ -15,7 +16,27 @@ export class StatComponent implements OnInit {
   dmax!: number;
   vmax!: number;
   stats: Stat[] = [];
-  iStat = -1;
+  _iStat = -1;
+
+  @Output()
+  statChange: EventEmitter<Stat | null> = new EventEmitter<Stat | null>();
+
+  get stat(): Stat | null {
+    if (this.iStat > -1) {
+      return this.stats[this.iStat];
+    } else {
+      return null;
+    }
+  }
+
+  get iStat(): number {
+    return this._iStat;
+  }
+
+  set iStat(value: number) {
+    this._iStat = value;
+    this.statChange.emit(this.stat);
+  }
 
   constructor(private gpxService: GpxService) {
   }

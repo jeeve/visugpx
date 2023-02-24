@@ -179,13 +179,9 @@ export class ChartComponent implements OnInit {
   }
 
   private initChart() {
+    this.drawChart();
     this.largeurFenetre = 2;
     this.majFenetre();
-    this.drawChart();
-    //this.gpxService.calculeStats();
-    //this.ivmax = this.gpxService.ivmax;
-   // const s = this.gpxService.stats;
-    //this.stats = [s.v100m, s.v500m, s.v2s, s.v5s, s.v10s];
   }
 
   resize(): void {

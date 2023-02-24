@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GpxService } from './gpx.service';
+import { Stat } from './stat/stat.component';
 
 export type Fenetre = {
   gauche: number;
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
   largeurFenetre = 2;
   fenetreAuto = true;
   visuStats = true;
+  stat!: Stat | null;
 
   majPosition(position: number): void {
     this.iPosition = position;
@@ -46,6 +48,9 @@ export class AppComponent implements OnInit {
     this.visuStats = value;
   }
 
+  majStat(value: Stat | null): void {
+    this.stat = value;
+  }
   constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {
