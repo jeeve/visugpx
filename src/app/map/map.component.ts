@@ -38,9 +38,18 @@ export class MapComponent implements AfterViewInit {
 
   @Input()
   set stat(value: Stat | null) {
-    this._stat = value;
-    this.statChange.emit(value);
+    const s = value;
+    if (s) {
+      this._stat = { nom: s.nom, x5: s.x5, x10: s.x10, v: [...s.v], indiceSelection: s.indiceSelection };
+    } else {
+      this._stat = null;
+    }   
+
+    this.statChange.emit(this._stat);
     this.metAJourStats();
+    if (this._stat) {
+      this.iPosition = this._stat.v[this._stat.indiceSelection].a; // marker au point de depart de la ligne
+    }
   }
 
   get visuStats(): boolean {

@@ -48,7 +48,7 @@
                 c5: i == iStat && j == 4
               }"
             >
-              <span [ngClass]="{ first: isFirst }">{{
+              <span (click)="valeurClick(i, j)" [ngClass]="{ first: isFirst }">{{
                 v.v | number : "1.2-2"
               }}</span>
             </td>
@@ -65,7 +65,7 @@
                 c10: i == iStat && j == 4
               }"
             >
-              <span>{{ v.v | number : "1.2-2" }}</span>
+              <span (click)="valeurClick(i, j+5)">{{ v.v | number : "1.2-2" }}</span>
             </td>
           </tr>
         </table>

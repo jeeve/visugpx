@@ -49,7 +49,12 @@ export class AppComponent implements OnInit {
   }
 
   majStat(value: Stat | null): void {
-    this.stat = value;
+    const s = value;
+    if (s) {
+      this.stat = { nom: s.nom, x5: s.x5, x10: s.x10, v: [...s.v], indiceSelection: s.indiceSelection };
+    } else {
+      this.stat = null;
+    }
   }
   constructor(private gpxService: GpxService) {}
 

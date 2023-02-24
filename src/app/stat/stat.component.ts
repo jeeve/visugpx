@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GpxService, Vitesse } from '../gpx.service';
 
-export type Stat = { nom: string, x5: number, x10: number, v: Vitesse[] };
+export type Stat = { nom: string, x5: number, x10: number, v: Vitesse[], indiceSelection: number };
 export const couleursStat = ["blue", "blueviolet", "chartreuse", "cyan", "coral", "crimson", "darksalmon", "darkseagreen", "deeppink", "darkgreen"];
 
 @Component({
@@ -58,6 +58,14 @@ export class StatComponent implements OnInit {
     this.iStat = i;
   }
 
+  valeurClick(i: number, j: number) {
+    this._iStat = i;
+    if (this.stat) {
+      this.stat.indiceSelection = j;
+      this.statChange.emit(this.stat); 
+    }
+  }
+
   calcule(): void {
     this.dmax = this.gpxService.dmax;
     this.vmax = this.gpxService.vmax;
@@ -70,7 +78,7 @@ export class StatComponent implements OnInit {
   }
 
   private calculeStat(nom: string, methode: Function, parametre: number) {
-    const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [] };
+    const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [], indiceSelection: 0 };
     let v0: Vitesse = { v: +Infinity, a: -1, b: -1 };
     for (let i = 0; i < 10; i++) {
       const v = methode(v0, parametre);
