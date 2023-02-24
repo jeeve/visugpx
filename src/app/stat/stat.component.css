@@ -38,7 +38,7 @@ h3 {
   border: 1px solid;
 }
 
-.ligne:hover {
+.ligne:hover, .selected {
   background-color: white;
   color: black;
 }

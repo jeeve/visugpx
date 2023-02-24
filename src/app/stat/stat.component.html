@@ -19,7 +19,7 @@
     </tr>
   </table>
   <table>
-    <tr *ngFor="let s of stats">
+    <tr *ngFor="let s of stats; let i = index" [ngClass]="{ selected: i == iStat }" (click)="ligneClick(i)">
       <td>
         <table class="ligne">
           <th colspan="2" class="nom">

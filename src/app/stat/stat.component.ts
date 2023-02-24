@@ -15,6 +15,7 @@ export class StatComponent implements OnInit {
   dmax!: number;
   vmax!: number;
   stats: Stat[] = [];
+  iStat = -1;
 
   constructor(private gpxService: GpxService) {
   }
@@ -23,6 +24,10 @@ export class StatComponent implements OnInit {
     this.gpxService.lit().subscribe(() => {
       this.calcule();
     });
+  }
+
+  ligneClick(i: number) {
+    this.iStat = i;
   }
 
   calcule(): void {
