@@ -121,10 +121,14 @@ export class MapComponent implements AfterViewInit {
   }
 
   private metAJourStats(): void {
+    if (this.markerVmax) {
+      this.markerVmax.remove();
+    }
+    if (this._visuStats) {
+      this.dessineMarkerVmax();
+    }
+
     if (this._stat == null || !this._visuStats) {
-      if (this.markerVmax) {
-        this.markerVmax.remove();
-      }
       for (let dessin of this.dessinTracesStat) {
         dessin.ligne.remove();
         dessin.flecheA.remove();
@@ -132,9 +136,6 @@ export class MapComponent implements AfterViewInit {
       }
       this.dessinTracesStat = [];
     } else {
-      if (this.markerVmax) {
-        this.markerVmax.remove();
-      }
       for (let dessin of this.dessinTracesStat) {
         dessin.ligne.remove();
         dessin.flecheA.remove();
@@ -143,7 +144,6 @@ export class MapComponent implements AfterViewInit {
       this.dessinTracesStat = [];
 
       if (this._stat) {
-        this.dessineMarkerVmax();
         if (this._stat) {
           for (let i = 9; i >= 0; i--) {
             const L = this.dessineTraceVitesse(
@@ -231,6 +231,7 @@ export class MapComponent implements AfterViewInit {
         }
         let polyline = L.polyline(xy, { color: 'black' });
         this.map.fitBounds(polyline.getBounds());
+        this.metAJourStats();
       },
       error: (err) => console.log(err),
     });
