@@ -56,9 +56,6 @@ export class MapComponent implements AfterViewInit {
     }
 
     this.metAJourStats();
-    if (this._stat) {
-      this.iPosition = this._stat.v[this._stat.indiceSelection].a; // marker au point de depart de la ligne
-    }
   }
 
   get visuStats(): boolean {

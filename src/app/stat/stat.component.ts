@@ -64,6 +64,9 @@ export class StatComponent implements OnInit {
     this.statChange.emit(this.stat);
   }
 
+  @Output()
+positionChange: EventEmitter<number> = new EventEmitter<number>();
+
   constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {
@@ -80,7 +83,9 @@ export class StatComponent implements OnInit {
     this._iStat = i;
     if (this.stat) {
       this.stat.indiceSelection = j;
-      this.statChange.emit(this.stat);
+      if (this.stat) {
+        this.positionChange.emit(this.stat.v[this.stat.indiceSelection].a); // marker au point de depart de la ligne
+      }
     }
   }
 
