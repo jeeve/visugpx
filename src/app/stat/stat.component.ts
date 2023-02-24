@@ -12,7 +12,8 @@ export class StatComponent implements OnInit {
 
   @Input()
   visuStats!: boolean;
-
+  dmax!: number;
+  vmax!: number;
   stats: Stat[] = [];
 
   constructor(private gpxService: GpxService) {
@@ -25,6 +26,8 @@ export class StatComponent implements OnInit {
   }
 
   calcule(): void {
+    this.dmax = this.gpxService.dmax;
+    this.vmax = this.gpxService.vmax;
     this.calculeStat('2s', this.calculeVmaxPendant.bind(this), 2);
     this.calculeStat('5s', this.calculeVmaxPendant.bind(this), 5);
     this.calculeStat('10s', this.calculeVmaxPendant.bind(this), 10);
