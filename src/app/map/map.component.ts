@@ -40,38 +40,7 @@ export class MapComponent implements AfterViewInit {
   set stat(value: Stat | null) {
     this._stat = value;
     this.statChange.emit(value);
-
-    if (value == null) {
-      if (this.markerVmax) {
-        this.markerVmax.remove();
-      }
-      for (let dessin of this.dessinTracesStat) {
-        dessin.ligne.remove();
-        dessin.flecheA.remove();
-        dessin.flecheB.remove();
-      }
-      this.dessinTracesStat = [];
-    } else {
-      if (this.markerVmax) {
-        this.markerVmax.remove();
-      }
-      for (let dessin of this.dessinTracesStat) {
-        dessin.ligne.remove();
-        dessin.flecheA.remove();
-        dessin.flecheB.remove();
-      }
-      this.dessinTracesStat = [];
-    }
-    if (value) {
-      this.dessineMarkerVmax();
-      if (this._stat) {
-        for (let i = 0; i < 10; i++) {
-          const L = this.dessineTraceVitesse(this._stat.v[i], couleursStat[i]);
-          this.dessinTracesStat.push(L);
-        }
-      }
-    }
-    this.dessineTrace();
+    this.metAJourStats();
   }
 
   get visuStats(): boolean {
@@ -81,6 +50,7 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set visuStats(value: boolean) {
     this._visuStats = value;
+    this.metAJourStats();
   }
 
   get date(): string {
@@ -132,6 +102,41 @@ export class MapComponent implements AfterViewInit {
     if (this.gpxService.estOK) {
       this.dessineTrace();
     }
+  }
+
+  private metAJourStats(): void {
+    if (this._stat == null || !this._visuStats) {
+      if (this.markerVmax) {
+        this.markerVmax.remove();
+      }
+      for (let dessin of this.dessinTracesStat) {
+        dessin.ligne.remove();
+        dessin.flecheA.remove();
+        dessin.flecheB.remove();
+      }
+      this.dessinTracesStat = [];
+    } else {
+      if (this.markerVmax) {
+        this.markerVmax.remove();
+      }
+      for (let dessin of this.dessinTracesStat) {
+        dessin.ligne.remove();
+        dessin.flecheA.remove();
+        dessin.flecheB.remove();
+      }
+      this.dessinTracesStat = [];
+    
+    if (this._stat) {
+      this.dessineMarkerVmax();
+      if (this._stat) {
+        for (let i = 0; i < 10; i++) {
+          const L = this.dessineTraceVitesse(this._stat.v[i], couleursStat[i]);
+          this.dessinTracesStat.push(L);
+        }
+      }
+    }
+  }
+    this.dessineTrace();
   }
 
   private dessineMarkerVmax(): void {
@@ -350,7 +355,6 @@ export class MapComponent implements AfterViewInit {
   };
 
   private dessineTraceVitesse(v: Vitesse, couleur: string): DessinTraceStat {
-
     const FA = this.dessineFleche(v.a);
     const FB = this.dessineFleche(v.b);
     let xy2: L.LatLng[] = [];
@@ -379,9 +383,6 @@ export class MapComponent implements AfterViewInit {
       className: 'fleche'
     });
 
-    //if (this.markerVitesse) {
-    //  this.markerVitesse.remove();
-    //}
     const txy = this.gpxService.pointsGps;
     let xy0 = new L.LatLng(txy[i].lat, txy[i].lon);
     return L.marker(xy0, {
