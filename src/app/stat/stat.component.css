@@ -6,7 +6,6 @@
   padding: 0;
   margin: 0;
   overflow-y: scroll;
-
   height: calc(100% - 280px);
   z-index: 20000;
   /*background-color: rgba(255, 255, 255, 0.75);*/
@@ -31,7 +30,7 @@ h3 {
 }
 
 .ligne {
-  border: 1px solid;
+  /*border: 1px solid;*/
 }
 
 .ligne:hover, .selected {
