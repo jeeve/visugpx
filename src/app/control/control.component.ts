@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
-import { GpxService, Stats } from '../gpx.service';
+import { GpxService } from '../gpx.service';
 import { UploadService } from '../upload.service';
 
 @Component({

@@ -1,16 +1,32 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GpxService, Vitesse } from '../gpx.service';
 
-export type Stat = { nom: string, x5: number, x10: number, v: Vitesse[], indiceSelection: number };
-export const couleursStat = ["blue", "blueviolet", "chartreuse", "cyan", "coral", "crimson", "darksalmon", "darkseagreen", "deeppink", "darkgreen"];
+export type Stat = {
+  nom: string;
+  x5: number;
+  x10: number;
+  v: Vitesse[];
+  indiceSelection: number;
+};
+export const couleursStat = [
+  'blue',
+  'blueviolet',
+  'chartreuse',
+  'cyan',
+  'coral',
+  'crimson',
+  'darksalmon',
+  'darkseagreen',
+  'deeppink',
+  'darkgreen',
+];
 
 @Component({
   selector: 'app-stat',
   templateUrl: './stat.component.html',
-  styleUrls: ['./stat.component.css']
+  styleUrls: ['./stat.component.css'],
 })
 export class StatComponent implements OnInit {
-
   @Input()
   visuStats!: boolean;
   dmax!: number;
@@ -45,8 +61,7 @@ export class StatComponent implements OnInit {
     this.statChange.emit(this.stat);
   }
 
-  constructor(private gpxService: GpxService) {
-  }
+  constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
@@ -62,7 +77,7 @@ export class StatComponent implements OnInit {
     this._iStat = i;
     if (this.stat) {
       this.stat.indiceSelection = j;
-      this.statChange.emit(this.stat); 
+      this.statChange.emit(this.stat);
     }
   }
 
@@ -76,6 +91,9 @@ export class StatComponent implements OnInit {
     this.calculeStat('250m', this.calculeVmaxSur.bind(this), 0.25);
     this.calculeStat('500m', this.calculeVmaxSur.bind(this), 0.5);
     this.calculeStat('1km', this.calculeVmaxSur.bind(this), 1);
+    this.calculeStat('α250', this.calculeAlphaSur.bind(this), 0.25);
+    this.calculeStat('α500', this.calculeAlphaSur.bind(this), 0.5);
+    this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
   }
 
   private calculeStat(nom: string, methode: Function, parametre: number) {
@@ -87,10 +105,10 @@ export class StatComponent implements OnInit {
       stat.v.push(v);
     }
     this.calculeMoyennes(stat);
-    this.stats.push(stat);  
+    this.stats.push(stat);
   }
 
-  private calculeMoyennes(stat : Stat): void {
+  private calculeMoyennes(stat: Stat): void {
     let s = 0;
     for (let i = 0; i < 5; i++) {
       s += stat.v[i].v;
@@ -100,17 +118,20 @@ export class StatComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       s += stat.v[i].v;
     }
-    stat.x10 = s / 10;  
+    stat.x10 = s / 10;
   }
 
-  private calculeVmaxSur(vReference: Vitesse, distanceReference: number): Vitesse {
+  private calculeVmaxSur(
+    vReference: Vitesse,
+    distanceReference: number
+  ): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
         const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai> 50 && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && deltai > 50 && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -120,14 +141,41 @@ export class StatComponent implements OnInit {
     return vmax;
   }
 
-  private calculeVmaxPendant(vReference: Vitesse, dureeeReference: number): Vitesse {
+  private calculeAlphaSur(
+    vReference: Vitesse,
+    distanceReference: number
+  ): Vitesse {
+    let vmax: Vitesse = { v: 0, a: 0, b: 0 };
+    for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
+      const va = this.calculeVetAlphaIndiceSur(i, distanceReference);
+      if (va.vitesse.a > -1) {
+        const deltai = Math.abs(va.vitesse.a - vReference.a);
+        if (
+          va.vitesse.v > vmax.v &&
+          deltai > 50 &&
+          Math.abs(va.alpha) > 300 &&
+          va.vitesse.v < vReference.v
+        ) {
+          vmax.v = va.vitesse.v;
+          vmax.a = va.vitesse.a;
+          vmax.b = va.vitesse.b;
+        }
+      }
+    }
+    return vmax;
+  }
+
+  private calculeVmaxPendant(
+    vReference: Vitesse,
+    dureeeReference: number
+  ): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
         const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai> 50 && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && deltai > 50 && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -153,10 +201,65 @@ export class StatComponent implements OnInit {
         return { v: vitesse, a: n, b: i };
       }
       if (i + 1 < this.gpxService.pointsCalcules.length) {
-        distance = distance + this.gpxService.pointsCalcules[i+1].deltad;
+        distance = distance + this.gpxService.pointsCalcules[i + 1].deltad;
       }
     }
     return { v: 0, a: -1, b: -1 };
+  }
+
+  private calculeVetAlphaIndiceSur(
+    n: number,
+    distanceReference: number
+  ): { vitesse: Vitesse; alpha: number } {
+    let t1 = this.gpxService.pointsGps[n].date;
+    let t2, dt, vitesse;
+    let distance = 0;
+
+    let alpha = 0;
+    const a = [];
+    for (let i = n; i < this.gpxService.pointsCalcules.length; i++) {
+      a.push(this.gpxService.pointsCalcules[i].deltaa);
+    }
+    const b = this.movingAverage(a, 5);
+
+    for (let i = n; i < this.gpxService.pointsCalcules.length; i++) {
+      if (distance >= distanceReference) {
+        t2 = this.gpxService.pointsGps[i].date;
+        dt = (t2.getTime() - t1.getTime()) / 1000;
+        if (dt != 0) {
+          vitesse = ((distance * 1000) / dt) * 1.94384;
+        } else {
+          vitesse = 0;
+        }
+        return { vitesse: { v: vitesse, a: n, b: i }, alpha: alpha };
+      }
+      if (i + 1 < this.gpxService.pointsCalcules.length) {
+        distance = distance + this.gpxService.pointsCalcules[i + 1].deltad;
+        if (b) {
+          alpha = alpha + b[i];
+        }
+      }
+    }
+    return { vitesse: { v: 0, a: -1, b: -1 }, alpha: 0 };
+  }
+
+  private movingAverage(data: number[], windowSize: number): number[] | null {
+    var result: number[] = [];
+    var lastAvg = null;
+    for (var i = 0; i < data.length; i++) {
+      var start = Math.max(0, i - windowSize + 1);
+      var end = i + 1;
+      var sum = 0;
+      for (var j = start; j < end; j++) {
+        sum += data[j];
+      }
+      var avg = sum / (end - start);
+      if (lastAvg) {
+        result.push(avg != avg ? lastAvg : avg);
+      }
+      lastAvg = avg;
+    }
+    return result;
   }
 
   private calculeVIndicePendant(n: number, dureeReference: number): Vitesse {
@@ -175,10 +278,9 @@ export class StatComponent implements OnInit {
         return { v: vitesse, a: n, b: i };
       }
       if (i + 1 < this.gpxService.pointsCalcules.length) {
-        distance = distance + this.gpxService.pointsCalcules[i+1].deltad;
+        distance = distance + this.gpxService.pointsCalcules[i + 1].deltad;
       }
     }
     return { v: 0, a: -1, b: -1 };
   }
-
 }

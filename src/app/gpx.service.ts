@@ -14,12 +14,12 @@ export interface IPointCalcule {
   angle: number;
   deltad: number;
   deltat: number;
+  deltaa: number;
 }
 
 export type UrlString = string;
 export type XmlString = string;
 export type Vitesse = { v: number, a: number, b: number };
-export type Stats = { vMax: Vitesse, v100m: Vitesse, v500m: Vitesse, v2s: Vitesse, v5s: Vitesse, v10s: Vitesse };
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +31,7 @@ export class GpxService {
   vmax!: number;
   ivmax!: number;
   dmax!: number;
-  stats: Stats = { vMax: { v: 0, a: -1, b: -1 }, v100m: { v: 0, a: -1, b: -1 }, v500m: { v: 0, a: -1, b: -1 }, v2s: { v: 0, a: -1, b: -1 }, v5s: { v: 0, a: -1, b: -1 }, v10s: { v: 0, a: -1, b: -1 } };
-
+ 
   private _estOK = false;
 
   get estOK(): boolean {
@@ -117,6 +116,7 @@ export class GpxService {
           angle: 0.0,
           deltad: 0.0,
           deltat: 0.0,
+          deltaa: 0.0
         });
       } else {
         dd = this.calculeDistance(
@@ -144,6 +144,7 @@ export class GpxService {
           angle: angle,
           deltad: dd,
           deltat: (ti - t0) / 1000,
+          deltaa: this.angle360Max(angle - this.pointsCalcules[this.pointsCalcules.length-1].angle)
         });
 
         d = d + dd;
@@ -163,6 +164,12 @@ export class GpxService {
   ) {
     let brng = Math.atan2(lat2 - lat1, lon2 - lon1);
     brng = brng * (180 / Math.PI);
+    brng = (brng + 360) % 360;
+    brng = 360 - brng;
+    return brng;
+  }
+
+  private angle360Max(brng: number) : number {
     brng = (brng + 360) % 360;
     brng = 360 - brng;
     return brng;
