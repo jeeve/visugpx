@@ -148,7 +148,7 @@ export class MapComponent implements AfterViewInit {
       if (this._stat) {
         this.dessineMarkerVmax();
         if (this._stat) {
-          for (let i = 0; i < 10; i++) {
+          for (let i = 9; i >= 0; i--) {
             const L = this.dessineTraceVitesse(
               this._stat.v[i],
               couleursStat[i]
