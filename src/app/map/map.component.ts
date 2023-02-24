@@ -49,7 +49,6 @@ export class MapComponent implements AfterViewInit {
         x5: s.x5,
         x10: s.x10,
         v: [...s.v],
-        indiceSelection: s.indiceSelection,
       };
     } else {
       this._stat = null;

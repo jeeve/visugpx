@@ -6,7 +6,6 @@ export type Stat = {
   x5: number;
   x10: number;
   v: Vitesse[];
-  indiceSelection: number;
 };
 export const couleursStat = [
   'blue',
@@ -82,9 +81,8 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
   valeurClick(i: number, j: number) {
     this._iStat = i;
     if (this.stat) {
-      this.stat.indiceSelection = j;
       if (this.stat) {
-        this.positionChange.emit(this.stat.v[this.stat.indiceSelection].a); // marker au point de depart de la ligne
+        this.positionChange.emit(this.stat.v[j].a); // marker au point de depart de la ligne
       }
     }
   }
@@ -112,7 +110,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
   }
 
   private calculeStat(nom: string, methode: Function, parametre: number) {
-    const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [], indiceSelection: 0 };
+    const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [] };
     let v0: Vitesse = { v: +Infinity, a: -1, b: -1 };
     for (let i = 0; i < 10; i++) {
       const v = methode(v0, parametre);
