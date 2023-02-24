@@ -15,8 +15,9 @@
   width: auto;
 }
 
-h3 {
-  line-height: 10px;
+.titre {
+  width: 120px;
+  text-align: left;;
 }
 
 .nom { 

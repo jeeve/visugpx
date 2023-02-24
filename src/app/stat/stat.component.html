@@ -1,22 +1,19 @@
 <div *ngIf="visuStats" class="stat">
   <table>
-    <tr>
-      <td class="titre"><h3>Statistiques</h3></td>
-      <td>
-        <table>
-          <tr>
-            <th>dmax</th>
-            <th>{{ dmax | number : "1.3-3" }}</th>
-            <th>km</th>
-          </tr>
-          <tr>
-            <th>vmax</th>
-            <th>{{ vmax | number : "1.2-2" }}</th>
-            <th>kts</th>
-          </tr>
-        </table>
-      </td>
-    </tr>
+    <table>
+      <tr>
+        <th class="titre">Statistiques</th>
+        <th>dmax</th>
+        <th>{{ dmax | number : "1.3-3" }}</th>
+        <th>km</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th>vmax</th>
+        <th>{{ vmax | number : "1.2-2" }}</th>
+        <th>kts</th>
+      </tr>
+    </table>
   </table>
   <table>
     <tr
@@ -48,9 +45,11 @@
                 c5: i == iStat && j == 4
               }"
             >
-              <span (click)="valeurClick(i, j)" [ngClass]="{ first: isFirst }">{{
-                v.v | number : "1.2-2"
-              }}</span>
+              <span
+                (click)="valeurClick(i, j)"
+                [ngClass]="{ first: isFirst }"
+                >{{ v.v | number : "1.2-2" }}</span
+              >
             </td>
           </tr>
           <tr>
@@ -65,7 +64,9 @@
                 c10: i == iStat && j == 4
               }"
             >
-              <span (click)="valeurClick(i, j+5)">{{ v.v | number : "1.2-2" }}</span>
+              <span (click)="valeurClick(i, j + 5)">{{
+                v.v | number : "1.2-2"
+              }}</span>
             </td>
           </tr>
         </table>
