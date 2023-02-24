@@ -11,6 +11,8 @@ import { Fenetre } from '../app.component';
 import { GpxService, Vitesse } from '../gpx.service';
 import { couleursStat, Stat } from '../stat/stat.component';
 
+type DessinTraceStat =  { ligne: L.Polyline, flecheA: L.Marker, flecheB: L.Marker };
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -23,7 +25,7 @@ export class MapComponent implements AfterViewInit {
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
   private markerVmax!: L.Marker;
-  private dessinTracesStat: L.Polyline[] = [];
+  private dessinTracesStat: DessinTraceStat[]  = [];
 
   _stat: Stat | null = null;
 
@@ -43,16 +45,20 @@ export class MapComponent implements AfterViewInit {
       if (this.markerVmax) {
         this.markerVmax.remove();
       }
-      for (let ligne of this.dessinTracesStat) {
-        ligne.remove();
+      for (let dessin of this.dessinTracesStat) {
+        dessin.ligne.remove();
+        dessin.flecheA.remove();
+        dessin.flecheB.remove();
       }
       this.dessinTracesStat = [];
     } else {
       if (this.markerVmax) {
         this.markerVmax.remove();
       }
-      for (let ligne of this.dessinTracesStat) {
-        ligne.remove();
+      for (let dessin of this.dessinTracesStat) {
+        dessin.ligne.remove();
+        dessin.flecheA.remove();
+        dessin.flecheB.remove();
       }
       this.dessinTracesStat = [];
     }
@@ -343,7 +349,10 @@ export class MapComponent implements AfterViewInit {
     }
   };
 
-  private dessineTraceVitesse(v: Vitesse, couleur: string) {
+  private dessineTraceVitesse(v: Vitesse, couleur: string): DessinTraceStat {
+
+    const FA = this.dessineFleche(v.a);
+    const FB = this.dessineFleche(v.b);
     let xy2: L.LatLng[] = [];
     const a = v.a;
     const b = v.b;
@@ -352,11 +361,32 @@ export class MapComponent implements AfterViewInit {
       const coord = new L.LatLng(txy[i].lat, txy[i].lon);
       xy2.push(coord);
     }
-    return L.polyline(xy2, {
+    const Ligne = L.polyline(xy2, {
       color: couleur,
       opacity: 1.0
     })
       .bindTooltip(v.v.toFixed(2))
       .addTo(this.map);
+    return { ligne: Ligne, flecheA: FA, flecheB: FB };
+  }
+
+  private dessineFleche(i: number): L.Marker {
+    var myIcon = L.icon({
+      iconUrl: 'assets/fleche-mini.png',
+      iconSize: [10, 10],
+      iconAnchor: [5, 5],
+      tooltipAnchor: [5, 5],
+      className: 'fleche'
+    });
+
+    //if (this.markerVitesse) {
+    //  this.markerVitesse.remove();
+    //}
+    const txy = this.gpxService.pointsGps;
+    let xy0 = new L.LatLng(txy[i].lat, txy[i].lon);
+    return L.marker(xy0, {
+      icon: myIcon,
+      rotationAngle: this.gpxService.pointsCalcules[i].angle,
+    }).addTo(this.map);
   }
 }
