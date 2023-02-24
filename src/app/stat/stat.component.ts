@@ -87,7 +87,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     }
   }
 
-  calcule(): void {
+  private calcule() {
     this.dmax = this.gpxService.dmax;
     this.vmax = this.gpxService.vmax;
 
@@ -144,7 +144,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
         const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai > 50 && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && deltai > 100 && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -165,8 +165,8 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
         const deltai = Math.abs(va.vitesse.a - vReference.a);
         if (
           va.vitesse.v > vmax.v &&
-          deltai > 50 &&
-          Math.abs(va.alpha) > 300 &&
+          deltai > 100 &&
+          Math.abs(va.alpha) > 180 &&
           va.vitesse.v < vReference.v
         ) {
           vmax.v = va.vitesse.v;
@@ -188,7 +188,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
         const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai > 50 && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && deltai > 100 && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
