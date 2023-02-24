@@ -11,7 +11,11 @@ import { Fenetre } from '../app.component';
 import { GpxService, Vitesse } from '../gpx.service';
 import { couleursStat, Stat } from '../stat/stat.component';
 
-type DessinTraceStat =  { ligne: L.Polyline, flecheA: L.Marker, flecheB: L.Marker };
+type DessinTraceStat = {
+  ligne: L.Polyline;
+  flecheA: L.Marker;
+  flecheB: L.Marker;
+};
 
 @Component({
   selector: 'app-map',
@@ -25,7 +29,7 @@ export class MapComponent implements AfterViewInit {
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
   private markerVmax!: L.Marker;
-  private dessinTracesStat: DessinTraceStat[]  = [];
+  private dessinTracesStat: DessinTraceStat[] = [];
 
   _stat: Stat | null = null;
 
@@ -40,12 +44,18 @@ export class MapComponent implements AfterViewInit {
   set stat(value: Stat | null) {
     const s = value;
     if (s) {
-      this._stat = { nom: s.nom, x5: s.x5, x10: s.x10, v: [...s.v], indiceSelection: s.indiceSelection };
+      this._stat = {
+        nom: s.nom,
+        x5: s.x5,
+        x10: s.x10,
+        v: [...s.v],
+        indiceSelection: s.indiceSelection,
+      };
     } else {
       this._stat = null;
-    }   
+    }
 
-    this.statChange.emit(this._stat);
+    //this.statChange.emit(this._stat);
     this.metAJourStats();
     if (this._stat) {
       this.iPosition = this._stat.v[this._stat.indiceSelection].a; // marker au point de depart de la ligne
@@ -134,17 +144,20 @@ export class MapComponent implements AfterViewInit {
         dessin.flecheB.remove();
       }
       this.dessinTracesStat = [];
-    
-    if (this._stat) {
-      this.dessineMarkerVmax();
+
       if (this._stat) {
-        for (let i = 0; i < 10; i++) {
-          const L = this.dessineTraceVitesse(this._stat.v[i], couleursStat[i]);
-          this.dessinTracesStat.push(L);
+        this.dessineMarkerVmax();
+        if (this._stat) {
+          for (let i = 0; i < 10; i++) {
+            const L = this.dessineTraceVitesse(
+              this._stat.v[i],
+              couleursStat[i]
+            );
+            this.dessinTracesStat.push(L);
+          }
         }
       }
     }
-  }
     this.dessineTrace();
   }
 
@@ -199,7 +212,8 @@ export class MapComponent implements AfterViewInit {
       if (i != -1) {
         this.iPosition = i;
       }
-      this.stat = null;
+      this._stat = null;
+      this.statChange.emit(null);
     });
   }
 
@@ -329,7 +343,11 @@ export class MapComponent implements AfterViewInit {
   }
 
   private indiceEndehorsBornes(i: number): boolean {
-    if (i < this._iFenetre.gauche || i > this._iFenetre.droite || (this.stat != null)) {
+    if (
+      i < this._iFenetre.gauche ||
+      i > this._iFenetre.droite ||
+      this.stat != null
+    ) {
       return true;
     }
     return false;
@@ -376,7 +394,7 @@ export class MapComponent implements AfterViewInit {
     }
     const Ligne = L.polyline(xy2, {
       color: couleur,
-      opacity: 1.0
+      opacity: 1.0,
     })
       .bindTooltip(v.v.toFixed(2))
       .addTo(this.map);
@@ -389,7 +407,7 @@ export class MapComponent implements AfterViewInit {
       iconSize: [10, 10],
       iconAnchor: [5, 5],
       tooltipAnchor: [5, 5],
-      className: 'fleche'
+      className: 'fleche',
     });
 
     const txy = this.gpxService.pointsGps;
