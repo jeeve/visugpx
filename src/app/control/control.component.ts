@@ -27,7 +27,7 @@ export class ControlComponent implements OnInit {
   private _vSeuil = 0;
 
   @Output()
-  visuSatsChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  visuStatsChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   get visuStats(): boolean {
     return this._visuStats;
@@ -35,7 +35,7 @@ export class ControlComponent implements OnInit {
 
   set visuStats(value: boolean) {
     this._visuStats = value;
-    this.visuSatsChange.emit(value);
+    this.visuStatsChange.emit(value);
   }
 
   @Output()

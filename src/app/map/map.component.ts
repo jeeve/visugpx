@@ -55,7 +55,6 @@ export class MapComponent implements AfterViewInit {
       this._stat = null;
     }
 
-    //this.statChange.emit(this._stat);
     this.metAJourStats();
     if (this._stat) {
       this.iPosition = this._stat.v[this._stat.indiceSelection].a; // marker au point de depart de la ligne
@@ -69,6 +68,7 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set visuStats(value: boolean) {
     this._visuStats = value;
+    this.dessineTrace();
     this.metAJourStats();
   }
 
@@ -346,7 +346,7 @@ export class MapComponent implements AfterViewInit {
     if (
       i < this._iFenetre.gauche ||
       i > this._iFenetre.droite ||
-      this.stat != null
+      (this.stat != null && this._visuStats)
     ) {
       return true;
     }

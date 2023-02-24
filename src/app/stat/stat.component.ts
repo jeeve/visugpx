@@ -22,8 +22,8 @@ export class StatComponent implements OnInit {
   statChange: EventEmitter<Stat | null> = new EventEmitter<Stat | null>();
 
   get stat(): Stat | null {
-    if (this.iStat > -1) {
-      return this.stats[this.iStat];
+    if (this._iStat > -1) {
+      return this.stats[this._iStat];
     } else {
       return null;
     }
@@ -73,6 +73,7 @@ export class StatComponent implements OnInit {
     this.calculeStat('5s', this.calculeVmaxPendant.bind(this), 5);
     this.calculeStat('10s', this.calculeVmaxPendant.bind(this), 10);
     this.calculeStat('100m', this.calculeVmaxSur.bind(this), 0.1);
+    this.calculeStat('100m', this.calculeVmaxSur.bind(this), 0.25);
     this.calculeStat('500m', this.calculeVmaxSur.bind(this), 0.5);
     this.calculeStat('1km', this.calculeVmaxSur.bind(this), 1);
   }
