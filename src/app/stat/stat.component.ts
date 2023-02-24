@@ -7,6 +7,7 @@ export type Stat = {
   x10: number;
   v: Vitesse[];
 };
+
 export const couleursStat = [
   'blue',
   'blueviolet',
@@ -20,6 +21,8 @@ export const couleursStat = [
   'darkgreen',
 ];
 
+const deltaiMin = 50; // ecart mini entre 2 mesures de vitesses
+
 @Component({
   selector: 'app-stat',
   templateUrl: './stat.component.html',
@@ -32,6 +35,7 @@ export class StatComponent implements OnInit {
   stats: Stat[] = [];
   _iStat = -1;
   alpha: number[] | null = [];
+  calculOK = false;
 
   @Input()
   visuStats!: boolean;
@@ -71,6 +75,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
       this.calcule();
+      this.calculOK = true;
     });
   }
 
@@ -144,7 +149,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
         const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai > 100 && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && deltai > deltaiMin && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -165,7 +170,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
         const deltai = Math.abs(va.vitesse.a - vReference.a);
         if (
           va.vitesse.v > vmax.v &&
-          deltai > 100 &&
+          deltai > deltaiMin &&
           Math.abs(va.alpha) > 180 &&
           va.vitesse.v < vReference.v
         ) {
@@ -188,7 +193,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
         const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai > 100 && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && deltai > deltaiMin && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
