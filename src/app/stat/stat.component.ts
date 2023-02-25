@@ -21,8 +21,6 @@ export const couleursStat = [
   'darkgreen',
 ];
 
-const deltaiMin = 50; // ecart mini entre 2 mesures de vitesses
-
 @Component({
   selector: 'app-stat',
   templateUrl: './stat.component.html',
@@ -116,7 +114,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   private calculeStat(nom: string, methode: Function, parametre: number) {
     const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [] };
-    let v0: Vitesse = { v: +Infinity, a: -1, b: -1 };
+    let v0: Vitesse = { v: +Infinity, a: 0, b: 0 };
     for (let i = 0; i < 10; i++) {
       const v = methode(v0, parametre);
       v0 = v;
@@ -148,8 +146,8 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
-        const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai > deltaiMin && vitesse.v < vReference.v) {
+        const delta = Math.abs(this.gpxService.pointsCalcules[vitesse.a].distance - this.gpxService.pointsCalcules[vReference.a].distance);
+        if (vitesse.v > vmax.v && delta > distanceReference && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -167,10 +165,10 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       const va = this.calculeVetAlphaIndiceSur(i, distanceReference);
       if (va.vitesse.a > -1) {
-        const deltai = Math.abs(va.vitesse.a - vReference.a);
+        const delta = Math.abs(this.gpxService.pointsCalcules[va.vitesse.a].distance - this.gpxService.pointsCalcules[vReference.a].distance);
         if (
           va.vitesse.v > vmax.v &&
-          deltai > deltaiMin &&
+          delta > distanceReference &&
           Math.abs(va.alpha) > 180 &&
           va.vitesse.v < vReference.v
         ) {
@@ -192,8 +190,8 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
-        const deltai = Math.abs(vitesse.a - vReference.a);
-        if (vitesse.v > vmax.v && deltai > deltaiMin && vitesse.v < vReference.v) {
+        const delta = Math.abs(this.gpxService.pointsCalcules[vitesse.a].distance - this.gpxService.pointsCalcules[vReference.a].distance);
+        if (vitesse.v > vmax.v && delta > 0.1 && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
