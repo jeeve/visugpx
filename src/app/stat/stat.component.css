@@ -15,6 +15,15 @@
   width: auto;
 }
 
+@media screen and (max-width: 767px) {
+  .stat {
+    height: auto;
+    position: relative;
+    overflow: auto;
+    left: 0;
+  }
+}
+
 .titre {
   width: 120px;
   text-align: left;;

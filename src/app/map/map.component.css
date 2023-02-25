@@ -6,6 +6,14 @@
     bottom: 150px;
     margin: 10px;
   }
+
+  @media screen and (max-width: 767px) {
+    .map-container {
+      position: relative;
+      height: 300px;
+      margin: 10px;
+    }
+  }
   
   .map-frame {
     border: 2px solid black;
