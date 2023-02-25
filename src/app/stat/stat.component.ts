@@ -136,7 +136,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v && !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.1) && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && !this.iAppartientTraces(i, vitesses, 0.1) && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -157,7 +157,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       if (va.vitesse.a > -1) {
          if (
           va.vitesse.v > vmax.v &&
-          !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.1) &&
+          !this.iAppartientTraces(i, vitesses, 0.1) &&
           Math.abs(va.alpha) > 180 &&
           va.vitesse.v < vReference.v
         ) {
@@ -180,7 +180,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
-         if (vitesse.v > vmax.v && !this.iAppartientTracesPendant(i, vitesses, dureeeReference, 10) && vitesse.v < vReference.v) {
+         if (vitesse.v > vmax.v && !this.iAppartientTraces(i, vitesses, 0.1) && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -297,7 +297,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     }
     stat.x10 = s / 10;
   }
-
+/*
   private iAppartientTracesSur(i: number, vitesses: Vitesse[], distance: number, marge: number): boolean {
     for (let k = 0; k < vitesses.length; k++) {
       const a = vitesses[k].a;
@@ -322,6 +322,22 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       const dbm = new Date();
       dbm.setTime(ta + temps + marge * 1000);        
       const bm = this.gpxService.getIndiceTemps(dbm);
+      if (i >= am && i <= bm) {
+        return true;
+      }
+    }
+    return false;
+  }
+  */
+
+  private iAppartientTraces(i: number, vitesses: Vitesse[], marge: number): boolean {
+    for (let k = 0; k < vitesses.length; k++) {
+      const a = vitesses[k].a;
+      const da = this.gpxService.pointsCalcules[a].distance;
+      const am = this.gpxService.getIndiceDistance(da - marge);
+      const b = vitesses[k].b;
+      const db = this.gpxService.pointsCalcules[b].distance;
+      const bm = this.gpxService.getIndiceDistance(db + marge);
       if (i >= am && i <= bm) {
         return true;
       }
