@@ -21,6 +21,8 @@ export const couleursStat = [
   'darkgreen',
 ];
 
+type FonctionStat = (vitesse: Vitesse, reference: number, vitesses: Vitesse[]) => Vitesse;
+
 @Component({
   selector: 'app-stat',
   templateUrl: './stat.component.html',
@@ -112,12 +114,12 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
   }
 
-  private calculeStat(nom: string, methode: Function, parametre: number) {
+  private calculeStat(nom: string, fonctionStat: FonctionStat, parametre: number) {
     const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [] };
     let v0: Vitesse = { v: +Infinity, a: 0, b: 0 };
     for (let i = 0; i < 10; i++) {
-      const v = methode(v0, parametre, stat.v);
-      v0 = v;
+      const v = fonctionStat(v0, parametre, stat.v);
+      v0 = { v: v.v, a: v.a, b: v.b };
       stat.v.push(v);
     }
     this.calculeMoyennes(stat);
@@ -134,7 +136,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
-        if (vitesse.v > vmax.v && !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.01) && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.1) && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -155,7 +157,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       if (va.vitesse.a > -1) {
          if (
           va.vitesse.v > vmax.v &&
-          !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.01) &&
+          !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.1) &&
           Math.abs(va.alpha) > 180 &&
           va.vitesse.v < vReference.v
         ) {
@@ -178,7 +180,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
-         if (vitesse.v > vmax.v && !this.iAppartientTracesPendant(i, vitesses, dureeeReference, 5) && vitesse.v < vReference.v) {
+         if (vitesse.v > vmax.v && !this.iAppartientTracesPendant(i, vitesses, dureeeReference, 10) && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -299,7 +301,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
   private iAppartientTracesSur(i: number, vitesses: Vitesse[], distance: number, marge: number): boolean {
     for (let k = 0; k < vitesses.length; k++) {
       const a = vitesses[k].a;
-      const da = this.gpxService.getIndiceDistance(this.gpxService.pointsCalcules[a].distance);
+      const da = this.gpxService.pointsCalcules[a].distance;
       const am = this.gpxService.getIndiceDistance(da + - marge);
       const bm = this.gpxService.getIndiceDistance(da + distance + marge);
       if (i >= am && i <= bm) {
@@ -315,10 +317,10 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       const da = this.gpxService.pointsGps[a].date;
       const ta = da.getTime();
       const dam = new Date();
-      dam.setTime(ta - marge);
+      dam.setTime(ta - marge * 1000);
       const am = this.gpxService.getIndiceTemps(dam);
       const dbm = new Date();
-      dbm.setTime(ta + temps + marge);        
+      dbm.setTime(ta + temps + marge * 1000);        
       const bm = this.gpxService.getIndiceTemps(dbm);
       if (i >= am && i <= bm) {
         return true;

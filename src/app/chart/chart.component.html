@@ -1,4 +1,4 @@
-<div class="chart-container" (window:resize)="resize()">
+<div *ngIf="affichageOK" class="chart-container" (window:resize)="resize()">
   <div id="chart"></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)" (mouseleave)="mouseLeave()">
     <svg>

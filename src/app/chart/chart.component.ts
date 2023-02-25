@@ -21,6 +21,7 @@ declare let google: any;
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
+  affichageOK = false;
   private _vSeuil = 0;
   private _largeurFenetre = 2;
 
@@ -174,6 +175,7 @@ export class ChartComponent implements OnInit {
       this.gpxService.lit().subscribe(() => {
         google.charts.load('current', { packages: ['corechart'] });
         google.charts.setOnLoadCallback(this.initChart.bind(this));
+        this.affichageOK = true;
       });
     };
   }
