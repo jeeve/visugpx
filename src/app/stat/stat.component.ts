@@ -116,7 +116,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     const stat: Stat = { nom: nom, x5: 0, x10: 0, v: [] };
     let v0: Vitesse = { v: +Infinity, a: 0, b: 0 };
     for (let i = 0; i < 10; i++) {
-      const v = methode(v0, parametre);
+      const v = methode(v0, parametre, stat.v);
       v0 = v;
       stat.v.push(v);
     }
@@ -124,30 +124,17 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     this.stats.push(stat);
   }
 
-  private calculeMoyennes(stat: Stat): void {
-    let s = 0;
-    for (let i = 0; i < 5; i++) {
-      s += stat.v[i].v;
-    }
-    stat.x5 = s / 5;
-    s = 0;
-    for (let i = 0; i < 10; i++) {
-      s += stat.v[i].v;
-    }
-    stat.x10 = s / 10;
-  }
-
   private calculeVmaxSur(
     vReference: Vitesse,
-    distanceReference: number
+    distanceReference: number, 
+    vitesses: Vitesse[] 
   ): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndiceSur(i, distanceReference);
       if (vitesse.a > -1) {
-        const delta = Math.abs(this.gpxService.pointsCalcules[vitesse.a].distance - this.gpxService.pointsCalcules[vReference.a].distance);
-        if (vitesse.v > vmax.v && delta > distanceReference && vitesse.v < vReference.v) {
+        if (vitesse.v > vmax.v && !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.01) && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -159,16 +146,16 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   private calculeAlphaSur(
     vReference: Vitesse,
-    distanceReference: number
+    distanceReference: number,
+    vitesses: Vitesse[]
   ): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       const va = this.calculeVetAlphaIndiceSur(i, distanceReference);
       if (va.vitesse.a > -1) {
-        const delta = Math.abs(this.gpxService.pointsCalcules[va.vitesse.a].distance - this.gpxService.pointsCalcules[vReference.a].distance);
-        if (
+         if (
           va.vitesse.v > vmax.v &&
-          delta > distanceReference &&
+          !this.iAppartientTracesSur(i, vitesses, distanceReference, 0.01) &&
           Math.abs(va.alpha) > 180 &&
           va.vitesse.v < vReference.v
         ) {
@@ -183,15 +170,15 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   private calculeVmaxPendant(
     vReference: Vitesse,
-    dureeeReference: number
+    dureeeReference: number,
+    vitesses: Vitesse[]
   ): Vitesse {
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     let vitesse: Vitesse;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       vitesse = this.calculeVIndicePendant(i, dureeeReference);
       if (vitesse.a > -1) {
-        const delta = Math.abs(this.gpxService.pointsCalcules[vitesse.a].distance - this.gpxService.pointsCalcules[vReference.a].distance);
-        if (vitesse.v > vmax.v && delta > 0.1 && vitesse.v < vReference.v) {
+         if (vitesse.v > vmax.v && !this.iAppartientTracesPendant(i, vitesses, dureeeReference, 5) && vitesse.v < vReference.v) {
           vmax.v = vitesse.v;
           vmax.a = vitesse.a;
           vmax.b = vitesse.b;
@@ -255,7 +242,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     return { vitesse: { v: 0, a: -1, b: -1 }, alpha: 0 };
   }
 
-  private movingAverage(data: number[], windowSize: number): number[] | null {
+  private movingAverage(data: number[], windowSize: number): number[] | null { // merci ChatGPT
     var result: number[] = [];
     var lastAvg = null;
     for (var i = 0; i < data.length; i++) {
@@ -294,5 +281,49 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
       }
     }
     return { v: 0, a: -1, b: -1 };
+  }
+
+  private calculeMoyennes(stat: Stat): void {
+    let s = 0;
+    for (let i = 0; i < 5; i++) {
+      s += stat.v[i].v;
+    }
+    stat.x5 = s / 5;
+    s = 0;
+    for (let i = 0; i < 10; i++) {
+      s += stat.v[i].v;
+    }
+    stat.x10 = s / 10;
+  }
+
+  private iAppartientTracesSur(i: number, vitesses: Vitesse[], distance: number, marge: number): boolean {
+    for (let k = 0; k < vitesses.length; k++) {
+      const a = vitesses[k].a;
+      const da = this.gpxService.getIndiceDistance(this.gpxService.pointsCalcules[a].distance);
+      const am = this.gpxService.getIndiceDistance(da + - marge);
+      const bm = this.gpxService.getIndiceDistance(da + distance + marge);
+      if (i >= am && i <= bm) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private iAppartientTracesPendant(i: number, vitesses: Vitesse[], temps: number, marge: number): boolean {
+    for (let k = 0; k < vitesses.length; k++) {
+      const a = vitesses[k].a;
+      const da = this.gpxService.pointsGps[a].date;
+      const ta = da.getTime();
+      const dam = new Date();
+      dam.setTime(ta - marge);
+      const am = this.gpxService.getIndiceTemps(dam);
+      const dbm = new Date();
+      dbm.setTime(ta + temps + marge);        
+      const bm = this.gpxService.getIndiceTemps(dbm);
+      if (i >= am && i <= bm) {
+        return true;
+      }
+    }
+    return false;
   }
 }

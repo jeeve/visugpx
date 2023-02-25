@@ -10,6 +10,7 @@ export interface IPointGps {
 
 export interface IPointCalcule {
   distance: number;
+  temps: number;
   vitesse: number;
   angle: number;
   deltad: number;
@@ -112,6 +113,7 @@ export class GpxService {
       if (i == 0) {
         this.pointsCalcules.push({
           distance: 0.0,
+          temps: 0.0,
           vitesse: 0.0,
           angle: 0.0,
           deltad: 0.0,
@@ -140,10 +142,11 @@ export class GpxService {
         let ti = this.pointsGps[i].date.getTime();
         this.pointsCalcules.push({
           distance: d,
+          temps: (ti - t0) / 1000,
           vitesse: vitesse,
           angle: angle,
           deltad: dd,
-          deltat: (ti - t0) / 1000,
+          deltat: (ti -this.pointsGps[this.pointsCalcules.length-1].date.getTime()) / 1000,
           deltaa: this.angle360Max(angle - this.pointsCalcules[this.pointsCalcules.length-1].angle)
         });
 
