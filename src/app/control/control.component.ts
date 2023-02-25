@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { GpxService } from '../gpx.service';
 import { UploadService } from '../upload.service';
@@ -73,6 +73,14 @@ export class ControlComponent implements OnInit {
   get xPosition(): number {
     if (this.gpxService.estOK) {
       return this.gpxService.pointsCalcules[this._iPosition].distance;
+    } else {
+      return 0;
+    }
+  }
+
+  get tPosition(): number {
+    if (this.gpxService.estOK) {
+      return this.gpxService.pointsCalcules[this._iPosition].temps;
     } else {
       return 0;
     }

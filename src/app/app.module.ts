@@ -8,6 +8,7 @@ import { ChartComponent } from './chart/chart.component';
 import { ControlComponent } from './control/control.component';
 import { FormsModule } from '@angular/forms';
 import { StatComponent } from './stat/stat.component';
+import { FormatTime } from './format-time.pipes';
 
 @NgModule({
   declarations: [
@@ -15,10 +16,10 @@ import { StatComponent } from './stat/stat.component';
     MapComponent,
     ChartComponent,
     ControlComponent,
-    StatComponent
+    StatComponent, FormatTime
   ],
   imports: [
-    BrowserModule, HttpClientModule, FormsModule
+    BrowserModule, HttpClientModule, FormsModule 
   ],
   providers: [],
   bootstrap: [AppComponent]
