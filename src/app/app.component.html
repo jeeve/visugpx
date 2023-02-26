@@ -7,7 +7,7 @@
   (positionChange)="majPosition($event)"
   (statChange)="majStat($event)"
 ></app-map>
-<app-chart *ngIf="estOK"
+<app-chart *ngIf="estOK && !ecranMini"
   [iPosition]="iPosition"
   [vSeuil]="vSeuil"
   [largeurFenetre]="largeurFenetre"
@@ -17,7 +17,7 @@
   (fenetreChange)="majFenetre($event)"
   (fenetreAutoChange)="majFenetreAuto($event)"
 ></app-chart>
-<app-control
+<app-control *ngIf="!ecranMini"
   [estOK]="estOK"
   [iPosition]="iPosition"
   [vSeuil]="vSeuil"

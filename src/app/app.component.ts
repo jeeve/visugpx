@@ -24,6 +24,10 @@ export class AppComponent implements OnInit {
   visuStats = true;
   stat!: Stat | null;
 
+  get ecranMini(): boolean {
+    return document.body.clientWidth <= 767; 
+  }
+
   majPosition(position: number): void {
     this.iPosition = position;
   }

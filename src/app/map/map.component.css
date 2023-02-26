@@ -9,7 +9,7 @@
 
   @media screen and (max-width: 767px) {
     .map-container {
-      position: relative;
+      position: absolute;
       height: 300px;
       margin: 10px;
     }

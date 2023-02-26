@@ -1,5 +1,5 @@
 <div *ngIf="visuStats && calculOK" class="stat">
-  <table>
+  <table class="entete">
     <table>
       <tr>
         <th class="titre">Statistiques</th>
@@ -15,7 +15,7 @@
       </tr>
     </table>
   </table>
-  <table>
+  <table class="liste1">
     <tr
       *ngFor="let s of stats; let i = index"
       [ngClass]="{ selected: i == iStat }"

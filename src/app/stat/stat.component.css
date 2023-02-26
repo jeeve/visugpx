@@ -15,14 +15,14 @@
   width: auto;
 }
 
-@media screen and (max-width: 767px) {
-  .stat {
-    height: auto;
-    position: relative;
-    overflow: auto;
-    left: 0;
-  }
+.ligne:hover, .selected {
+  background-color: white;
+  color: black;
 }
+
+.ligne:hover .valeur {
+  color: black;
+} 
 
 .titre {
   width: 120px;
@@ -38,19 +38,6 @@
 .first {
   font-weight: bold;
 }
-
-.ligne {
-  /*border: 1px solid;*/
-}
-
-.ligne:hover, .selected {
-  background-color: white;
-  color: black;
-}
-
-.ligne:hover .valeur {
-  color: black;
-} 
 
 .valeur {
   color: white;
@@ -88,4 +75,56 @@
   color:darkgreen;
 }
 
+@media screen and (max-width: 767px) {
+  .stat {
+    position: fixed;
+    top: 320px;
+    overflow-y: scroll;
+    width: 100%;
+    height: auto;
+    bottom: 0;
+    left: 0;
+    background: white;
+    color: black;
+  }
 
+  .entete {
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+
+  .liste1 {
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }  
+
+  .ligne {
+    border: 1px solid;
+    margin: 5px;
+  }
+  
+  .ligne:hover, .selected {
+    background-color:cornflowerblue;
+    color:black;
+  }
+  
+  .ligne:hover .valeur {
+    color: black;
+  } 
+
+  ::ng-deep .ligne td {
+    padding: 5px;
+  }
+
+  .nom { 
+    background-color: black;
+    color: white;
+  } 
+
+  .valeur {
+    color: black;
+    text-align: right;
+  } 
+}
