@@ -88,17 +88,11 @@
     color: black;
   }
 
-  .entete {
+  .entete, .liste1 {
     width: auto;
     margin-left: auto;
     margin-right: auto;   
   }
-
-  .liste1 {
-    width: auto;
-    margin-left: auto;
-    margin-right: auto;
-  }  
 
   .ligne {
     border: 1px solid;
@@ -114,7 +108,7 @@
     color: black;
   } 
 
-  ::ng-deep .ligne td {
+  .ligne td, .ligne th {
     padding: 5px;
   }
 
