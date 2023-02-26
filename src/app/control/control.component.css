@@ -1,13 +1,9 @@
-::ng-deep td {
+.control td {
   padding: 5px;
 }
 
-::ng-deep label {
+.control label {
   padding: 5px;
-}
-
-::ng-deep button {
-/* margin-left: 5px;*/
 }
 
 .stop {
@@ -26,6 +22,8 @@
   text-decoration: underline;
   color: mediumblue;
   cursor: pointer;
+  width: 120px;
+  height: 30px;
 }
 
 .upload {
@@ -44,13 +42,8 @@
   /*display: none;*/
 }
 
-@media screen and (min-width: 768px) {
-  .control {
-    position: absolute;
-  }
-}
-
 .control {
+  position: absolute;
   top: 10px;
   left: 10px;
   z-index: 20000;

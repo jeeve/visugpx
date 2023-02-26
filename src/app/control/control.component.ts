@@ -29,6 +29,10 @@ export class ControlComponent implements OnInit {
   @Output()
   visuStatsChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  get ecranMini(): boolean {
+    return document.body.clientWidth <= 767; 
+  }
+  
   get visuStats(): boolean {
     return this._visuStats;
   }

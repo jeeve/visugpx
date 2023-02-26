@@ -6,7 +6,7 @@
     <button (click)="this.upload()" type="button">Envoyer</button>
   </div>
 
-  <div *ngIf="estOK">
+  <div *ngIf="estOK && !ecranMini">
     <div class="reglages">
       <div class="slider-wrapper">
         <input

@@ -36,3 +36,12 @@
     color: white;
   }
   
+  #auteur {
+    z-index: 100000;
+    position: absolute;
+    bottom: 0;
+    right: 180px;
+    text-align: right;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+  }
