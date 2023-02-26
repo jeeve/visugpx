@@ -24,9 +24,13 @@
   color: black;
 } 
 
+.ligne td, .ligne th {
+  text-align: center;
+}
+
 .titre {
   width: 120px;
-  text-align: left;;
+  text-align: left;
 }
 
 .nom { 
@@ -41,7 +45,6 @@
 
 .valeur {
   color: white;
-  text-align: right;
 } 
 
 .c1 {
@@ -110,6 +113,7 @@
 
   .ligne td, .ligne th {
     padding: 5px;
+    width: 80px;
   }
 
   .nom { 
