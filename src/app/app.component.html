@@ -16,6 +16,7 @@
   (seuilChange)="majSeuil($event)"
   (fenetreChange)="majFenetre($event)"
   (fenetreAutoChange)="majFenetreAuto($event)"
+  (chartOkChange)="majOkCalculeStat($event)"
 ></app-chart>
 <app-control *ngIf="!ecranMini"
   [estOK]="estOK"
@@ -31,6 +32,7 @@
 <app-stat *ngIf="estOK"
   [visuStats]="visuStats"
   [stat]="stat"
+  [okCalculeStat]="okCalculeStat"
   (statChange)="majStat($event)"
   (positionChange)="majPosition($event)"
 ></app-stat>

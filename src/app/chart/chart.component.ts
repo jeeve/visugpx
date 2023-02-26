@@ -21,7 +21,20 @@ declare let google: any;
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
-  affichageOK = false;
+  _affichageOK = false;
+
+  get affichageOK(): boolean {
+    return this._affichageOK;
+  }
+
+  set affichageOK(value: boolean) {
+    this._affichageOK = value;
+    this.chartOkChange.emit(value);
+  }
+
+  @Output()
+  chartOkChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   private _vSeuil = 0;
   private _largeurFenetre = 2;
 

@@ -36,6 +36,14 @@ export class StatComponent implements OnInit {
   _iStat = -1;
   alpha: number[] | null = [];
   calculOK = false;
+  _okCalculeStat = false;
+
+  @Input()
+  set okCalculeStat(value: boolean) {
+    if (value) {
+      this.calcule();
+    }
+  }
 
   @Input()
   visuStats!: boolean;
@@ -74,8 +82,8 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
 
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
-      this.calcule();
-      this.calculOK = true;
+      //this.calcule();
+     // this.calculOK = true;
     });
   }
 
@@ -112,6 +120,7 @@ positionChange: EventEmitter<number> = new EventEmitter<number>();
     this.calculeStat('α250', this.calculeAlphaSur.bind(this), 0.25);
     this.calculeStat('α500', this.calculeAlphaSur.bind(this), 0.5);
     this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
+    this.calculOK = true;
   }
 
   private calculeStat(nom: string, fonctionStat: FonctionStat, parametre: number) {

@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   fenetreAuto = true;
   visuStats = true;
   stat!: Stat | null;
+  okCalculeStat = false;
 
   get ecranMini(): boolean {
     return document.body.clientWidth <= 767; 
@@ -60,6 +61,13 @@ export class AppComponent implements OnInit {
       this.stat = null;
     }
   }
+
+  majOkCalculeStat(value: boolean) {
+    if (value) {
+      this.okCalculeStat = true;
+    }
+  }
+
   constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {
