@@ -175,7 +175,6 @@ export class ChartComponent implements OnInit {
       this.gpxService.lit().subscribe(() => {
         google.charts.load('current', { packages: ['corechart'] });
         google.charts.setOnLoadCallback(this.initChart.bind(this));
-        this.affichageOK = true;
       });
     };
   }
@@ -184,6 +183,7 @@ export class ChartComponent implements OnInit {
     this.drawChart();
     this.largeurFenetre = 2;
     this.majFenetre();
+    this.affichageOK = true;
   }
 
   resize(): void {
