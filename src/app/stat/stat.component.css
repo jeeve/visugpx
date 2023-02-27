@@ -52,34 +52,34 @@
 } 
 
 .c1 {
-  color:blue;
+  color:red;
 }
 .c2 {
-  color:blueviolet;
+  color:blue;
 }
 .c3 {
-  color:chartreuse;
+  color:blueviolet;
 }
 .c4 {
-  color:cyan;
+  color:green
 }
 .c5 {
   color:coral;
 }
 .c6 {
-  color:crimson;
-}
-.c7 {
-  color:darksalmon;
-}
-.c8 {
-  color:darkseagreen;
-}
-.c9 {
   color:deeppink;
 }
+.c7 {
+  color:dodgerblue;
+}
+.c8 {
+  color:lightseagreen;
+}
+.c9 {
+  color:gold;
+}
 .c10 {
-  color:darkgreen;
+  color:lightpink;
 }
 
 @media screen and (max-width: 767px) {

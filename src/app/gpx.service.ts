@@ -32,6 +32,7 @@ export class GpxService {
   vmax!: number;
   ivmax!: number;
   dmax!: number;
+  tmax!: number;
  
   private _estOK = false;
 
@@ -77,6 +78,7 @@ export class GpxService {
     this.vmax = 0;
     this.ivmax = 0;
     this.dmax = 0;
+    this.tmax = 0;
 
     doc.querySelectorAll('trkpt').forEach((elt) => {
       let t = elt.querySelector('time');
@@ -140,17 +142,19 @@ export class GpxService {
         }
         let t0 = this.pointsGps[0].date.getTime();
         let ti = this.pointsGps[i].date.getTime();
+        const deltat = (ti -this.pointsGps[this.pointsCalcules.length-1].date.getTime()) / 1000;
         this.pointsCalcules.push({
           distance: d,
           temps: (ti - t0) / 1000,
           vitesse: vitesse,
           angle: angle,
           deltad: dd,
-          deltat: (ti -this.pointsGps[this.pointsCalcules.length-1].date.getTime()) / 1000,
+          deltat: deltat,
           deltaa: this.angle360Max(angle - this.pointsCalcules[this.pointsCalcules.length-1].angle)
         });
 
         d = d + dd;
+        this.tmax += deltat;
       }
     }
 
