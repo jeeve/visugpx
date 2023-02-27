@@ -85,7 +85,7 @@
 @media screen and (max-width: 767px) {
   .stat {
     position: fixed;
-    top: 320px;
+    top: 300px;
     overflow-y: scroll;
     width: 100%;
     height: auto;
@@ -107,7 +107,7 @@
   }
   
   .ligne:hover, .selected {
-    background-color:cornflowerblue;
+    background-color:lightyellow;
     color:black;
   }
   
