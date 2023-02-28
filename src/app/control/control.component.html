@@ -2,7 +2,7 @@
   <div [ngClass]="{'lire-gpx-lien': estOK, 'lire-gpx': !estOK }" (click)="clickUploadGpx()">Lire fichier GPX</div>
 
   <div *ngIf="uploadGpx || !estOK" class="upload">
-    <input (change)="this.onFilechange($event)" class="form-control" type="file">
+    <input (change)="this.onFilechange($event)" class="form-control" type="file" accept=".gpx">
     <button (click)="this.upload()" type="button">Envoyer</button>
   </div>
 
