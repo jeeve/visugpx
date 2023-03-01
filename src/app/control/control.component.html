@@ -55,13 +55,8 @@
             <div class="position">
               {{ tPosition | formatTime }}
             </div>
-          <td></td>
+          <td>h</td>
         </tr>
-          <tr class="ligne-temps" style="display: none">
-            <td><label>Temps</label></td>
-            <td><input type="text" class="temps" /></td>
-            <td>s</td>
-          </tr>
           <tr>
             <td><label>Vitesse</label></td>
             <td>
@@ -82,7 +77,7 @@
           class="fenetre-largeur"
           [(ngModel)]="largeurFenetre"
         />
-        km
+        <span>km</span>
       </div>
     </div>
     <div class="magneto">

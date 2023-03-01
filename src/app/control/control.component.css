@@ -66,8 +66,16 @@
   padding-left: 15px;
 }
 
+.div-fenetre-largeur span {
+  padding-left: 10px;
+}
+
 .magneto {
   margin: 15px;
+}
+
+.stop {
+  margin-left: 25px;
 }
 
 .fenetre-magneto {
