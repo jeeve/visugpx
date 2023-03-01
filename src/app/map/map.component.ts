@@ -9,7 +9,8 @@ import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import { Fenetre } from '../app.component';
 import { GpxService, Vitesse } from '../gpx.service';
-import { couleursStat, Stat } from '../stat/stat.component';
+import { Stat } from '../stat.service';
+import { couleursStat } from '../stat/stat.component';
 
 type DessinTraceStat = {
   ligne: L.Polyline;

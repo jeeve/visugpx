@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GpxService } from './gpx.service';
-import { Stat } from './stat/stat.component';
+import { Stat } from './stat.service';
 
 export type Fenetre = {
   gauche: number;
