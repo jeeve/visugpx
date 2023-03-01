@@ -5,19 +5,19 @@
         <th class="titre">Statistiques</th>
         <th style="text-align:right"></th>
         <th style="text-align:right">{{ tmax |formatTime }}</th>
-        <th>h</th>
+        <th class="unite">h</th>
       </tr>
       <tr>
         <th></th>
         <th style="text-align:right"></th>
         <th style="text-align:right" >{{ dmax | number : "1.3-3" }}</th>
-        <th>km</th>
+        <th class="unite">km</th>
       </tr>
       <tr>
         <th></th>
         <th style="text-align:right">Vmax</th>
         <th style="text-align:right">{{ vmax | number : "1.2-2" }}</th>
-        <th>kts</th>
+        <th class="unite">kts</th>
       </tr>
     </table>
   </table>
