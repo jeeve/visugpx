@@ -1,11 +1,11 @@
 <div *ngIf="affichageOK" class="chart-container" (window:resize)="resize()">
   <div id="chart"></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)" (mouseleave)="mouseLeave()">
-    <svg>
+    <svg *ngIf="afficheFenetre">
       <rect x="30" y="0" [attr.width]="XFenetreGauche-25" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
-    <svg>
+    <svg *ngIf="afficheFenetre">
       <rect [attr.x]="XFenetreDroite+5" y="0" [attr.width]="largeur-XFenetreDroite" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
@@ -50,7 +50,7 @@
           stroke-width="2"
         ></line>
       </svg>
-      <svg class="ligne ligne-verticale ligne-gauche" [attr.x]="XFenetreGauche" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-gauche" [attr.x]="XFenetreGauche" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
@@ -70,7 +70,7 @@
           stroke-width="3"
         ></line>
       </svg>
-      <svg class="ligne ligne-verticale ligne-droite" [attr.x]="XFenetreDroite" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-droite" [attr.x]="XFenetreDroite" y="0" width="10" height="140" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"

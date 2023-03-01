@@ -12,6 +12,9 @@ export class ControlComponent implements OnInit {
   @Input()
   estOK = false;
 
+  @Input()
+  afficheFenetre = true;
+
   uploadGpx = false;
   _visuStats = true;
   vmax!: number;

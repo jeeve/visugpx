@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <div class="fenetre">
+    <div *ngIf="afficheFenetre" class="fenetre">
       <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetreAuto" />
       <label class="label-fenetre-auto">Fenêtre auto</label>
       <div *ngIf="fenetreAuto" class="div-fenetre-largeur">

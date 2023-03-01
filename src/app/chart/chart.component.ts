@@ -26,6 +26,9 @@ export class ChartComponent implements OnInit {
   private _largeurFenetre = 2;
 
   @Input()
+  afficheFenetre = true;
+
+  @Input()
   get largeurFenetre(): number {
     return this._largeurFenetre;
   }
