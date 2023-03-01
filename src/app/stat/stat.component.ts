@@ -40,6 +40,9 @@ export class StatComponent implements OnInit {
   @Output()
   statChange: EventEmitter<Stat | null> = new EventEmitter<Stat | null>();
 
+  @Output()
+  calculeOKChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   get stat(): Stat | null {
     if (this._iStat > -1) {
       return this.statService.stats[this._iStat];
@@ -73,7 +76,8 @@ export class StatComponent implements OnInit {
     this.gpxService.lit().subscribe(() => {
       this.statService.calcule();
       this.stats = this.statService.stats;
-      this.calculOK = true;
+      this.calculOK = this.statService.calculOK;
+      this.calculeOKChange.emit(this.calculOK);
     });
   }
 

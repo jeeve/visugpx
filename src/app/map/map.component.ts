@@ -9,7 +9,7 @@ import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import { Fenetre } from '../app.component';
 import { GpxService, Vitesse } from '../gpx.service';
-import { Stat } from '../stat.service';
+import { Stat, StatService } from '../stat.service';
 import { couleursStat } from '../stat/stat.component';
 
 type DessinTraceStat = {
@@ -30,7 +30,15 @@ export class MapComponent implements AfterViewInit {
   private markerVitesse!: L.Marker;
   private _iPosition = 0;
   private markerVmax!: L.Marker;
+  private markersChutes: L.Marker[] = [];
   private dessinTracesStat: DessinTraceStat[] = [];
+
+  @Input()
+  set calculStatOk(value: boolean) {
+    if (value) {
+      this.metAJourStats();
+    }
+  }
 
   _stat: Stat | null = null;
 
@@ -124,8 +132,15 @@ export class MapComponent implements AfterViewInit {
     if (this.markerVmax) {
       this.markerVmax.remove();
     }
+    for (let m of this.markersChutes) {
+      if (m) {
+        m.remove();
+      }
+    }
+    this.markersChutes = [];
     if (this._visuStats) {
       this.dessineMarkerVmax();
+      this.dessineMarkerChutes();
     }
 
     if (this._stat == null || !this._visuStats) {
@@ -183,6 +198,29 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
+  private dessineMarkerChutes(): void {
+    for (let m of this.markersChutes) {
+      if (m) {
+        m.remove();
+      }
+    }
+    this.markersChutes = [];
+    if (this.statService.calculOK) {
+      for (let c of this.statService.chutes) {
+        const coord = new L.LatLng(
+          this.gpxService.pointsGps[c].lat,
+          this.gpxService.pointsGps[c].lon
+        );
+        const defaultIcon = L.icon({
+          iconUrl: 'assets/marker-chute.png',
+          iconSize: [25, 22],
+        });
+        const m = L.marker(coord, { icon: defaultIcon }).addTo(this.map);
+        this.markersChutes.push(m);
+      }
+    }
+  }
+
   private initMap(): void {
     this.map = L.map('map', {
       center: [39.8282, -98.5795],
@@ -214,7 +252,10 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  constructor(private gpxService: GpxService) {}
+  constructor(
+    private gpxService: GpxService,
+    private statService: StatService
+  ) {}
 
   ngAfterViewInit(): void {
     this.initMap();

@@ -4,6 +4,7 @@
   [vSeuil]="vSeuil"
   [visuStats]="visuStats"
   [stat]="stat"
+  [calculStatOk]="calculStatOk"
   (positionChange)="majPosition($event)"
   (statChange)="majStat($event)"
 ></app-map>
@@ -33,6 +34,7 @@
 <app-stat *ngIf="estOK"
   [visuStats]="visuStats"
   [stat]="stat"
+  (calculeOKChange)="majCalculStatOk($event)"
   (statChange)="majStat($event)"
   (positionChange)="majPosition($event)"
 ></app-stat>

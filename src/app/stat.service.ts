@@ -20,11 +20,13 @@ type FonctionStat = (
 export class StatService {
 
   private alpha: number[] | null = [];
-  
+
   dmax!: number;
   tmax!: number;
   vmax!: number;
   stats: Stat[] = [];
+  chutes: number[] = [];
+  calculOK = false;
 
   constructor(private gpxService: GpxService) { }
 
@@ -49,8 +51,22 @@ export class StatService {
     this.calculeStat('α250', this.calculeAlphaSur.bind(this), 0.25);
     this.calculeStat('α500', this.calculeAlphaSur.bind(this), 0.5);
     this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
+
+    this.calculeChutes();
+
+    this.calculOK = true;
   }
 
+  private calculeChutes(): void {
+    for (let i = 2; i < this.gpxService.pointsCalcules.length; i++) {
+      const v0 = this.gpxService.pointsCalcules[i-1].vitesse;
+      const v = this.gpxService.pointsCalcules[i].vitesse;
+      const deltav = v - v0;
+      if (deltav < 0 && v0 > 12 && v < 1) {
+        this.chutes.push(i);
+      }
+    }
+  }
   private calculeStat(
     nom: string,
     fonctionStat: FonctionStat,
