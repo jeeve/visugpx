@@ -62,7 +62,7 @@ export class StatService {
       const v0 = this.gpxService.pointsCalcules[i-1].vitesse;
       const v = this.gpxService.pointsCalcules[i].vitesse;
       const deltav = v - v0;
-      if (deltav < 0 && v0 > 12 && v < 1) {
+      if (deltav < 0 && v0 > 12 && v < 2) {
         this.chutes.push(i);
       }
     }

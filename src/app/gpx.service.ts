@@ -304,4 +304,24 @@ export class GpxService {
       return arr.length;
     }
   }
+
+  calculeIndiceLePlusPresDe = (lat: number, lng: number, marge: number): number => {
+    let dmin = 1000000.0;
+    let d;
+    let j = 0;
+    let txy = this.pointsGps;
+    for (let i = 0; i < txy.length; i++) {
+      d = this.calculeDistance(lat, lng, txy[i].lat, txy[i].lon);
+      if (d < dmin) {
+        j = i;
+        dmin = d;
+      }
+    }
+    if (dmin < marge) {
+      // ne prend que si moins de 100m
+      return j;
+    } else {
+      return -1;
+    }
+  };
 }

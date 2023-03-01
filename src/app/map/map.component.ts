@@ -201,6 +201,16 @@ export class MapComponent implements AfterViewInit {
         shadowSize: [41, 41],
       });
       this.markerVmax = L.marker(coord, { icon: defaultIcon })
+        .on('click', (e: L.LeafletMouseEvent) => {
+          const i = this.gpxService.calculeIndiceLePlusPresDe(
+            e.latlng.lat,
+            e.latlng.lng,
+            0.1
+          );
+          if (i != -1) {
+            this.iPosition = i;
+          }
+        })
         .bindTooltip('VMax : ' + this.gpxService.vmax.toFixed(2) + ' kts')
         .addTo(this.map);
     }
@@ -223,7 +233,18 @@ export class MapComponent implements AfterViewInit {
           iconUrl: 'assets/marker-chute.png',
           iconSize: [25, 22],
         });
-        const m = L.marker(coord, { icon: defaultIcon }).addTo(this.map);
+        const m = L.marker(coord, { icon: defaultIcon })
+          .addTo(this.map)
+          .on('click', (e: L.LeafletMouseEvent) => {
+            const i = this.gpxService.calculeIndiceLePlusPresDe(
+              e.latlng.lat,
+              e.latlng.lng,
+              0.1
+            );
+            if (i != -1) {
+              this.iPosition = i;
+            }
+          });
         this.markersChutes.push(m);
       }
     }
@@ -251,7 +272,11 @@ export class MapComponent implements AfterViewInit {
     L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
     this.map.on('click', (e) => {
-      const i = this.calculeIndiceLePlusPresDe(e.latlng.lat, e.latlng.lng);
+      const i = this.gpxService.calculeIndiceLePlusPresDe(
+        e.latlng.lat,
+        e.latlng.lng,
+        0.1
+      );
       if (i != -1) {
         this.iPosition = i;
       }
@@ -407,26 +432,6 @@ export class MapComponent implements AfterViewInit {
       return 'red';
     }
   }
-
-  private calculeIndiceLePlusPresDe = (lat: number, lng: number): number => {
-    let dmin = 1000000.0;
-    let d;
-    let j = 0;
-    let txy = this.gpxService.pointsGps;
-    for (let i = 0; i < txy.length; i++) {
-      d = this.gpxService.calculeDistance(lat, lng, txy[i].lat, txy[i].lon);
-      if (d < dmin) {
-        j = i;
-        dmin = d;
-      }
-    }
-    if (dmin < 0.1) {
-      // ne prend que si moins de 100m
-      return j;
-    } else {
-      return -1;
-    }
-  };
 
   private dessineTraceVitesse(v: Vitesse, couleur: string): DessinTraceStat {
     const FA = this.dessineFleche(v.a);
