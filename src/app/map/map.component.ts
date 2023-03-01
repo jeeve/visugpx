@@ -25,6 +25,7 @@ type DessinTraceStat = {
 })
 export class MapComponent implements AfterViewInit {
   private _visuStats = false;
+  private _visuChutes = false;
   private map!: L.Map;
   private trace!: L.LayerGroup;
   private markerVitesse!: L.Marker;
@@ -37,6 +38,9 @@ export class MapComponent implements AfterViewInit {
   set calculStatOk(value: boolean) {
     if (value) {
       this.metAJourStats();
+      if (this._visuChutes) {
+        this.dessineMarkerChutes();
+      }
     }
   }
 
@@ -66,15 +70,26 @@ export class MapComponent implements AfterViewInit {
     this.metAJourStats();
   }
 
-  get visuStats(): boolean {
-    return this._visuStats;
-  }
-
   @Input()
   set visuStats(value: boolean) {
     this._visuStats = value;
     this.dessineTrace();
     this.metAJourStats();
+  }
+
+  @Input()
+  set visuChutes(value: boolean) {
+    this._visuChutes = value;
+    if (!value) {
+      for (let m of this.markersChutes) {
+        if (m) {
+          m.remove();
+        }
+      }
+      this.markersChutes = [];
+    } else {
+      this.dessineMarkerChutes();
+    }
   }
 
   get date(): string {
@@ -132,15 +147,8 @@ export class MapComponent implements AfterViewInit {
     if (this.markerVmax) {
       this.markerVmax.remove();
     }
-    for (let m of this.markersChutes) {
-      if (m) {
-        m.remove();
-      }
-    }
-    this.markersChutes = [];
     if (this._visuStats) {
       this.dessineMarkerVmax();
-      this.dessineMarkerChutes();
     }
 
     if (this._stat == null || !this._visuStats) {

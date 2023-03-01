@@ -3,6 +3,7 @@
   [iFenetre]="iFenetre"
   [vSeuil]="vSeuil"
   [visuStats]="visuStats"
+  [visuChutes]="visuChutes"
   [stat]="stat"
   [calculStatOk]="calculStatOk"
   (positionChange)="majPosition($event)"
@@ -30,6 +31,7 @@
   (fenetreAutoChange)="majFenetreAuto($event)"
   (largeurFenetreChange)="majLargeurFenetre($event)"
   (visuStatsChange)="majVisuStats($event)"
+  (visuChutesChange)="majVisuChutes($event)"
 ></app-control>
 <app-stat *ngIf="estOK"
   [visuStats]="visuStats"

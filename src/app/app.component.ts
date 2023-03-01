@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
   largeurFenetre = 2;
   fenetreAuto = true;
   visuStats = true;
+  visuChutes = true;
   stat!: Stat | null;
   calculStatOk = false;
 
@@ -51,6 +52,10 @@ export class AppComponent implements OnInit {
 
   majVisuStats(value: boolean): void {
     this.visuStats = value;
+  }
+
+  majVisuChutes(value: boolean): void {
+    this.visuChutes = value;
   }
 
   majStat(value: Stat | null): void {
