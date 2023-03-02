@@ -27,6 +27,7 @@
                 type="text"
                 class="seuil"
                 [ngModel]="vSeuil | number : '1.2-2'"
+                [ngModelOptions]="{updateOn: 'blur'}"
                 (ngModelChange)="vSeuil = $event"
               />
             </td>
