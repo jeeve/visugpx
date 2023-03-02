@@ -1,6 +1,16 @@
 <div *ngIf="affichageOK" class="chart-container" (window:resize)="resize()">
   <div id="chart"></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)" (mouseleave)="mouseLeave()">
+    <svg *ngIf="visuChutes">
+      <line *ngFor="let c of chutes" [attr.x]="X(c)"
+          [attr.x1]="X(c)+5"
+          y1="7"
+          [attr.x2]="X(c)+5"
+          y2="132"
+          stroke="darkorange"
+          stroke-width="1"
+        ></line>
+      </svg>
     <svg *ngIf="afficheFenetre">
       <rect x="30" y="0" [attr.width]="XFenetreGauche-25" height="134" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
@@ -88,16 +98,6 @@
           y2="134"
           stroke="#000000"
           stroke-width="3"
-        ></line>
-      </svg>
-      <svg *ngIf="visuChutes">
-      <line *ngFor="let c of chutes" [attr.x]="X(c)"
-          [attr.x1]="X(c)+5"
-          y1="7"
-          [attr.x2]="X(c)+5"
-          y2="132"
-          stroke="darkorange"
-          stroke-width="1"
         ></line>
       </svg>
     </svg>
