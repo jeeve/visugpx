@@ -10,6 +10,7 @@ import { from, mergeMap, Observable, of } from 'rxjs';
 import { GpxService, Vitesse } from '../gpx.service';
 import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
+import { StatService } from '../stat.service';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
 const LARGEUR_LIGNE = 10;
@@ -24,6 +25,14 @@ export class ChartComponent implements OnInit {
   affichageOK = false;
   private _vSeuil = 0;
   private _largeurFenetre = 2;
+
+  @Input()
+  get chutes(): number[] {
+    return this.statService.chutes;
+  }
+
+  @Input()
+  visuChutes = true;
 
   @Input()
   afficheFenetre = true;
@@ -165,7 +174,8 @@ export class ChartComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private scriptService: ScriptService,
-    private gpxService: GpxService
+    private gpxService: GpxService,
+    private statService: StatService
   ) {}
 
   ngOnInit(): void {

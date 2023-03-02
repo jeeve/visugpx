@@ -90,5 +90,15 @@
           stroke-width="3"
         ></line>
       </svg>
+      <svg *ngIf="visuChutes">
+      <line *ngFor="let c of chutes" [attr.x]="X(c)"
+          [attr.x1]="X(c)+5"
+          y1="7"
+          [attr.x2]="X(c)+5"
+          y2="132"
+          stroke="darkorange"
+          stroke-width="1"
+        ></line>
+      </svg>
     </svg>
 </div>
