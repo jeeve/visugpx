@@ -140,9 +140,9 @@ export class GpxService {
           this.vmax = vitesse;
           this.ivmax = i;
         }
-        let t0 = this.pointsGps[0].date.getTime();
-        let ti = this.pointsGps[i].date.getTime();
-        const deltat = (ti -this.pointsGps[this.pointsCalcules.length-1].date.getTime()) / 1000;
+        const t0 = this.pointsGps[0].date.getTime();
+        const ti = this.pointsGps[i].date.getTime();
+        const deltat = (ti - this.pointsGps[i-1].date.getTime()) / 1000;
         this.pointsCalcules.push({
           distance: d,
           temps: (ti - t0) / 1000,
