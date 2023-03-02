@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { GpxService } from '../gpx.service';
+import { StatService } from '../stat.service';
 import { UploadService } from '../upload.service';
 
 @Component({
@@ -14,6 +15,16 @@ export class ControlComponent implements OnInit {
 
   @Input()
   afficheFenetre = true;
+
+  @Input()
+  get afficheBoutonChutes(): boolean {
+    if (this.statService.calculOK) {
+      if (this.statService.chutes.length == 0) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   uploadGpx = false;
   _visuStats = true;
@@ -158,7 +169,7 @@ export class ControlComponent implements OnInit {
     }
   }
 
-  constructor(private gpxService: GpxService, private uploadService: UploadService) {}
+  constructor(private gpxService: GpxService, private uploadService: UploadService, private statService: StatService) {}
 
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {

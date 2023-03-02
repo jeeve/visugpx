@@ -97,7 +97,7 @@
       <input class="calcule" type="checkbox" [(ngModel)]="visuStats" />
       <label>Statistiques</label>
     </div>
-    <div class="stats">
+    <div *ngIf="afficheBoutonChutes" class="stats">
       <input class="calcule" type="checkbox" [(ngModel)]="visuChutes" />
       <label>Chutes</label>
     </div>
