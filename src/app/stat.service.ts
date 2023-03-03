@@ -24,6 +24,7 @@ export class StatService {
   dmax!: number;
   tmax!: number;
   vmax!: number;
+  ivmax!: number;
   stats: Stat[] = [];
   chutes: number[] = [];
   calculOK = false;
@@ -34,6 +35,7 @@ export class StatService {
     this.dmax = this.gpxService.dmax;
     this.tmax = this.gpxService.tmax;
     this.vmax = this.gpxService.vmax;
+    this.ivmax = this.gpxService.ivmax;
 
     const a = [];
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {

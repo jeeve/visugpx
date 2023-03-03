@@ -1,6 +1,11 @@
 <div *ngIf="affichageOK" class="chart-container" (window:resize)="resize()">
   <div id="chart"></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)" (mouseleave)="mouseLeave()">
+    <svg *ngIf="visuStats">
+      <svg *ngFor="let c of chutes" [attr.x]="X(ivmax)" y="10" width="10" height="5">
+        <polygon points="0,0 10,0 5,5" fill="red" stroke="red"></polygon>
+      </svg>
+    </svg>
     <svg *ngIf="visuChutes">
       <svg *ngFor="let c of chutes" [attr.x]="X(c)" y="10" width="10" height="5">
         <polygon points="0,0 10,0 5,5" fill="darkorange" stroke="darkorange"></polygon>

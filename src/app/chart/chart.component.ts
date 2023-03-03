@@ -10,7 +10,7 @@ import { from, mergeMap, Observable, of } from 'rxjs';
 import { GpxService, Vitesse } from '../gpx.service';
 import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
-import { StatService } from '../stat.service';
+import { Stat, StatService } from '../stat.service';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
 const LARGEUR_LIGNE = 10;
@@ -29,6 +29,13 @@ export class ChartComponent implements OnInit {
   @Input()
   get chutes(): number[] {
     return this.statService.chutes;
+  }
+
+  @Input()
+  visuStats = true;
+
+  get ivmax(): number {
+    return this.statService.ivmax;
   }
 
   @Input()
