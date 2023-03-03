@@ -30,7 +30,7 @@ export class StatComponent implements OnInit {
   get tmax(): number {
     return this.statService.tmax;
   }
-  stats: Stat[] = [];
+
   _iStat = -1;
   calculOK = false;
 
@@ -38,44 +38,33 @@ export class StatComponent implements OnInit {
   visuStats!: boolean;
 
   @Output()
-  statChange: EventEmitter<Stat | null> = new EventEmitter<Stat | null>();
+  iStatChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Output()
   calculeOKChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  get stat(): Stat | null {
-    if (this._iStat > -1) {
-      return this.statService.stats[this._iStat];
-    } else {
-      return null;
-    }
-  }
-
-  @Input()
-  set stat(value: Stat | null) {
-    if (value == null) {
-      this._iStat = -1;
-    }
-  }
 
   get iStat(): number {
     return this._iStat;
   }
 
+  @Input()
   set iStat(value: number) {
     this._iStat = value;
-    this.statChange.emit(this.stat);
+    this.iStatChange.emit(value);
   }
 
   @Output()
   positionChange: EventEmitter<number> = new EventEmitter<number>();
 
+  get stats(): Stat[] {
+    return this.statService.stats;
+  }
+  
   constructor(private gpxService: GpxService, private statService: StatService) {}
 
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
       this.statService.calcule();
-      this.stats = this.statService.stats;
       this.calculOK = this.statService.calculOK;
       this.calculeOKChange.emit(this.calculOK);
     });
@@ -86,11 +75,10 @@ export class StatComponent implements OnInit {
   }
 
   valeurClick(i: number, j: number) {
-    this._iStat = i;
-    if (this.stat) {
-      if (this.stat) {
-        this.positionChange.emit(this.stat.v[j].a); // marker au point de depart de la ligne
-      }
+    this.iStat = i;
+    if (this.iStat > -1) {
+      this.positionChange.emit(this.statService.stats[this.iStat].v[j].a); // marker au point de depart de la ligne
+
     }
   }
 

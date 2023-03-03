@@ -44,29 +44,18 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  _stat: Stat | null = null;
+  private _iStat = -1;
 
-  get stat(): Stat | null {
-    return this._stat;
+  get iStat(): number {
+    return this._iStat;
   }
 
   @Output()
-  statChange: EventEmitter<Stat | null> = new EventEmitter<Stat | null>();
+  iStatChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
-  set stat(value: Stat | null) {
-    const s = value;
-    if (s) {
-      this._stat = {
-        nom: s.nom,
-        x5: s.x5,
-        x10: s.x10,
-        v: [...s.v],
-      };
-    } else {
-      this._stat = null;
-    }
-
+  set iStat(value: number) {
+    this._iStat = value;
     this.metAJourStats();
   }
 
@@ -151,7 +140,7 @@ export class MapComponent implements AfterViewInit {
       this.dessineMarkerVmax();
     }
 
-    if (this._stat == null || !this._visuStats) {
+    if (this._iStat == -1 || !this._visuStats) {
       for (let dessin of this.dessinTracesStat) {
         dessin.ligne.remove();
         dessin.flecheA.remove();
@@ -166,17 +155,15 @@ export class MapComponent implements AfterViewInit {
       }
       this.dessinTracesStat = [];
 
-      if (this._stat) {
-        if (this._stat) {
+      if (this._iStat > -1) {
           for (let i = 9; i >= 0; i--) {
             const L = this.dessineTraceVitesse(
-              this._stat.v[i],
+              this.statService.stats[this._iStat].v[i],
               couleursStat[i]
             );
             this.dessinTracesStat.push(L);
           }
         }
-      }
     }
     this.dessineTrace();
   }
@@ -280,8 +267,8 @@ export class MapComponent implements AfterViewInit {
       if (i != -1) {
         this.iPosition = i;
       }
-      this._stat = null;
-      this.statChange.emit(null);
+      this._iStat = -1;
+      this.iStatChange.emit(this._iStat);
     });
   }
 
@@ -418,7 +405,7 @@ export class MapComponent implements AfterViewInit {
     if (
       i < this._iFenetre.gauche ||
       i > this._iFenetre.droite ||
-      (this.stat != null && this._visuStats)
+      (this._iStat > -1 && this._visuStats)
     ) {
       return true;
     }

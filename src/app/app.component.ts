@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   fenetreAuto = true;
   visuStats = true;
   visuChutes = true;
-  stat!: Stat | null;
+  iStat = -1;
   calculStatOk = false;
 
   get ecranMini(): boolean {
@@ -58,13 +58,8 @@ export class AppComponent implements OnInit {
     this.visuChutes = value;
   }
 
-  majStat(value: Stat | null): void {
-    const s = value;
-    if (s) {
-      this.stat = { nom: s.nom, x5: s.x5, x10: s.x10, v: [...s.v] };
-    } else {
-      this.stat = null;
-    }
+  majiStat(value: number): void {
+    this.iStat = value;
   }
 
   majCalculStatOk(value: boolean): void {
