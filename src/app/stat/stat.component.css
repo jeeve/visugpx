@@ -15,6 +15,10 @@
   width: auto;
 }
 
+.ligne {
+  width: 100%;
+}
+
 .ligne:hover, .selected {
   background-color: white;
   color: black;
@@ -24,7 +28,12 @@
   color: black;
 } 
 
-.ligne td, .ligne th {
+.ligne td {
+  text-align: right;
+  width: auto;
+}
+
+.ligne th {
   text-align: center;
 }
 

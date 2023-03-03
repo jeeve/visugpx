@@ -5,7 +5,7 @@
       <svg *ngFor="let c of chutes" [attr.x]="X(ivmax)" y="10" width="10" height="6">
         <polygon points="0,0 10,0 5,5" fill="red" stroke="red"></polygon>
       </svg>
-      <svg *ngFor="let v of vitesses; let i = index" class="indicateur plage"  [attr.x]="X(v.a)+3" y="10" [attr.width]="X(v.b)-X(v.a)+7" height="5">
+      <svg *ngFor="let v of vitesses; let i = index" class="indicateur plage"  [attr.x]="X(v.a)+3" y="10" [attr.width]="X(v.b)-X(v.a)+10" height="5">
         <line [attr.x1]="2" y1="0" x2="2" y2="5" [attr.stroke]="couleursStat[i]" stroke-width="3"></line>
         <line [attr.x1]="X(v.b)-X(v.a)" y1="0" [attr.x2]="X(v.b)-X(v.a)" y2="5" [attr.stroke]="couleursStat[i]" stroke-width="3"></line>
         <line [attr.x1]="2" y1="0" [attr.x2]="X(v.b)-X(v.a)" y2="0" [attr.stroke]="couleursStat[i]" stroke-width="3"></line>
