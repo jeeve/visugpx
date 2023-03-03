@@ -11,6 +11,7 @@ import { GpxService, Vitesse } from '../gpx.service';
 import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
 import { Stat, StatService } from '../stat.service';
+import { couleursStat } from '../stat/stat.component';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
 const LARGEUR_LIGNE = 10;
@@ -34,8 +35,23 @@ export class ChartComponent implements OnInit {
   @Input()
   visuStats = true;
 
+  @Input()
+  iStat = -1;
+
   get ivmax(): number {
     return this.statService.ivmax;
+  }
+
+  get vitesses() : Vitesse[] {
+    if (this.iStat > -1) {
+      return this.statService.stats[this.iStat].v;
+    } else {
+      return [];
+    }
+  }
+
+  get couleursStat() : string[] {
+    return couleursStat;
   }
 
   @Input()
