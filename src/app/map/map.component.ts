@@ -37,10 +37,7 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set calculStatOk(value: boolean) {
     if (value) {
-      this.metAJourStats();
-      if (this._visuChutes) {
-        this.dessineMarkerChutes();
-      }
+      this.dessineMarkerChutes();  
     }
   }
 
@@ -69,16 +66,7 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set visuChutes(value: boolean) {
     this._visuChutes = value;
-    if (!value) {
-      for (let m of this.markersChutes) {
-        if (m) {
-          m.remove();
-        }
-      }
-      this.markersChutes = [];
-    } else {
-      this.dessineMarkerChutes();
-    }
+    this.dessineMarkerChutes();
   }
 
   get date(): string {
@@ -210,7 +198,7 @@ export class MapComponent implements AfterViewInit {
       }
     }
     this.markersChutes = [];
-    if (this.statService.calculOK) {
+    if (this._visuChutes && this.statService.calculOK) {
       for (let c of this.statService.chutes) {
         const coord = new L.LatLng(
           this.gpxService.pointsGps[c].lat,
@@ -292,6 +280,7 @@ export class MapComponent implements AfterViewInit {
         }
         let polyline = L.polyline(xy, { color: 'black' });
         this.map.fitBounds(polyline.getBounds());
+        
         this.metAJourStats();
       },
       error: (err) => console.log(err),

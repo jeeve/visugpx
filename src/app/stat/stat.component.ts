@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { GpxService, Vitesse } from '../gpx.service';
 import { Stat, StatService } from '../stat.service';
 
 export const couleursStat = [
@@ -21,6 +20,7 @@ export const couleursStat = [
   styleUrls: ['./stat.component.css'],
 })
 export class StatComponent implements OnInit {
+
   get dmax(): number {
     return this.statService.dmax;
   }
@@ -32,16 +32,15 @@ export class StatComponent implements OnInit {
   }
 
   _iStat = -1;
-  calculOK = false;
 
   @Input()
   visuStats!: boolean;
 
-  @Output()
-  iStatChange: EventEmitter<number> = new EventEmitter<number>();
+  @Input()
+  calculOk = false;
 
   @Output()
-  calculeOKChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  iStatChange: EventEmitter<number> = new EventEmitter<number>();
 
   get iStat(): number {
     return this._iStat;
@@ -60,14 +59,9 @@ export class StatComponent implements OnInit {
     return this.statService.stats;
   }
   
-  constructor(private gpxService: GpxService, private statService: StatService) {}
+  constructor(private statService: StatService) {}
 
   ngOnInit(): void {
-    this.gpxService.lit().subscribe(() => {
-      this.statService.calcule();
-      this.calculOK = this.statService.calculOK;
-      this.calculeOKChange.emit(this.calculOK);
-    });
   }
 
   ligneClick(i: number) {
@@ -78,7 +72,6 @@ export class StatComponent implements OnInit {
     this.iStat = i;
     if (this.iStat > -1) {
       this.positionChange.emit(this.statService.stats[this.iStat].v[j].a); // marker au point de depart de la ligne
-
     }
   }
 

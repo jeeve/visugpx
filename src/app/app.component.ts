@@ -22,9 +22,9 @@ export class AppComponent implements OnInit {
   largeurFenetre = 2;
   fenetreAuto = true;
   visuStats = true;
+  calculStatOk = false;
   visuChutes = true;
   iStat = -1;
-  calculStatOk = false;
 
   get ecranMini(): boolean {
     return document.body.clientWidth <= 767; 

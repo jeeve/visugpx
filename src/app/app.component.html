@@ -5,7 +5,7 @@
   [visuStats]="visuStats"
   [visuChutes]="visuChutes"
   [iStat]="iStat"
-  [calculStatOk]="calculStatOk"
+  [calculStatOk] ="calculStatOk"
   (positionChange)="majPosition($event)"
   (iStatChange)="majiStat($event)"
 ></app-map>
@@ -22,6 +22,7 @@
   (seuilChange)="majSeuil($event)"
   (fenetreChange)="majFenetre($event)"
   (fenetreAutoChange)="majFenetreAuto($event)"
+  (calculStatOkChange)="majCalculStatOk($event)"
 ></app-chart>
 <app-control
   [estOK]="estOK"
@@ -39,7 +40,7 @@
 <app-stat *ngIf="estOK"
   [visuStats]="visuStats"
   [iStat]="iStat"
-  (calculeOKChange)="majCalculStatOk($event)"
+  [calculOk] ="calculStatOk"
   (iStatChange)="majiStat($event)"
   (positionChange)="majPosition($event)"
 ></app-stat>

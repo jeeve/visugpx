@@ -57,6 +57,9 @@ export class ChartComponent implements OnInit {
   @Input()
   visuChutes = true;
 
+  @Output()
+  calculStatOkChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   @Input()
   afficheFenetre = true;
 
@@ -220,6 +223,8 @@ export class ChartComponent implements OnInit {
     this.drawChart();
     this.largeurFenetre = 2;
     this.majFenetre();
+    this.statService.calcule();
+    this.calculStatOkChange.emit(true);
   }
 
   resize(): void {

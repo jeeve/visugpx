@@ -32,6 +32,8 @@ export class StatService {
   constructor(private gpxService: GpxService) { }
 
   calcule() {
+    if (this.calculOK) return;
+    
     this.dmax = this.gpxService.dmax;
     this.tmax = this.gpxService.tmax;
     this.vmax = this.gpxService.vmax;
