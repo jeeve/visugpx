@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { GpxService, Vitesse } from './gpx.service';
 
 export type Stat = {
@@ -31,8 +32,8 @@ export class StatService {
 
   constructor(private gpxService: GpxService) { }
 
-  calcule() {
-    if (this.calculOK) return;
+  calcule(): Observable<boolean> {
+    if (this.calculOK) return of(true);
     
     this.dmax = this.gpxService.dmax;
     this.tmax = this.gpxService.tmax;
@@ -59,6 +60,8 @@ export class StatService {
     this.calculeChutes();
 
     this.calculOK = true;
+
+    return of(true);
   }
 
   private calculeChutes(): void {

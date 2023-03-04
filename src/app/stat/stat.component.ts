@@ -37,7 +37,7 @@ export class StatComponent implements OnInit {
   visuStats!: boolean;
 
   @Input()
-  calculOk = false;
+  calculStatOk = false;
 
   @Output()
   iStatChange: EventEmitter<number> = new EventEmitter<number>();
