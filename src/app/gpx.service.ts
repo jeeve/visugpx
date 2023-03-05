@@ -66,7 +66,7 @@ export class GpxService {
     if (!this.estOK && url != "") {
       return this.http.get(url, { responseType: 'text' });
     } else {
-      return of();
+      return of("");
     }
   }
 

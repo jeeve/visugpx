@@ -223,7 +223,7 @@ export class ChartComponent implements OnInit {
     this.drawChart();
     this.largeurFenetre = 2;
     this.majFenetre();
-    this.statService.calcule().subscribe(() => this.calculStatOkChange.emit(true));
+    this.statService.calcule().subscribe((res) => this.calculStatOkChange.emit(res));
   }
 
   resize(): void {
