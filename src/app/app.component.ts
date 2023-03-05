@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
   largeurFenetre = 2;
   fenetreAuto = true;
   visuStats = true;
-  calculStatOk = false;
   visuChutes = true;
   iStat = -1;
 
@@ -60,10 +59,6 @@ export class AppComponent implements OnInit {
 
   majiStat(value: number): void {
     this.iStat = value;
-  }
-
-  majCalculStatOk(value: boolean): void {
-    this.calculStatOk = value;
   }
 
   constructor(private gpxService: GpxService) {}

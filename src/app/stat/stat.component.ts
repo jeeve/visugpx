@@ -36,8 +36,7 @@ export class StatComponent implements OnInit {
   @Input()
   visuStats!: boolean;
 
-  @Input()
-  calculStatOk = false;
+  calculOk = false;
 
   @Output()
   iStatChange: EventEmitter<number> = new EventEmitter<number>();
@@ -62,6 +61,7 @@ export class StatComponent implements OnInit {
   constructor(private statService: StatService) {}
 
   ngOnInit(): void {
+    this.statService.calcule().subscribe(() => {this.calculOk = true; })
   }
 
   ligneClick(i: number) {

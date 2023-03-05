@@ -57,9 +57,6 @@ export class ChartComponent implements OnInit {
   @Input()
   visuChutes = true;
 
-  @Output()
-  calculStatOkChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
   @Input()
   afficheFenetre = true;
 
@@ -214,7 +211,6 @@ export class ChartComponent implements OnInit {
       this.gpxService.lit().subscribe(() => {
         google.charts.load('current', { packages: ['corechart'] });
         google.charts.setOnLoadCallback(this.initChart.bind(this));
-        this.statService.calcule().subscribe(() => this.calculStatOkChange.emit(true));
         this.affichageOK = true;
       });
     };
