@@ -58,12 +58,16 @@ export class GpxService {
 
   lit(): Observable<void> {
     return this.litFichier(this.urlFichier).pipe(
-      mergeMap(async (xml) => this.litXml(xml))
+      mergeMap(async (xml) => { if (xml != "") this.litXml(xml) })
     );
   }
 
   private litFichier(url: UrlString): Observable<XmlString> {
-    return this.http.get(url, { responseType: 'text' });
+    if (!this.estOK && url != "") {
+      return this.http.get(url, { responseType: 'text' });
+    } else {
+      return of("");
+    }
   }
 
   litXml(xml: XmlString): void {
