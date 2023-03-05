@@ -63,11 +63,7 @@ export class GpxService {
   }
 
   private litFichier(url: UrlString): Observable<XmlString> {
-    if (!this.estOK && url != "") {
-      return this.http.get(url, { responseType: 'text' });
-    } else {
-      return of("");
-    }
+    return this.http.get(url, { responseType: 'text' });
   }
 
   litXml(xml: XmlString): void {
