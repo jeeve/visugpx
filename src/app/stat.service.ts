@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { delay, Observable, of } from 'rxjs';
 import { GpxService, Vitesse } from './gpx.service';
 
 export type Stat = {
@@ -16,10 +16,9 @@ type FonctionStat = (
 ) => Vitesse;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StatService {
-
   private alpha: number[] | null = [];
 
   dmax!: number;
@@ -30,43 +29,49 @@ export class StatService {
   chutes: number[] = [];
   calculOK = false;
 
-  constructor(private gpxService: GpxService) { }
+  constructor(private gpxService: GpxService) {}
 
-  calcule(): Observable<boolean> {
-    if (this.calculOK) return of(true);
-    
-    this.dmax = this.gpxService.dmax;
-    this.tmax = this.gpxService.tmax;
-    this.vmax = this.gpxService.vmax;
-    this.ivmax = this.gpxService.ivmax;
+  calcule(): Observable<void> {
+    return new Observable(observer => {
+      if (this.calculOK) {
+        observer.next();
+        observer.complete;
+      }
 
-    const a = [];
-    for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
-      a.push(this.gpxService.pointsCalcules[i].deltaa);
-    }
-    this.alpha = this.movingAverage(a, 2);
+      this.dmax = this.gpxService.dmax;
+      this.tmax = this.gpxService.tmax;
+      this.vmax = this.gpxService.vmax;
+      this.ivmax = this.gpxService.ivmax;
 
-    this.calculeStat('2s', this.calculeVmaxPendant.bind(this), 2);
-    this.calculeStat('5s', this.calculeVmaxPendant.bind(this), 5);
-    this.calculeStat('10s', this.calculeVmaxPendant.bind(this), 10);
-    this.calculeStat('100m', this.calculeVmaxSur.bind(this), 0.1);
-    this.calculeStat('250m', this.calculeVmaxSur.bind(this), 0.25);
-    this.calculeStat('500m', this.calculeVmaxSur.bind(this), 0.5);
-    this.calculeStat('1km', this.calculeVmaxSur.bind(this), 1);
-    this.calculeStat('α250', this.calculeAlphaSur.bind(this), 0.25);
-    this.calculeStat('α500', this.calculeAlphaSur.bind(this), 0.5);
-    this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
+      const a = [];
+      for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
+        a.push(this.gpxService.pointsCalcules[i].deltaa);
+      }
+      this.alpha = this.movingAverage(a, 2);
 
-    this.calculeChutes();
+      this.calculeStat('2s', this.calculeVmaxPendant.bind(this), 2);
+      this.calculeStat('5s', this.calculeVmaxPendant.bind(this), 5);
+      this.calculeStat('10s', this.calculeVmaxPendant.bind(this), 10);
+      this.calculeStat('100m', this.calculeVmaxSur.bind(this), 0.1);
+      this.calculeStat('250m', this.calculeVmaxSur.bind(this), 0.25);
+      this.calculeStat('500m', this.calculeVmaxSur.bind(this), 0.5);
+      this.calculeStat('1km', this.calculeVmaxSur.bind(this), 1);
+      this.calculeStat('α250', this.calculeAlphaSur.bind(this), 0.25);
+      this.calculeStat('α500', this.calculeAlphaSur.bind(this), 0.5);
+      this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
 
-    this.calculOK = true;
+      this.calculeChutes();
+      
+      this.calculOK = true;
 
-    return of(true);
+      observer.next();
+      observer.complete();
+    });
   }
 
   private calculeChutes(): void {
     for (let i = 2; i < this.gpxService.pointsCalcules.length; i++) {
-      const v0 = this.gpxService.pointsCalcules[i-1].vitesse;
+      const v0 = this.gpxService.pointsCalcules[i - 1].vitesse;
       const v = this.gpxService.pointsCalcules[i].vitesse;
       const deltav = v - v0;
       if (deltav < 0 && v0 > 12 && v < 3) {
@@ -299,5 +304,4 @@ export class StatService {
     }
     return false;
   }
-
 }

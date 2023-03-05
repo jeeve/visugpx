@@ -214,6 +214,7 @@ export class ChartComponent implements OnInit {
       this.gpxService.lit().subscribe(() => {
         google.charts.load('current', { packages: ['corechart'] });
         google.charts.setOnLoadCallback(this.initChart.bind(this));
+        this.statService.calcule().subscribe(() => this.calculStatOkChange.emit(true));
         this.affichageOK = true;
       });
     };
@@ -223,7 +224,6 @@ export class ChartComponent implements OnInit {
     this.drawChart();
     this.largeurFenetre = 2;
     this.majFenetre();
-    this.statService.calcule().subscribe((res) => this.calculStatOkChange.emit(res));
   }
 
   resize(): void {
