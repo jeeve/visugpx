@@ -90,6 +90,7 @@ export class MapComponent implements AfterViewInit {
     this._iPosition = value;
     this.positionChange.emit(value);
     this.updatePosition();
+    this.majFenetre();
   }
 
   private _iFenetre!: Fenetre;
@@ -117,6 +118,28 @@ export class MapComponent implements AfterViewInit {
     this._vSeuil = value;
     if (this.gpxService.estOK) {
       this.dessineTrace();
+    }
+  }
+
+  @Input()
+  fenetreAuto = true;
+
+  @Input()
+  largeurFenetre = 2;
+
+  private majFenetre() {
+    if (this.fenetreAuto) {
+      if (!this.gpxService.estOK) return;
+      const d = this.gpxService.pointsCalcules[this._iPosition].distance;
+      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre / 2);
+      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre / 2);
+      if (a < 0) {
+        a = 0;
+      }
+      if (b > this.gpxService.pointsCalcules.length - 1) {
+        b = this.gpxService.pointsCalcules.length - 1;
+      }
+      this.iFenetre = { gauche: a, droite: b };
     }
   }
 

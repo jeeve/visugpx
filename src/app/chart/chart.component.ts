@@ -25,7 +25,6 @@ declare let google: any;
 export class ChartComponent implements OnInit {
   affichageOK = false;
   private _vSeuil = 0;
-  private _largeurFenetre = 2;
 
   @Input()
   get chutes(): number[] {
@@ -59,6 +58,8 @@ export class ChartComponent implements OnInit {
 
   @Input()
   afficheFenetre = true;
+
+  private _largeurFenetre = 2;
 
   @Input()
   get largeurFenetre(): number {
