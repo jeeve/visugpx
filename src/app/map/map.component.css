@@ -7,14 +7,6 @@
     margin: 10px;
   }
 
-  @media screen and (max-width: 767px) {
-    .map-container {
-      position: absolute;
-      height: 300px;
-      margin: 0;
-    }
-  }
-  
   .map-frame {
     border: 2px solid black;
     height: 100%;
@@ -44,4 +36,13 @@
     text-align: right;
     margin-bottom: 0;
     font-size: 0.8rem;
+  }
+
+  @media screen and (max-width: 767px) {
+    .map-container {
+      display: block;
+      position: relative;
+      height: 300px;
+      margin: 0;
+    }
   }

@@ -1,3 +1,13 @@
+.control {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 20000;
+  background-color: rgba(255, 255, 255, 0.75);
+  /*border: 3px solid rgb(110, 110, 112);*/
+  border: 2px solid;
+}
+
 .control td {
   padding: 5px;
 }
@@ -40,16 +50,6 @@
 
 .stats table {
   /*display: none;*/
-}
-
-.control {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 20000;
-  background-color: rgba(255, 255, 255, 0.75);
-  /*border: 3px solid rgb(110, 110, 112);*/
-  border: 2px solid;
 }
 
 .reglages {
@@ -139,4 +139,16 @@
 .stats {
   padding-left: 15px;
   padding-bottom: 10px;
+}
+
+@media screen and (max-width: 767px) {
+  .control {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: auto;
+    height: 100%;
+    margin-left: -10px;
+    margin-right: 10px;
+  }
 }

@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   fenetreAuto = true;
   visuStats = true;
   visuChutes = true;
+  calculStatsOk = false;
   iStat = -1;
 
   get ecranMini(): boolean {
@@ -59,6 +60,10 @@ export class AppComponent implements OnInit {
 
   majiStat(value: number): void {
     this.iStat = value;
+  }
+
+  majCalculStatsOk(value: boolean) {
+    this.calculStatsOk = value;
   }
 
   constructor(private gpxService: GpxService) {}

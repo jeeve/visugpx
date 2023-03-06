@@ -1,74 +1,91 @@
 <div class="control">
-  <div [ngClass]="{'lire-gpx-lien': estOK, 'lire-gpx': !estOK }" (click)="clickUploadGpx()">Lire fichier GPX</div>
-
-  <div *ngIf="uploadGpx || !estOK" class="upload">
-    <input (change)="this.onFilechange($event)" class="form-control" type="file" accept=".gpx">
-    <button (click)="this.upload()" type="button">Envoyer</button>
-  </div>
-
-  <div *ngIf="estOK && !ecranMini">
-    <div class="reglages">
-      <div class="slider-wrapper">
-        <input
-          type="range"
-          class="curseur"
-          min="0"
-          [max]="vmax"
-          step="any"
-          [(ngModel)]="vSeuil"
-        />
-      </div>
-      <div class="div-seuil">
-        <table>
-          <tr>
-            <td><label>Seuil ></label></td>
-            <td>
-              <input
-                type="text"
-                class="seuil"
-                [ngModel]="vSeuil | number : '1.2-2'"
-                [ngModelOptions]="{updateOn: 'blur'}"
-                (ngModelChange)="vSeuil = $event"
-              />
-            </td>
-            <td>kts</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>
-              <div class="distance-seuil">
-                {{ distanceSeuil | number : "1.3-3" }}
-              </div>
-            </td>
-            <td>km</td>
-          </tr>
-          <tr>
-            <td><label>Distance</label></td>
-            <td>
-              <div class="position">
-                {{ xPosition | number : "1.3-3" }}
-              </div>
-            <td>km</td>
-          </tr>
-        <tr>
-          <td><label>Temps</label></td>
-          <td>
-            <div class="position">
-              {{ tPosition | formatTime }}
-            </div>
-          <td>h</td>
-        </tr>
-          <tr>
-            <td><label>Vitesse</label></td>
-            <td>
-              <div class="vitesse">{{ vitesse | number : "1.2-2" }}</div>
-            </td>
-            <td>kts</td>
-          </tr>
-        </table>
-      </div>
+  <div class="controle1">
+    <div
+      [ngClass]="{ 'lire-gpx-lien': estOK, 'lire-gpx': !estOK }"
+      (click)="clickUploadGpx()"
+    >
+      Lire fichier GPX
     </div>
 
+    <div *ngIf="uploadGpx || !estOK" class="upload">
+      <input
+        (change)="this.onFilechange($event)"
+        class="form-control"
+        type="file"
+        accept=".gpx"
+      />
+      <button (click)="this.upload()" type="button">Envoyer</button>
+    </div>
+
+    <div *ngIf="estOK">
+      <div class="reglages">
+        <div class="slider-wrapper">
+          <input
+            type="range"
+            class="curseur"
+            min="0"
+            [max]="vmax"
+            step="any"
+            [(ngModel)]="vSeuil"
+          />
+        </div>
+        <div class="div-seuil">
+          <table>
+            <tr>
+              <td><label>Seuil ></label></td>
+              <td>
+                <input
+                  type="text"
+                  class="seuil"
+                  [ngModel]="vSeuil | number : '1.2-2'"
+                  [ngModelOptions]="{ updateOn: 'blur' }"
+                  (ngModelChange)="vSeuil = $event"
+                />
+              </td>
+              <td>kts</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <div class="distance-seuil">
+                  {{ distanceSeuil | number : "1.3-3" }}
+                </div>
+              </td>
+              <td>km</td>
+            </tr>
+            <tr>
+              <td><label>Distance</label></td>
+              <td>
+                <div class="position">
+                  {{ xPosition | number : "1.3-3" }}
+                </div>
+              </td>
+
+              <td>km</td>
+            </tr>
+            <tr>
+              <td><label>Temps</label></td>
+              <td>
+                <div class="position">
+                  {{ tPosition | formatTime }}
+                </div>
+              </td>
+
+              <td>h</td>
+            </tr>
+            <tr>
+              <td><label>Vitesse</label></td>
+              <td>
+                <div class="vitesse">{{ vitesse | number : "1.2-2" }}</div>
+              </td>
+              <td>kts</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="controle2">
     <div *ngIf="afficheFenetre" class="fenetre">
       <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetreAuto" />
       <label class="label-fenetre-auto">Fenêtre auto</label>

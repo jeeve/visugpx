@@ -5,6 +5,7 @@
   [visuStats]="visuStats"
   [visuChutes]="visuChutes"
   [iStat]="iStat"
+  [calculStatOk]="calculStatsOk"
   (positionChange)="majPosition($event)"
   (iStatChange)="majiStat($event)"
 ></app-map>
@@ -38,6 +39,7 @@
 <app-stat *ngIf="estOK"
   [visuStats]="visuStats"
   [iStat]="iStat"
+  (calculOkChange)="majCalculStatsOk($event)"
   (iStatChange)="majiStat($event)"
   (positionChange)="majPosition($event)"
 ></app-stat>
