@@ -1,3 +1,16 @@
+<app-control
+  [estOK]="estOK"
+  [iPosition]="iPosition"
+  [vSeuil]="vSeuil"
+  [fenetreAuto]="fenetreAuto"
+  [afficheFenetre]="!(visuStats && iStat > - 1)"
+  (positionChange)="majPosition($event)"
+  (seuilChange)="majSeuil($event)"
+  (fenetreAutoChange)="majFenetreAuto($event)"
+  (largeurFenetreChange)="majLargeurFenetre($event)"
+  (visuStatsChange)="majVisuStats($event)"
+  (visuChutesChange)="majVisuChutes($event)"
+></app-control>
 <app-map *ngIf="estOK"
   [iPosition]="iPosition"
   [iFenetre]="iFenetre"
@@ -23,19 +36,6 @@
   (fenetreChange)="majFenetre($event)"
   (fenetreAutoChange)="majFenetreAuto($event)"
 ></app-chart>
-<app-control
-  [estOK]="estOK"
-  [iPosition]="iPosition"
-  [vSeuil]="vSeuil"
-  [fenetreAuto]="fenetreAuto"
-  [afficheFenetre]="!(visuStats && iStat > - 1)"
-  (positionChange)="majPosition($event)"
-  (seuilChange)="majSeuil($event)"
-  (fenetreAutoChange)="majFenetreAuto($event)"
-  (largeurFenetreChange)="majLargeurFenetre($event)"
-  (visuStatsChange)="majVisuStats($event)"
-  (visuChutesChange)="majVisuChutes($event)"
-></app-control>
 <app-stat *ngIf="estOK"
   [visuStats]="visuStats"
   [iStat]="iStat"

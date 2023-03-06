@@ -145,10 +145,12 @@
   .control {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     position: relative;
     width: auto;
     height: 100%;
-    margin-left: -10px;
-    margin-right: 10px;
+    left: 0;
+    right: 15px;
+    top: 0;
   }
 }

@@ -97,15 +97,13 @@
 
 @media screen and (max-width: 767px) {
   .stat {
-    position: fixed;
-    top: 525px;
-    overflow-y: scroll;
-    width: 100%;
-    height: auto;
-    bottom: 0;
+    position: relative;
+    width: auto;
+    top: 0;
     left: 0;
     background-color:white;
     color: black;
+    overflow-y: auto;
   }
 
   .entete, .liste1 {

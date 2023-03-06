@@ -7,12 +7,6 @@
   user-select: none;
 }
 
-@media screen and (max-width: 767px) {
-  .chart-container {
-    position: relative;
-  }
-}
-
 #chart {
   position: absolute;
   height: calc(100% - 10px);
@@ -43,4 +37,10 @@
 
 .ligne-droite {
   cursor: col-resize;
+}
+
+@media screen and (max-width: 767px) {
+  .chart-container {
+    position: relative;
+  }
 }
