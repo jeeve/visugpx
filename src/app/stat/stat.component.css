@@ -130,7 +130,7 @@
 
   .ligne td, .ligne th {
     padding: 5px;
-    width: 80px;
+    width: auto;
   }
 
   .nom { 

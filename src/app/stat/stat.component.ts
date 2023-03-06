@@ -61,7 +61,7 @@ export class StatComponent implements OnInit {
   constructor(private statService: StatService) {}
 
   ngOnInit(): void {
-    this.statService.calcule().subscribe(() => {this.calculOk = true; })
+    this.statService.calcule().subscribe(() => { this.calculOk = true; })
   }
 
   ligneClick(i: number) {
