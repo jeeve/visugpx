@@ -283,6 +283,8 @@ export class MapComponent implements AfterViewInit {
         let polyline = L.polyline(xy, { color: 'black' });
         this.map.fitBounds(polyline.getBounds());
         
+        this.fenetre.calcule(this._iPosition);
+        this.dessineTrace();
         this.metAJourStats();
       },
       error: (err) => console.log(err),
