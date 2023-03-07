@@ -56,8 +56,10 @@ export class AppComponent implements OnInit {
     this.vSeuil = seuil;
   }
 
-  majFenetre(fenetre: Fenetre): void {
-    this.mapComponent.dessineTrace();
+  majFenetre(): void {
+    if (this.mapComponent) {
+      this.mapComponent.dessineTrace();
+    }
   }
 
   majVisuStats(value: boolean): void {

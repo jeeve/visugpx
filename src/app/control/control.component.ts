@@ -121,22 +121,11 @@ export class ControlComponent implements OnInit {
     }
   }
 
-  private _fenetre!: Fenetre;
+  @Input()
+  fenetre!: Fenetre;
 
   @Output()
-  fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
-
-  @Input()
-  get fenetre(): Fenetre {
-    return this._fenetre;
-  }
-
-  set fenetre(value: Fenetre) {
-    this._fenetre = value;
-    this.fenetreChange.emit(value);
-  }
-
-  private _fenetreAuto = true;
+  fenetreChange: EventEmitter<void> = new EventEmitter<void>();
 
   file!: File;
 
@@ -152,6 +141,11 @@ export class ControlComponent implements OnInit {
         window.location.href = res;
       })
     }
+  }
+
+  metAjourFenetre() {
+    this.fenetre.calcule(this._iPosition);
+    this.fenetreChange.emit();
   }
 
   constructor(private gpxService: GpxService, private uploadService: UploadService, private statService: StatService) {}
