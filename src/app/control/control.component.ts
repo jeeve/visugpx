@@ -3,9 +3,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output,
-  Pipe,
-  PipeTransform,
+  Output
 } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Fenetre } from '../app.component';
@@ -168,8 +166,6 @@ export class ControlComponent implements OnInit {
         this.vmax = this.gpxService.vmax;
         this.iPosition = 0;
         this.distanceSeuil = this.calculeDistanceSeuil();
-        //this.gpxService.calculeStats();
-        //this.stats = this.gpxService.stats;
       }
     });
   }

@@ -91,6 +91,7 @@ export class MapComponent implements AfterViewInit {
     this.positionChange.emit(value);
     this.updatePosition();
     this.majFenetre();
+    this.dessineTrace();
   }
 
   @Input()
@@ -293,7 +294,7 @@ export class MapComponent implements AfterViewInit {
 
   private updatePosition() {
     if (this.gpxService.estOK) {
-      const i = this.iPosition;
+      const i = this._iPosition;
       const lat = this.gpxService.pointsGps[i].lat;
       const lon = this.gpxService.pointsGps[i].lon;
       this.markerVitesse.setLatLng({ lat: lat, lng: lon });

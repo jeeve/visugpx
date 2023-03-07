@@ -48,10 +48,6 @@
   margin-top: 10px;
 }
 
-.stats table {
-  /*display: none;*/
-}
-
 .reglages {
   display: block;
 }
@@ -89,6 +85,10 @@
 
 .fenetre-largeur {
   width: 50px;
+}
+
+.div-seuil {
+  margin-top: -10px;
 }
 
 .seuil {
@@ -152,5 +152,18 @@
     left: 0;
     right: 15px;
     top: 0;
+    font-size: 12px;
+  }
+
+  .slider-wrapper input {
+    width: 110px;
+    height: 40px;
+    margin: 0;
+    transform-origin: 55px 55px;
+    transform: rotate(-90deg);
+  }
+
+  .stop {
+    margin-left: 5px;
   }
 }
