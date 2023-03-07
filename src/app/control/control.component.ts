@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
+import { Fenetre } from '../app.component';
 import { GpxService } from '../gpx.service';
 import { StatService } from '../stat.service';
 import { UploadService } from '../upload.service';
@@ -120,34 +121,22 @@ export class ControlComponent implements OnInit {
     }
   }
 
-  private _largeurFenetre = 2;
+  private _fenetre!: Fenetre;
 
   @Output()
-  largeurFenetreChange: EventEmitter<number> = new EventEmitter<number>();
+  fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
 
-  get largeurFenetre(): number {
-    return this._largeurFenetre;
+  @Input()
+  get fenetre(): Fenetre {
+    return this._fenetre;
   }
 
-  set largeurFenetre(value: number) {
-    this._largeurFenetre = value;
-    this.largeurFenetreChange.emit(value);
+  set fenetre(value: Fenetre) {
+    this._fenetre = value;
+    this.fenetreChange.emit(value);
   }
 
   private _fenetreAuto = true;
-
-  @Output()
-  fenetreAutoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  @Input()
-  get fenetreAuto(): boolean {
-    return this._fenetreAuto;
-  }
-
-  set fenetreAuto(value: boolean) {
-    this._fenetreAuto = value;
-    this.fenetreAutoChange.emit(value);
-  }
 
   file!: File;
 

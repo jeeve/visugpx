@@ -93,19 +93,8 @@ export class MapComponent implements AfterViewInit {
     this.majFenetre();
   }
 
-  private _iFenetre!: Fenetre;
-
   @Input()
-  get iFenetre(): Fenetre {
-    return this._iFenetre;
-  }
-
-  set iFenetre(value: Fenetre) {
-    this._iFenetre = value;
-    if (this.gpxService.estOK) {
-      this.dessineTrace();
-    }
-  }
+  fenetre!: Fenetre;
 
   private _vSeuil!: number;
 
@@ -128,18 +117,8 @@ export class MapComponent implements AfterViewInit {
   largeurFenetre = 2;
 
   private majFenetre() {
-    if (this.fenetreAuto) {
-      if (!this.gpxService.estOK) return;
-      const d = this.gpxService.pointsCalcules[this._iPosition].distance;
-      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre / 2);
-      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre / 2);
-      if (a < 0) {
-        a = 0;
-      }
-      if (b > this.gpxService.pointsCalcules.length - 1) {
-        b = this.gpxService.pointsCalcules.length - 1;
-      }
-      this.iFenetre = { gauche: a, droite: b };
+    if (this.fenetre) {
+      this.fenetre.calcule(this._iPosition);
     }
   }
 
@@ -325,7 +304,7 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  private dessineTrace(): void {
+  dessineTrace(): void {
     if (!this.gpxService.estOK) return;
     let polylignes = [];
 
@@ -415,8 +394,8 @@ export class MapComponent implements AfterViewInit {
 
   private indiceEndehorsBornes(i: number): boolean {
     if (
-      i < this._iFenetre.gauche ||
-      i > this._iFenetre.droite ||
+      i < this.fenetre.a ||
+      i > this.fenetre.b ||
       (this._iStat > -1 && this._visuStats)
     ) {
       return true;

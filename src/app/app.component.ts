@@ -1,10 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { GpxService } from './gpx.service';
-import { Stat } from './stat.service';
+import { MapComponent } from './map/map.component';
 
-export type Fenetre = {
-  gauche: number;
-  droite: number;
+export class Fenetre {
+  a = 0.0;
+  b = 0.0;
+  auto = true;
+  largeur = 2;
+
+  constructor(private gpxService: GpxService) {
+  }
+
+  calcule(i: number): void {
+    if (this.auto) {
+      if (!this.gpxService.estOK) return;
+      const d = this.gpxService.pointsCalcules[i].distance;
+      this.a = this.gpxService.getIndiceDistance(d - this.largeur / 2);
+      this.b = this.gpxService.getIndiceDistance(d + this.largeur / 2);
+      if (this.a < 0) {
+        this.a = 0;
+      }
+      if (this.b > this.gpxService.pointsCalcules.length - 1) {
+        this.b = this.gpxService.pointsCalcules.length - 1;
+      }
+    }
+  }
 };
 
 @Component({
@@ -18,9 +38,7 @@ export class AppComponent implements OnInit {
   estOK = false;
   iPosition: number = 0;
   vSeuil: number = 12;
-  iFenetre: Fenetre = { gauche: 0, droite: 0 };
-  largeurFenetre = 2;
-  fenetreAuto = true;
+  fenetre: Fenetre = new Fenetre(this.gpxService);
   visuStats = true;
   visuChutes = true;
   calculStatsOk = false;
@@ -39,15 +57,7 @@ export class AppComponent implements OnInit {
   }
 
   majFenetre(fenetre: Fenetre): void {
-    this.iFenetre = fenetre;
-  }
-
-  majFenetreAuto(value: boolean): void {
-    this.fenetreAuto = value;
-  }
-
-  majLargeurFenetre(value: number): void {
-    this.largeurFenetre = value;
+    this.mapComponent.dessineTrace();
   }
 
   majVisuStats(value: boolean): void {
@@ -65,6 +75,8 @@ export class AppComponent implements OnInit {
   majCalculStatsOk(value: boolean) {
     this.calculStatsOk = value;
   }
+
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   constructor(private gpxService: GpxService) {}
 

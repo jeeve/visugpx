@@ -59,33 +59,11 @@ export class ChartComponent implements OnInit {
   @Input()
   afficheFenetre = true;
 
-  private _largeurFenetre = 2;
-
   @Input()
-  get largeurFenetre(): number {
-    return this._largeurFenetre;
-  }
-
-  set largeurFenetre(value: number) {
-    this._largeurFenetre = value;
-    this.majFenetre();
-  }
-
-  private _fenetreAuto = true;
+  fenetre!: Fenetre;
 
   @Output()
-  fenetreAutoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  @Input()
-  get fenetreAuto(): boolean {
-    return this._fenetreAuto;
-  }
-
-  set fenetreAuto(value: boolean) {
-    this._fenetreAuto = value;
-    this.majFenetre();
-    this.fenetreAutoChange.emit(value);
-  }
+  fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
 
   @Output()
   seuilChange: EventEmitter<number> = new EventEmitter<number>();
@@ -114,48 +92,25 @@ export class ChartComponent implements OnInit {
     this._iPosition = value;
     this.majFenetre();
     this.positionChange.emit(value);
-  }
-
-  private _iFenetre = { gauche: 0, droite: 0 };
-
-  @Output()
-  fenetreChange: EventEmitter<Fenetre> = new EventEmitter<Fenetre>();
-
-  get iFenetre(): Fenetre {
-    return this._iFenetre;
-  }
-
-  set iFenetre(value: Fenetre) {
-    this._iFenetre = value;
-    this.fenetreChange.emit(value);
+    this.fenetreChange.emit(this.fenetre);
   }
 
   private majFenetre() {
-    if (this._fenetreAuto) {
-      if (!this.gpxService.estOK) return;
-      const d = this.gpxService.pointsCalcules[this._iPosition].distance;
-      let a = this.gpxService.getIndiceDistance(d - this.largeurFenetre / 2);
-      let b = this.gpxService.getIndiceDistance(d + this.largeurFenetre / 2);
-      if (a < 0) {
-        a = 0;
-      }
-      if (b > this.gpxService.pointsCalcules.length - 1) {
-        b = this.gpxService.pointsCalcules.length - 1;
-      }
-      this.iFenetre = { gauche: a, droite: b };
+    if (this.fenetre) {
+      this.fenetre.calcule(this._iPosition);
     }
   }
 
   get XFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
-      if (this._iFenetre.gauche <= this._iFenetre.droite) {
+      if (this.fenetre.a <= this.fenetre.b) {
         return (
-          this.xLoc(this.gpxService.x(this._iFenetre.gauche)) -
+          this.xLoc(this.gpxService.x(this.fenetre.a)) -
           LARGEUR_LIGNE / 2
         );
       } else {
         return (
-          this.xLoc(this.gpxService.x(this._iFenetre.droite)) -
+          this.xLoc(this.gpxService.x(this.fenetre.b)) -
           LARGEUR_LIGNE / 2
         );
       }
@@ -166,14 +121,14 @@ export class ChartComponent implements OnInit {
 
   get XFenetreDroite(): number {
     if (this.chart && this.gpxService.estOK) {
-      if (this._iFenetre.gauche <= this._iFenetre.droite) {
+      if (this.fenetre.a <= this.fenetre.b) {
         return (
-          this.xLoc(this.gpxService.x(this._iFenetre.droite)) -
+          this.xLoc(this.gpxService.x(this.fenetre.b)) -
           LARGEUR_LIGNE / 2
         );
       } else {
         return (
-          this.xLoc(this.gpxService.x(this._iFenetre.gauche)) -
+          this.xLoc(this.gpxService.x(this.fenetre.a)) -
           LARGEUR_LIGNE / 2
         );
       }
@@ -219,7 +174,7 @@ export class ChartComponent implements OnInit {
 
   private initChart() {
     this.drawChart();
-    this.largeurFenetre = 2;
+    this.fenetre.largeur = 2;
     this.majFenetre();
   }
 
@@ -290,18 +245,14 @@ export class ChartComponent implements OnInit {
             this.iPosition = this.gpxService.getIndiceDistance(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
-            this.fenetreAuto = false;
-            this.iFenetre = {
-              gauche: this.gpxService.getIndiceDistance(x),
-              droite: this._iFenetre.droite,
-            };
+            this.fenetre.auto = false;
+            this.fenetre.a = this.gpxService.getIndiceDistance(x);
+            this.fenetreChange.emit(this.fenetre);
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
-            this.fenetreAuto = false;
-            this.iFenetre = {
-              gauche: this._iFenetre.gauche,
-              droite: this.gpxService.getIndiceDistance(x),
-            };
+            this.fenetre.auto = false;
+            this.fenetre.b = this.gpxService.getIndiceDistance(x);
+            this.fenetreChange.emit(this.fenetre);
           }
         }
       } else {
@@ -315,7 +266,6 @@ export class ChartComponent implements OnInit {
       }
     }
   }
-
   mouseUp(e: Event): void {
     this.elementSelectionne = null;
   }

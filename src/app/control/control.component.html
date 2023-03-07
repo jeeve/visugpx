@@ -87,13 +87,13 @@
   </div>
   <div class="controle2">
     <div *ngIf="afficheFenetre" class="fenetre">
-      <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetreAuto" />
+      <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetre.auto" />
       <label class="label-fenetre-auto">Fenêtre auto</label>
-      <div *ngIf="fenetreAuto" class="div-fenetre-largeur">
+      <div *ngIf="fenetre.auto" class="div-fenetre-largeur">
         <input
           type="text"
           class="fenetre-largeur"
-          [(ngModel)]="largeurFenetre"
+          [(ngModel)]="fenetre.largeur"
         />
         <span>km</span>
       </div>
