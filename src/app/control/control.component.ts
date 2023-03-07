@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { Fenetre } from '../app.component';
 import { GpxService } from '../gpx.service';
@@ -130,16 +138,16 @@ export class ControlComponent implements OnInit {
   file!: File;
 
   onFilechange(event: any) {
-    console.log(event.target.files[0])
-    this.file = event.target.files[0]
+    console.log(event.target.files[0]);
+    this.file = event.target.files[0];
   }
-  
+
   upload() {
     if (this.file) {
       this.uploadService.uploadfile(this.file).subscribe((res: any) => {
         console.log(res);
         window.location.href = res;
-      })
+      });
     }
   }
 
@@ -148,7 +156,11 @@ export class ControlComponent implements OnInit {
     this.fenetreChange.emit();
   }
 
-  constructor(private gpxService: GpxService, private uploadService: UploadService, private statService: StatService) {}
+  constructor(
+    private gpxService: GpxService,
+    private uploadService: UploadService,
+    private statService: StatService
+  ) {}
 
   ngOnInit(): void {
     this.gpxService.lit().subscribe(() => {
@@ -163,7 +175,7 @@ export class ControlComponent implements OnInit {
   }
 
   lecture(): void {
-    if (this.intervalSubscription) 
+    if (this.intervalSubscription)
       if (!this.intervalSubscription.closed) return;
     this.intervalSubscription = interval(1000 / this.rapidite).subscribe(() => {
       let d = this.gpxService.pointsGps[this._iPosition].date;
@@ -176,7 +188,9 @@ export class ControlComponent implements OnInit {
   }
 
   stop(): void {
-    this.intervalSubscription.unsubscribe();
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
   }
 
   rapiditeChange(): void {
