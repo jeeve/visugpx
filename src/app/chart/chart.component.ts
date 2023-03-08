@@ -263,7 +263,7 @@ export class ChartComponent implements OnInit {
 
   private getIndiceAbscisse(x : number): number {
     if (this.modeTemps) {
-      const d = this.gpxService.pointsGps[0].date;
+      const d = new Date(this.gpxService.pointsGps[0].date);
       d.setTime(d.getTime() + x*1000);
       return this.gpxService.getIndiceTemps(d);
     } else {
