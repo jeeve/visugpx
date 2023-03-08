@@ -3,14 +3,15 @@
   [iPosition]="iPosition"
   [vSeuil]="vSeuil"
   [fenetre]="fenetre"
-  [afficheFenetre]="!(visuStats && iStat > - 1)"
+  [afficheFenetre]="!(visuStats && iStat > -1)"
   (positionChange)="majPosition($event)"
   (seuilChange)="majSeuil($event)"
   (fenetreChange)="majFenetre()"
   (visuStatsChange)="majVisuStats($event)"
   (visuChutesChange)="majVisuChutes($event)"
 ></app-control>
-<app-map *ngIf="estOK"
+<app-map
+  *ngIf="estOK"
   [iPosition]="iPosition"
   [vSeuil]="vSeuil"
   [visuStats]="visuStats"
@@ -21,19 +22,37 @@
   (positionChange)="majPosition($event)"
   (iStatChange)="majiStat($event)"
 ></app-map>
-<app-chart *ngIf="estOK && !ecranMini"
-  [iPosition]="iPosition"
-  [vSeuil]="vSeuil"
-  [fenetre]="fenetre"
-  [visuStats]="visuStats"
-  [visuChutes]="visuChutes"
-  [iStat]="iStat"
-  [afficheFenetre]="!(visuStats && iStat > - 1)"
-  (positionChange)="majPosition($event)"
-  (seuilChange)="majSeuil($event)"
-  (fenetreChange)="majFenetre()"
-></app-chart>
-<app-stat *ngIf="estOK"
+<div class="charts-container">
+  <app-chart
+    *ngIf="estOK && !ecranMini"
+    [iPosition]="iPosition"
+    [vSeuil]="vSeuil"
+    [fenetre]="fenetre"
+    [visuStats]="visuStats"
+    [visuChutes]="visuChutes"
+    [iStat]="iStat"
+    [afficheFenetre]="!(visuStats && iStat > -1)"
+    (positionChange)="majPosition($event)"
+    (seuilChange)="majSeuil($event)"
+    (fenetreChange)="majFenetre()"
+  ></app-chart>
+  <app-chart
+    *ngIf="estOK && !ecranMini"
+    [modeTemps]="true"
+    [iPosition]="iPosition"
+    [vSeuil]="vSeuil"
+    [fenetre]="fenetre"
+    [visuStats]="visuStats"
+    [visuChutes]="visuChutes"
+    [iStat]="iStat"
+    [afficheFenetre]="!(visuStats && iStat > -1)"
+    (positionChange)="majPosition($event)"
+    (seuilChange)="majSeuil($event)"
+    (fenetreChange)="majFenetre()"
+  ></app-chart>
+</div>
+<app-stat
+  *ngIf="estOK"
   [visuStats]="visuStats"
   [iStat]="iStat"
   (calculOkChange)="majCalculStatsOk($event)"

@@ -1,5 +1,6 @@
 .chart-container {
-  position: absolute;
+  position: relative;
+  height: 130px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -7,7 +8,7 @@
   user-select: none;
 }
 
-#chart {
+.chart {
   position: absolute;
   height: calc(100% - 10px);
   width: 100%;

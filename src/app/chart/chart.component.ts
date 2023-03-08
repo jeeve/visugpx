@@ -1,16 +1,17 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
-import { from, mergeMap, Observable, of } from 'rxjs';
 import { GpxService, Vitesse } from '../gpx.service';
 import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
-import { Stat, StatService } from '../stat.service';
+import { StatService } from '../stat.service';
 import { couleursStat } from '../stat/stat.component';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
@@ -24,6 +25,20 @@ declare let google: any;
 })
 export class ChartComponent implements OnInit {
   affichageOK = false;
+
+  @Input()
+  modeTemps = false;
+  
+  @ViewChild('charttemplate') 
+  chartTemplate!: ElementRef;
+
+  private chartElement(): HTMLElement | null {
+    if (this.chartTemplate) {
+      return this.chartTemplate.nativeElement;
+    }
+    return null;
+  }
+ 
   private _vSeuil = 0;
 
   @Input()
@@ -138,7 +153,7 @@ export class ChartComponent implements OnInit {
   }
 
   get largeur(): number {
-    const c = document.querySelector('#chart');
+    const c = this.chartElement();
     if (c) {
       return c.clientWidth;
     } else {
@@ -186,10 +201,16 @@ export class ChartComponent implements OnInit {
 
   private drawChart(): void {
     let chartxy = [];
+    let abscisse: number;
     chartxy.push(['Distance', 'Vitesse']);
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
+      if (this.modeTemps) {
+        abscisse = this.gpxService.pointsCalcules[i].temps;
+      } else {
+        abscisse = this.gpxService.pointsCalcules[i].distance;
+      } 
       chartxy.push([
-        this.gpxService.pointsCalcules[i].distance,
+        abscisse,
         this.gpxService.pointsCalcules[i].vitesse,
       ]);
     }
@@ -216,7 +237,7 @@ export class ChartComponent implements OnInit {
     };
 
     this.chart = new google.visualization.LineChart(
-      document.querySelector('#chart')
+      this.chartElement()
     );
 
     this.chart.draw(this.data, this.options);
@@ -281,7 +302,7 @@ export class ChartComponent implements OnInit {
   private chartGetx(X: number): number {
     const layout = this.chart.getChartLayoutInterface();
     const L = layout.getChartAreaBoundingBox().width;
-    const c = document.querySelector('#chart');
+    const c = this.chartElement();
     if (c) {
       const X2 = X - c.clientLeft - 40;
       return (X2 * this.gpxService.dmax) / L;
@@ -292,7 +313,7 @@ export class ChartComponent implements OnInit {
   private chartGety(Y: number): number {
     const layout = this.chart.getChartLayoutInterface();
     const H = layout.getChartAreaBoundingBox().height;
-    const c = document.querySelector('#chart') as HTMLElement;
+    const c = this.chartElement();
     if (c) {
       const Y2 = c.getBoundingClientRect().top + H - Y + 10;
       return (Y2 * this.gpxService.vmax) / H;
