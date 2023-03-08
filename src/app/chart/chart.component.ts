@@ -24,6 +24,7 @@ declare let google: any;
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
+  private chartxy: any[] = [];
   affichageOK = false;
 
   @Input()
@@ -200,26 +201,25 @@ export class ChartComponent implements OnInit {
   }
 
   private drawChart(): void {
-    let chartxy = [];
     let abscisse: number;
-    chartxy.push(['Distance', 'Vitesse']);
+    this.chartxy.push(['Distance', 'Vitesse']);
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       if (this.modeTemps) {
         abscisse = this.gpxService.pointsCalcules[i].temps;
       } else {
         abscisse = this.gpxService.pointsCalcules[i].distance;
       } 
-      chartxy.push([
+      this.chartxy.push([
         abscisse,
         this.gpxService.pointsCalcules[i].vitesse,
       ]);
     }
 
-    if (chartxy.length == 0) {
+    if (this.chartxy.length == 0) {
       return;
     }
 
-    this.data = google.visualization.arrayToDataTable(chartxy);
+    this.data = google.visualization.arrayToDataTable(this.chartxy);
 
     const vAxisOptions = {
       viewWindowMode: 'explicit',
@@ -287,6 +287,7 @@ export class ChartComponent implements OnInit {
       }
     }
   }
+
   mouseUp(e: Event): void {
     this.elementSelectionne = null;
   }
@@ -300,14 +301,7 @@ export class ChartComponent implements OnInit {
   }
 
   private xmax(): number {
-    if (!this.gpxService.estOK) {
-      return 0;
-    }
-    if (this.modeTemps) {
-      return this.gpxService.tmax;
-    } else {
-      return this.gpxService.dmax;
-    }
+    return this.chartxy[this.chartxy.length-1][0];
   }
 
   private chartGetx(X: number): number {
