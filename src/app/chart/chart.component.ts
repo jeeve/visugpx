@@ -257,7 +257,17 @@ export class ChartComponent implements OnInit {
     e.preventDefault();
     const x = this.chartGetx((e as MouseEvent).clientX);
     if (x >= 0 && x <= this.xmax()) {
-      this.iPosition = this.gpxService.getIndiceDistance(x);
+      this.iPosition = this.getIndiceAbscisse(x);
+    }
+  }
+
+  private getIndiceAbscisse(x : number): number {
+    if (this.modeTemps) {
+      const d = this.gpxService.pointsGps[0].date;
+      d.setTime(d.getTime() + x*1000);
+      return this.gpxService.getIndiceTemps(d);
+    } else {
+      return this.gpxService.getIndiceDistance(x);
     }
   }
 
@@ -271,16 +281,16 @@ export class ChartComponent implements OnInit {
         const x = this.chartGetx((e as MouseEvent).clientX);
         if (x >= 0 && x <= this.xmax()) {
           if (this.elementSelectionne.classList.contains('ligne-position')) {
-            this.iPosition = this.gpxService.getIndiceDistance(x);
+            this.iPosition = this.getIndiceAbscisse(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
             this.fenetre.auto = false;
-            this.fenetre.a = this.gpxService.getIndiceDistance(x);
+            this.fenetre.a = this.getIndiceAbscisse(x);
             this.fenetreChange.emit(this.fenetre);
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
             this.fenetre.auto = false;
-            this.fenetre.b = this.gpxService.getIndiceDistance(x);
+            this.fenetre.b = this.getIndiceAbscisse(x);
             this.fenetreChange.emit(this.fenetre);
           }
         }
