@@ -117,16 +117,24 @@ export class ChartComponent implements OnInit {
     }
   }
 
+  private x(i: number): number {
+    if (this.modeTemps) {
+      return this.gpxService.pointsCalcules[i].temps;
+    } else {
+      return this.gpxService.pointsCalcules[i].distance;
+    }
+  }
+
   get XFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
         return (
-          this.xLoc(this.gpxService.x(this.fenetre.a)) -
+          this.xLoc(this.x(this.fenetre.a)) -
           LARGEUR_LIGNE / 2
         );
       } else {
         return (
-          this.xLoc(this.gpxService.x(this.fenetre.b)) -
+          this.xLoc(this.x(this.fenetre.b)) -
           LARGEUR_LIGNE / 2
         );
       }
@@ -139,12 +147,12 @@ export class ChartComponent implements OnInit {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
         return (
-          this.xLoc(this.gpxService.x(this.fenetre.b)) -
+          this.xLoc(this.x(this.fenetre.b)) -
           LARGEUR_LIGNE / 2
         );
       } else {
         return (
-          this.xLoc(this.gpxService.x(this.fenetre.a)) -
+          this.xLoc(this.x(this.fenetre.a)) -
           LARGEUR_LIGNE / 2
         );
       }
@@ -328,7 +336,7 @@ export class ChartComponent implements OnInit {
 
   get XPosition(): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.gpxService.x(this._iPosition)) - LARGEUR_LIGNE / 2;
+      return this.xLoc(this.x(this._iPosition)) - LARGEUR_LIGNE / 2;
     } else {
       return 0;
     }
@@ -354,7 +362,7 @@ export class ChartComponent implements OnInit {
 
   X(i: number): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.gpxService.x(i)) - 5;
+      return this.xLoc(this.x(i)) - 5;
     } else {
       return 25;
     }
