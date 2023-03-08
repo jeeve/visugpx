@@ -248,7 +248,7 @@ export class ChartComponent implements OnInit {
   clickChart(e: Event): void {
     e.preventDefault();
     const x = this.chartGetx((e as MouseEvent).clientX);
-    if (x >= 0 && x <= this.gpxService.dmax) {
+    if (x >= 0 && x <= this.xmax()) {
       this.iPosition = this.gpxService.getIndiceDistance(x);
     }
   }
@@ -261,7 +261,7 @@ export class ChartComponent implements OnInit {
     if (this.elementSelectionne) {
       if (this.elementSelectionne.classList.contains('ligne-verticale')) {
         const x = this.chartGetx((e as MouseEvent).clientX);
-        if (x >= 0 && x <= this.gpxService.dmax) {
+        if (x >= 0 && x <= this.xmax()) {
           if (this.elementSelectionne.classList.contains('ligne-position')) {
             this.iPosition = this.gpxService.getIndiceDistance(x);
           }
@@ -299,13 +299,24 @@ export class ChartComponent implements OnInit {
     this.elementSelectionne = null;
   }
 
+  private xmax(): number {
+    if (!this.gpxService.estOK) {
+      return 0;
+    }
+    if (this.modeTemps) {
+      return this.gpxService.tmax;
+    } else {
+      return this.gpxService.dmax;
+    }
+  }
+
   private chartGetx(X: number): number {
     const layout = this.chart.getChartLayoutInterface();
     const L = layout.getChartAreaBoundingBox().width;
     const c = this.chartElement();
     if (c) {
       const X2 = X - c.clientLeft - 40;
-      return (X2 * this.gpxService.dmax) / L;
+      return (X2 * this.xmax()) / L;
     }
     return -1;
   }
