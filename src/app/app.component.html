@@ -10,46 +10,50 @@
   (visuStatsChange)="majVisuStats($event)"
   (visuChutesChange)="majVisuChutes($event)"
 ></app-control>
-<app-map
-  *ngIf="estOK"
-  [iPosition]="iPosition"
-  [vSeuil]="vSeuil"
-  [visuStats]="visuStats"
-  [visuChutes]="visuChutes"
-  [iStat]="iStat"
-  [calculStatOk]="calculStatsOk"
-  [fenetre]="fenetre"
-  (positionChange)="majPosition($event)"
-  (iStatChange)="majiStat($event)"
-></app-map>
-<div class="charts-container">
-  <app-chart
-    *ngIf="estOK && !ecranMini"
-    [iPosition]="iPosition"
-    [vSeuil]="vSeuil"
-    [fenetre]="fenetre"
-    [visuStats]="visuStats"
-    [visuChutes]="visuChutes"
-    [iStat]="iStat"
-    [afficheFenetre]="!(visuStats && iStat > -1)"
-    (positionChange)="majPosition($event)"
-    (seuilChange)="majSeuil($event)"
-    (fenetreChange)="majFenetre()"
-  ></app-chart>
-  <app-chart
-    *ngIf="estOK && !ecranMini"
-    [modeTemps]="true"
-    [iPosition]="iPosition"
-    [vSeuil]="vSeuil"
-    [fenetre]="fenetre"
-    [visuStats]="visuStats"
-    [visuChutes]="visuChutes"
-    [iStat]="iStat"
-    [afficheFenetre]="!(visuStats && iStat > -1)"
-    (positionChange)="majPosition($event)"
-    (seuilChange)="majSeuil($event)"
-    (fenetreChange)="majFenetre()"
-  ></app-chart>
+<div class="container">
+  <div class="map-container">
+    <app-map
+      *ngIf="estOK"
+      [iPosition]="iPosition"
+      [vSeuil]="vSeuil"
+      [visuStats]="visuStats"
+      [visuChutes]="visuChutes"
+      [iStat]="iStat"
+      [calculStatOk]="calculStatsOk"
+      [fenetre]="fenetre"
+      (positionChange)="majPosition($event)"
+      (iStatChange)="majiStat($event)"
+    ></app-map>
+  </div>
+  <div class="charts-container">
+    <app-chart
+      *ngIf="estOK && !ecranMini"
+      [iPosition]="iPosition"
+      [vSeuil]="vSeuil"
+      [fenetre]="fenetre"
+      [visuStats]="visuStats"
+      [visuChutes]="visuChutes"
+      [iStat]="iStat"
+      [afficheFenetre]="!(visuStats && iStat > -1)"
+      (positionChange)="majPosition($event)"
+      (seuilChange)="majSeuil($event)"
+      (fenetreChange)="majFenetre()"
+    ></app-chart>
+    <app-chart
+      *ngIf="estOK && !ecranMini"
+      [modeTemps]="true"
+      [iPosition]="iPosition"
+      [vSeuil]="vSeuil"
+      [fenetre]="fenetre"
+      [visuStats]="visuStats"
+      [visuChutes]="visuChutes"
+      [iStat]="iStat"
+      [afficheFenetre]="!(visuStats && iStat > -1)"
+      (positionChange)="majPosition($event)"
+      (seuilChange)="majSeuil($event)"
+      (fenetreChange)="majFenetre()"
+    ></app-chart>
+  </div>
 </div>
 <app-stat
   *ngIf="estOK"
