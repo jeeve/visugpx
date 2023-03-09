@@ -17,14 +17,14 @@
       </svg>
     </svg>
     <svg *ngIf="afficheFenetre">
-      <rect x="30" y="10" [attr.width]="XFenetreGauche-25" height="124" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
+      <rect x="30" y="10" [attr.width]="XFenetreGauche-25" height="135" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
     <svg *ngIf="afficheFenetre">
-      <rect [attr.x]="XFenetreDroite+5" y="10" [attr.width]="largeur-XFenetreDroite" height="124" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
+      <rect [attr.x]="XFenetreDroite+5" y="10" [attr.width]="largeur-XFenetreDroite" height="135" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
-    <svg class="ligne ligne-verticale ligne-position" [attr.x]="XPosition" y="10" width="10" height="130" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+    <svg class="ligne ligne-verticale ligne-position" [attr.x]="XPosition" y="10" width="10" height="135" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
@@ -39,7 +39,7 @@
           x1="5"
           y1="0"
           x2="5"
-          y2="130"
+          y2="135"
           stroke="#000000"
           stroke-width="3"
           stroke-dasharray="5, 5"
@@ -65,7 +65,7 @@
           stroke-width="2"
         ></line>
       </svg>
-      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-gauche" [attr.x]="XFenetreGauche" y="10" width="10" height="130" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-gauche" [attr.x]="XFenetreGauche" y="10" width="10" height="135" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
@@ -80,12 +80,12 @@
           x1="5"
           y1="0"
           x2="5"
-          y2="125"
+          y2="135"
           stroke="#000000"
           stroke-width="3"
         ></line>
       </svg>
-      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-droite" [attr.x]="XFenetreDroite" y="10" width="10" height="130" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
+      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-droite" [attr.x]="XFenetreDroite" y="10" width="10" height="135" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
         <rect
           x="0"
           y="0"
@@ -100,7 +100,7 @@
           x1="5"
           y1="0"
           x2="5"
-          y2="125"
+          y2="135"
           stroke="#000000"
           stroke-width="3"
         ></line>
