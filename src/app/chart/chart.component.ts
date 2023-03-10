@@ -29,8 +29,8 @@ export class ChartComponent implements OnInit {
 
   @Input()
   modeTemps = false;
-  
-  @ViewChild('charttemplate') 
+
+  @ViewChild('charttemplate')
   chartTemplate!: ElementRef;
 
   private chartElement(): HTMLElement | null {
@@ -39,7 +39,7 @@ export class ChartComponent implements OnInit {
     }
     return null;
   }
- 
+
   private _vSeuil = 0;
 
   @Input()
@@ -57,7 +57,7 @@ export class ChartComponent implements OnInit {
     return this.statService.ivmax;
   }
 
-  get vitesses() : Vitesse[] {
+  get vitesses(): Vitesse[] {
     if (this.iStat > -1) {
       return this.statService.stats[this.iStat].v;
     } else {
@@ -65,7 +65,7 @@ export class ChartComponent implements OnInit {
     }
   }
 
-  get couleursStat() : string[] {
+  get couleursStat(): string[] {
     return couleursStat;
   }
 
@@ -128,15 +128,9 @@ export class ChartComponent implements OnInit {
   get XFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
-        return (
-          this.xLoc(this.x(this.fenetre.a)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.a)) - LARGEUR_LIGNE / 2;
       } else {
-        return (
-          this.xLoc(this.x(this.fenetre.b)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.b)) - LARGEUR_LIGNE / 2;
       }
     } else {
       return 25;
@@ -146,15 +140,9 @@ export class ChartComponent implements OnInit {
   get XFenetreDroite(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
-        return (
-          this.xLoc(this.x(this.fenetre.b)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.b)) - LARGEUR_LIGNE / 2;
       } else {
-        return (
-          this.xLoc(this.x(this.fenetre.a)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.a)) - LARGEUR_LIGNE / 2;
       }
     } else {
       return 0;
@@ -216,11 +204,8 @@ export class ChartComponent implements OnInit {
         abscisse = this.gpxService.pointsCalcules[i].temps;
       } else {
         abscisse = this.gpxService.pointsCalcules[i].distance;
-      } 
-      this.chartxy.push([
-        abscisse,
-        this.gpxService.pointsCalcules[i].vitesse,
-      ]);
+      }
+      this.chartxy.push([abscisse, this.gpxService.pointsCalcules[i].vitesse]);
     }
 
     if (this.chartxy.length == 0) {
@@ -229,13 +214,11 @@ export class ChartComponent implements OnInit {
 
     this.data = google.visualization.arrayToDataTable(this.chartxy);
 
-    const vAxisOptions = {
-      viewWindowMode: 'explicit',
-      viewWindow: { min: 0, max: this.gpxService.vmax },
-    };
-
     this.options = {
-      vAxis: vAxisOptions,
+      vAxis: {
+        viewWindowMode: 'explicit',
+        viewWindow: { min: 0, max: this.gpxService.vmax },
+      },
       pointSize: 0,
       legend: { position: 'none' },
       chartArea: { left: '30', right: '0', top: '10', bottom: '20' },
@@ -244,9 +227,21 @@ export class ChartComponent implements OnInit {
       lineWidth: 1,
     };
 
-    this.chart = new google.visualization.LineChart(
-      this.chartElement()
-    );
+    // TODO ne marche pas
+    if (this.modeTemps) {
+      for (let i = 0; i < this.data.getNumberOfRows(); i++) {
+        const value = this.data.getValue(i, 0);
+        const minutes = Math.floor(value / 60);
+        const seconds = Math.round(value % 60);
+        let sminutes = minutes.toString();
+        let sseconds = seconds.toString();
+        sminutes = minutes < 10 ? '0' + sminutes : sminutes;
+        sseconds = seconds < 10 ? '0' + sseconds : sseconds;
+        this.data.setFormattedValue(i, 0, sminutes + ':' + sseconds);
+      }
+    }
+
+    this.chart = new google.visualization.LineChart(this.chartElement());
 
     this.chart.draw(this.data, this.options);
   }
@@ -261,10 +256,10 @@ export class ChartComponent implements OnInit {
     }
   }
 
-  private getIndiceAbscisse(x : number): number {
+  private getIndiceAbscisse(x: number): number {
     if (this.modeTemps) {
       const d = new Date(this.gpxService.pointsGps[0].date);
-      d.setTime(d.getTime() + x*1000);
+      d.setTime(d.getTime() + x * 1000);
       return this.gpxService.getIndiceTemps(d);
     } else {
       return this.gpxService.getIndiceDistance(x);
@@ -319,7 +314,7 @@ export class ChartComponent implements OnInit {
   }
 
   private xmax(): number {
-    return this.chartxy[this.chartxy.length-1][0];
+    return this.chartxy[this.chartxy.length - 1][0];
   }
 
   private chartGetx(X: number): number {
