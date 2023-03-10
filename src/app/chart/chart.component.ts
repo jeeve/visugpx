@@ -196,13 +196,16 @@ export class ChartComponent implements OnInit {
   }
   
   private timeFormat(t: number): string {
+    const heures = Math.floor(t / 3600);
     const minutes = Math.floor(t / 60);
     const seconds = Math.round(t % 60);
+    let sheures = heures.toString();
     let sminutes = minutes.toString();
     let sseconds = seconds.toString();
+    sheures = heures < 10 ? '0' + sheures : sheures;
     sminutes = minutes < 10 ? '0' + sminutes : sminutes;
     sseconds = seconds < 10 ? '0' + sseconds : sseconds;
-    return sminutes + ':' + sseconds;
+    return sheures + ':' + sminutes + ':' + sseconds;
   }
 
   private drawChart(): void {
