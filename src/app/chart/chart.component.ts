@@ -13,6 +13,7 @@ import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
 import { StatService } from '../stat.service';
 import { couleursStat } from '../stat/stat.component';
+import { format } from 'path';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
 const LARGEUR_LIGNE = 10;
@@ -194,40 +195,56 @@ export class ChartComponent implements OnInit {
       this.chart.draw(this.data, this.options);
     }
   }
-  
+
   private timeFormat(t: number): string {
     const heures = Math.floor(t / 3600);
-    const minutes = Math.floor(t / 60);
-    const seconds = Math.round(t % 60);
+    const minutes = Math.floor((t % 3600) / 60);
+    const seconds = t % 60;
     let sheures = heures.toString();
     let sminutes = minutes.toString();
     let sseconds = seconds.toString();
     sheures = heures < 10 ? '0' + sheures : sheures;
     sminutes = minutes < 10 ? '0' + sminutes : sminutes;
     sseconds = seconds < 10 ? '0' + sseconds : sseconds;
-    return sheures + ':' + sminutes + ':' + sseconds;
+    return sheures + ':' + sminutes;
   }
 
   private drawChart(): void {
-    let abscisse: any;
+    let abscisse: number;
 
     this.data = new google.visualization.DataTable();
     this.data.addColumn('number', 'Distance');
-    this.data.addColumn('number', 'Vistesse');
+    this.data.addColumn('number', 'Vitesse');
 
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       if (this.modeTemps) {
-        abscisse = { 
-          v: this.gpxService.pointsCalcules[i].temps,
-          f: this.timeFormat(this.gpxService.pointsCalcules[i].temps) // ne marche pas
-        };
+        abscisse = this.gpxService.pointsCalcules[i].temps;
       } else {
         abscisse = this.gpxService.pointsCalcules[i].distance;
       }
       this.data.addRow([abscisse, this.gpxService.pointsCalcules[i].vitesse]);
     }
 
+    let hAxis = {}
+    
+    if (this.modeTemps) {
+      const range = this.data.getColumnRange(0);
+      const max = Math.ceil(range.max / 100) * 100;
+      var ticks = [];
+      for (let i = 0; i <= max + 600; i = i + 600) {
+        ticks.push({
+          v: i,
+          f: this.timeFormat(i),
+        });
+      }
+      hAxis = {
+        ticks: ticks,
+        slantedText: false,
+      }
+    }
+
     this.options = {
+      hAxis: hAxis,
       vAxis: {
         viewWindowMode: 'explicit',
         viewWindow: { min: 0, max: this.gpxService.vmax },
@@ -240,7 +257,7 @@ export class ChartComponent implements OnInit {
       lineWidth: 1,
     };
 
-    this.chart = new google.visualization.LineChart(this.chartElement());
+    this.chart = new google.visualization.AreaChart(this.chartElement());
 
     this.chart.draw(this.data, this.options);
   }
@@ -313,7 +330,7 @@ export class ChartComponent implements OnInit {
   }
 
   private xmax(): number {
-    return this.data.getValue(this.data.getNumberOfRows()-1, 0);
+    return this.data.getValue(this.data.getNumberOfRows() - 1, 0);
   }
 
   private chartGetx(X: number): number {
