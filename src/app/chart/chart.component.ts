@@ -194,17 +194,30 @@ export class ChartComponent implements OnInit {
       this.chart.draw(this.data, this.options);
     }
   }
+  
+  private timeFormat(t: number): string {
+    const minutes = Math.floor(t / 60);
+    const seconds = Math.round(t % 60);
+    let sminutes = minutes.toString();
+    let sseconds = seconds.toString();
+    sminutes = minutes < 10 ? '0' + sminutes : sminutes;
+    sseconds = seconds < 10 ? '0' + sseconds : sseconds;
+    return sminutes + ':' + sseconds;
+  }
 
   private drawChart(): void {
-    let abscisse: number;
+    let abscisse: any;
 
     this.data = new google.visualization.DataTable();
-    this.data.addColumn('number', 'Rank');
-    this.data.addColumn('number', 'Rank');
+    this.data.addColumn('number', 'Distance');
+    this.data.addColumn('number', 'Vistesse');
 
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       if (this.modeTemps) {
-        abscisse = this.gpxService.pointsCalcules[i].temps;
+        abscisse = { 
+          v: this.gpxService.pointsCalcules[i].temps,
+          f: this.timeFormat(this.gpxService.pointsCalcules[i].temps)
+        };
       } else {
         abscisse = this.gpxService.pointsCalcules[i].distance;
       }
@@ -223,20 +236,6 @@ export class ChartComponent implements OnInit {
       dataOpacity: 0.0,
       lineWidth: 1,
     };
-
-    // TODO ne marche pas
-    if (this.modeTemps) {
-      for (let i = 0; i < this.data.getNumberOfRows(); i++) {
-        const value = this.data.getValue(i, 0);
-        const minutes = Math.floor(value / 60);
-        const seconds = Math.round(value % 60);
-        let sminutes = minutes.toString();
-        let sseconds = seconds.toString();
-        sminutes = minutes < 10 ? '0' + sminutes : sminutes;
-        sseconds = seconds < 10 ? '0' + sseconds : sseconds;
-        this.data.setFormattedValue(i, 0, sminutes + ':' + sseconds);
-      }
-    }
 
     this.chart = new google.visualization.LineChart(this.chartElement());
 
