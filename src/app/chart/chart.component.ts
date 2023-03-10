@@ -216,7 +216,7 @@ export class ChartComponent implements OnInit {
       if (this.modeTemps) {
         abscisse = { 
           v: this.gpxService.pointsCalcules[i].temps,
-          f: this.timeFormat(this.gpxService.pointsCalcules[i].temps)
+          f: this.timeFormat(this.gpxService.pointsCalcules[i].temps) // ne marche pas
         };
       } else {
         abscisse = this.gpxService.pointsCalcules[i].distance;
