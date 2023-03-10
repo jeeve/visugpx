@@ -231,7 +231,7 @@ export class ChartComponent implements OnInit {
       const range = this.data.getColumnRange(0);
       const max = Math.ceil(range.max / 100) * 100;
       var ticks = [];
-      for (let i = 0; i <= max + 600; i = i + 600) {
+      for (let i = 600; i < max-600; i = i + 600) {
         ticks.push({
           v: i,
           f: this.timeFormat(i),
