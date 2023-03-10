@@ -24,7 +24,6 @@ declare let google: any;
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
-  private chartxy: any[] = [];
   affichageOK = false;
 
   @Input()
@@ -198,21 +197,19 @@ export class ChartComponent implements OnInit {
 
   private drawChart(): void {
     let abscisse: number;
-    this.chartxy.push(['Distance', 'Vitesse']);
+
+    this.data = new google.visualization.DataTable();
+    this.data.addColumn('number', 'Rank');
+    this.data.addColumn('number', 'Rank');
+
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       if (this.modeTemps) {
         abscisse = this.gpxService.pointsCalcules[i].temps;
       } else {
         abscisse = this.gpxService.pointsCalcules[i].distance;
       }
-      this.chartxy.push([abscisse, this.gpxService.pointsCalcules[i].vitesse]);
+      this.data.addRow([abscisse, this.gpxService.pointsCalcules[i].vitesse]);
     }
-
-    if (this.chartxy.length == 0) {
-      return;
-    }
-
-    this.data = google.visualization.arrayToDataTable(this.chartxy);
 
     this.options = {
       vAxis: {
@@ -314,7 +311,7 @@ export class ChartComponent implements OnInit {
   }
 
   private xmax(): number {
-    return this.chartxy[this.chartxy.length - 1][0];
+    return this.data.getValue(this.data.getNumberOfRows()-1, 0);
   }
 
   private chartGetx(X: number): number {
