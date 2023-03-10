@@ -244,6 +244,7 @@ export class ChartComponent implements OnInit {
     }
 
     this.options = {
+      fontSize: 12,
       hAxis: hAxis,
       vAxis: {
         viewWindowMode: 'explicit',
