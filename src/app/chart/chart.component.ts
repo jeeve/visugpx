@@ -215,7 +215,7 @@ export class ChartComponent implements OnInit {
       lineWidth: 1,
     };
 
-    this.chart = new google.visualization.LineChart(
+    this.chart = new google.visualization.AreaChart(
       document.querySelector('#chart')
     );
 

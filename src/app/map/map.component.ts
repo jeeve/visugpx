@@ -274,15 +274,7 @@ export class MapComponent implements AfterViewInit {
       next: () => {
         this.dessineTrace();
 
-        // zoom sur zone
-        let xy = [];
-        const txy = this.gpxService.pointsGps;
-        for (let i = 0; i < txy.length; i++) {
-          let coord = new L.LatLng(txy[i].lat, txy[i].lon);
-          xy.push(coord);
-        }
-        let polyline = L.polyline(xy, { color: 'black' });
-        this.map.fitBounds(polyline.getBounds());
+        this.zoomSurTrace();
         
         this.fenetre.calcule(this._iPosition);
         this.dessineTrace();
@@ -290,6 +282,20 @@ export class MapComponent implements AfterViewInit {
       },
       error: (err) => console.log(err),
     });
+  }
+
+  private zoomSurTrace(): void {
+    if (this.gpxService.estOK) {
+      let xy = [];
+      const txy = this.gpxService.pointsGps;
+      for (let i = 0; i < txy.length; i++) {
+        let coord = new L.LatLng(txy[i].lat, txy[i].lon);
+        xy.push(coord);
+      }
+      let polyline = L.polyline(xy, { color: 'black' });
+      this.map.fitBounds(polyline.getBounds());
+      polyline.remove();
+    }
   }
 
   private updatePosition() {
