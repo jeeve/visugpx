@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -13,7 +14,6 @@ import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
 import { StatService } from '../stat.service';
 import { couleursStat } from '../stat/stat.component';
-import { format } from 'path';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
 const LARGEUR_LIGNE = 10;
@@ -24,7 +24,7 @@ declare let google: any;
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css'],
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements AfterViewInit {
   affichageOK = false;
 
   @Input()
@@ -149,15 +149,6 @@ export class ChartComponent implements OnInit {
     }
   }
 
-  get largeur(): number {
-    const c = this.chartElement();
-    if (c) {
-      return c.clientWidth;
-    } else {
-      return 0;
-    }
-  }
-
   private chart: any = null;
   private data: any = null;
   private options: any = null;
@@ -169,7 +160,7 @@ export class ChartComponent implements OnInit {
     private statService: StatService
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     const scriptElement = this.scriptService.loadJsScript(
       this.renderer,
       SCRIPT_PATH

@@ -21,7 +21,7 @@
       </rect>
     </svg>
     <svg *ngIf="afficheFenetre">
-      <rect [attr.x]="XFenetreDroite+5" y="10" [attr.width]="largeur-XFenetreDroite" height="135" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
+      <rect [attr.x]="XFenetreDroite+5" y="10" [attr.width]="charttemplate.clientWidth-XFenetreDroite" height="135" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
     <svg class="ligne ligne-verticale ligne-position" [attr.x]="XPosition" y="10" width="10" height="135" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (click)="ligneClick($event)">
