@@ -183,7 +183,7 @@ export class ChartComponent implements AfterViewInit {
 
   resize(): void {
     if (this.chart && this.data && this.options) {
-      this.chart.draw(this.data, this.options);
+      this.drawChart() //this.chart.draw(this.data, this.options); ne marche pas !!
     }
   }
 
