@@ -36,6 +36,8 @@ export class ControlComponent implements OnInit {
   uploadGpx = false;
   _visuStats = true;
   _visuChutes = true;
+  _visuGraphDistance = true;
+  _visuGraphTemps = false;
   vmax!: number;
   vitesse!: number;
   distanceSeuil!: number;
@@ -70,6 +72,30 @@ export class ControlComponent implements OnInit {
   set visuChutes(value: boolean) {
     this._visuChutes = value;
     this.visuChutesChange.emit(value);
+  }
+
+  @Output()
+  visuGraphDistanceChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  get visuGraphDistance(): boolean {
+    return this._visuGraphDistance;
+  }
+
+  set visuGraphDistance(value: boolean) {
+    this._visuGraphDistance = value;
+    this.visuGraphDistanceChange.emit(value);
+  }
+
+  @Output()
+  visuGraphTempsChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  get visuGraphTemps(): boolean {
+    return this._visuGraphTemps;
+  }
+
+  set visuGraphTemps(value: boolean) {
+    this._visuGraphTemps = value;
+    this.visuGraphTempsChange.emit(value);
   }
 
   @Output()

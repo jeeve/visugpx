@@ -9,6 +9,8 @@
   (fenetreChange)="majFenetre()"
   (visuStatsChange)="majVisuStats($event)"
   (visuChutesChange)="majVisuChutes($event)"
+  (visuGraphDistanceChange)="majVisuGraphDistance($event)"
+  (visuGraphTempsChange)="majVisuGraphTemps($event)"
 ></app-control>
 <div class="container">
   <div class="map-container">
@@ -27,7 +29,7 @@
   </div>
   <div class="charts-container">
     <app-chart
-      *ngIf="estOK && !ecranMini"
+      *ngIf="visuGraphDistance && estOK && !ecranMini"
       [iPosition]="iPosition"
       [vSeuil]="vSeuil"
       [fenetre]="fenetre"
@@ -40,7 +42,7 @@
       (fenetreChange)="majFenetre()"
     ></app-chart>
     <app-chart
-      *ngIf="estOK && !ecranMini"
+      *ngIf="visuGraphTemps && estOK && !ecranMini"
       [modeTemps]="true"
       [iPosition]="iPosition"
       [vSeuil]="vSeuil"
@@ -55,8 +57,9 @@
     ></app-chart>
   </div>
 </div>
-<app-stat
+<app-stat 
   *ngIf="estOK"
+  [bottom]="100 + (visuGraphDistance? 170:0) + (visuGraphTemps? 170:0)"
   [visuStats]="visuStats"
   [iStat]="iStat"
   (calculOkChange)="majCalculStatsOk($event)"

@@ -41,6 +41,8 @@ export class AppComponent implements OnInit {
   fenetre: Fenetre = new Fenetre(this.gpxService);
   visuStats = true;
   visuChutes = true;
+  visuGraphDistance = true;
+  visuGraphTemps = false;
   calculStatsOk = false;
   iStat = -1;
 
@@ -70,6 +72,14 @@ export class AppComponent implements OnInit {
     this.visuChutes = value;
   }
 
+  majVisuGraphDistance(value: boolean): void {
+    this.visuGraphDistance = value;
+  }
+
+  majVisuGraphTemps(value: boolean): void {
+    this.visuGraphTemps = value;
+  }
+
   majiStat(value: number): void {
     this.iStat = value;
   }
@@ -80,7 +90,8 @@ export class AppComponent implements OnInit {
 
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
-  constructor(private gpxService: GpxService) {}
+  constructor(private gpxService: GpxService) {
+  }
 
   ngOnInit(): void {
     const url = this.getParameterByName('url');

@@ -35,6 +35,9 @@ export class StatComponent implements OnInit {
   calculOk = false;
 
   @Input()
+  bottom!: number
+
+  @Input()
   visuStats!: boolean;
 
   @Output()
