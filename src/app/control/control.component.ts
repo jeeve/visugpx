@@ -44,6 +44,9 @@ export class ControlComponent implements OnInit {
   rapidite = 10;
   private intervalSubscription!: Subscription;
 
+  @Input()
+  visuGraphes = true;
+
   clickUploadGpx(): void {
     this.uploadGpx = !this.uploadGpx;
   }

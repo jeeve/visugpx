@@ -62,7 +62,7 @@ export class StatComponent implements OnInit {
   get stats(): Stat[] {
     return this.statService.stats;
   }
-  
+ 
   constructor(private statService: StatService) {}
 
   ngOnInit(): void {

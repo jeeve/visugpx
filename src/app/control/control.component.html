@@ -124,14 +124,14 @@
       <input type="checkbox" [(ngModel)]="visuChutes" />
       <label>Chutes</label>
     </div>
-    <div class="graphes">
+    <div *ngIf="visuGraphes" class="graphes">
       <div class="stats graphe-distance">
         <input type="checkbox" [(ngModel)]="visuGraphDistance" />
-        <label>Graph distance</label>
+        <label>Graphique v / x</label>
       </div>
       <div class="stats graphe-temps">
         <input type="checkbox" [(ngModel)]="visuGraphTemps" />
-        <label>Graph temps</label>
+        <label>Graphique v / t</label>
       </div>
     </div>
   </div>
