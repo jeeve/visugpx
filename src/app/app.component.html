@@ -59,7 +59,7 @@
 </div>
 <app-stat 
   *ngIf="estOK"
-  [bottom]="100 + (visuGraphDistance? 170:0) + (visuGraphTemps? 170:0)"
+  [bottom]="130 + (visuGraphDistance ? 170 : 0) + (visuGraphTemps ? 170 : 0)"
   [visuStats]="visuStats"
   [iStat]="iStat"
   (calculOkChange)="majCalculStatsOk($event)"
