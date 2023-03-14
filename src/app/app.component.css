@@ -15,15 +15,15 @@
 
 .map-container {
   margin: 0;
+  padding: 0;
   flex-grow: 1;
-  height: auto;
 }
 
 .charts-container {
   width: 100%;
   margin: 0;
   padding: 0;
-  min-height: 20px;
+  min-height: 40px;
 }
 
 @media screen and (max-width: 767px) {
