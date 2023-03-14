@@ -313,7 +313,7 @@ export class MapComponent implements AfterViewInit {
         xy.push(coord);
       }
       let polyline = L.polyline(xy, { color: 'black' });
-      this.map.fitBounds(polyline.getBounds(), { padding: [5, 5] });
+      this.map.fitBounds(polyline.getBounds());
       polyline.remove();
     }
   }
