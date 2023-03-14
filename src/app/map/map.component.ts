@@ -4,9 +4,12 @@ import {
   Output,
   EventEmitter,
   Input,
+  ElementRef,
+  ViewChild,
 } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
+import { Observer } from 'rxjs';
 import { Fenetre } from '../app.component';
 import { GpxService, Vitesse } from '../gpx.service';
 import { Stat, StatService } from '../stat.service';
@@ -263,10 +266,17 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  constructor(
-    private gpxService: GpxService,
+  @ViewChild('maptemplate')
+  mapTemplate!: ElementRef;
+
+  private observer!: ResizeObserver;
+
+  constructor(private gpxService: GpxService,
     private statService: StatService
   ) {}
+
+  ngInit() {
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -279,12 +289,23 @@ export class MapComponent implements AfterViewInit {
         this.fenetre.calcule(this._iPosition);
         this.dessineTrace();
         this.metAJourStats();
+
+        this.observer = new ResizeObserver(entries => {
+          this.map.invalidateSize();
+          this.zoomSurTrace();
+        });
+    
+        this.observer.observe(this.mapTemplate.nativeElement);
       },
       error: (err) => console.log(err),
     });
   }
 
-  zoomSurTrace(): void {
+  ngOnDestroy() {
+    this.observer.unobserve(this.mapTemplate.nativeElement);
+  }
+
+  private zoomSurTrace(): void {
     if (this.gpxService.estOK) {
       let xy = [];
       const txy = this.gpxService.pointsGps;
