@@ -9,10 +9,9 @@ import {
 } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-rotatedmarker';
-import { Observer } from 'rxjs';
 import { Fenetre } from '../app.component';
 import { GpxService, Vitesse } from '../gpx.service';
-import { Stat, StatService } from '../stat.service';
+import { StatService } from '../stat.service';
 import { couleursStat } from '../stat/stat.component';
 
 type DessinTraceStat = {
