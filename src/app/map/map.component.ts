@@ -284,6 +284,20 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
+  zoomSurTrace(): void {
+    if (this.gpxService.estOK) {
+      let xy = [];
+      const txy = this.gpxService.pointsGps;
+      for (let i = 0; i < txy.length; i++) {
+        let coord = new L.LatLng(txy[i].lat, txy[i].lon);
+        xy.push(coord);
+      }
+      let polyline = L.polyline(xy, { color: 'black' });
+      this.map.fitBounds(polyline.getBounds());
+      polyline.remove();
+    }
+  }
+
   private updatePosition() {
     if (this.gpxService.estOK) {
       const i = this._iPosition;
