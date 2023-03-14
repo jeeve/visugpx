@@ -43,10 +43,6 @@ export class GpxService {
   constructor(private http: HttpClient) {
   }
 
-  x(i: number): number {
-    return this.pointsCalcules[i].distance;
-  }
-
   get urlFichier(): UrlString {
     return this._urlFichier;
   }

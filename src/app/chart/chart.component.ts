@@ -1,16 +1,18 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
-import { from, mergeMap, Observable, of } from 'rxjs';
 import { GpxService, Vitesse } from '../gpx.service';
 import { Fenetre } from '../app.component';
 import { ScriptService } from '../script.service';
-import { Stat, StatService } from '../stat.service';
+import { StatService } from '../stat.service';
 import { couleursStat } from '../stat/stat.component';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
@@ -22,8 +24,22 @@ declare let google: any;
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css'],
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements AfterViewInit {
   affichageOK = false;
+
+  @Input()
+  modeTemps = false;
+
+  @ViewChild('charttemplate')
+  chartTemplate!: ElementRef;
+
+  private chartElement(): HTMLElement | null {
+    if (this.chartTemplate) {
+      return this.chartTemplate.nativeElement;
+    }
+    return null;
+  }
+
   private _vSeuil = 0;
 
   @Input()
@@ -41,7 +57,7 @@ export class ChartComponent implements OnInit {
     return this.statService.ivmax;
   }
 
-  get vitesses() : Vitesse[] {
+  get vitesses(): Vitesse[] {
     if (this.iStat > -1) {
       return this.statService.stats[this.iStat].v;
     } else {
@@ -49,7 +65,7 @@ export class ChartComponent implements OnInit {
     }
   }
 
-  get couleursStat() : string[] {
+  get couleursStat(): string[] {
     return couleursStat;
   }
 
@@ -101,18 +117,20 @@ export class ChartComponent implements OnInit {
     }
   }
 
+  private x(i: number): number {
+    if (this.modeTemps) {
+      return this.gpxService.pointsCalcules[i].temps;
+    } else {
+      return this.gpxService.pointsCalcules[i].distance;
+    }
+  }
+
   get XFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
-        return (
-          this.xLoc(this.gpxService.x(this.fenetre.a)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.a)) - LARGEUR_LIGNE / 2;
       } else {
-        return (
-          this.xLoc(this.gpxService.x(this.fenetre.b)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.b)) - LARGEUR_LIGNE / 2;
       }
     } else {
       return 25;
@@ -122,25 +140,10 @@ export class ChartComponent implements OnInit {
   get XFenetreDroite(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
-        return (
-          this.xLoc(this.gpxService.x(this.fenetre.b)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.b)) - LARGEUR_LIGNE / 2;
       } else {
-        return (
-          this.xLoc(this.gpxService.x(this.fenetre.a)) -
-          LARGEUR_LIGNE / 2
-        );
+        return this.xLoc(this.x(this.fenetre.a)) - LARGEUR_LIGNE / 2;
       }
-    } else {
-      return 0;
-    }
-  }
-
-  get largeur(): number {
-    const c = document.querySelector('#chart');
-    if (c) {
-      return c.clientWidth;
     } else {
       return 0;
     }
@@ -157,7 +160,7 @@ export class ChartComponent implements OnInit {
     private statService: StatService
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     const scriptElement = this.scriptService.loadJsScript(
       this.renderer,
       SCRIPT_PATH
@@ -180,33 +183,64 @@ export class ChartComponent implements OnInit {
 
   resize(): void {
     if (this.chart && this.data && this.options) {
-      this.chart.draw(this.data, this.options);
+      this.drawChart() //this.chart.draw(this.data, this.options); ne marche pas !!
     }
   }
 
+  private timeFormat(t: number): string {
+    const heures = Math.floor(t / 3600);
+    const minutes = Math.floor((t % 3600) / 60);
+    const seconds = t % 60;
+    let sheures = heures.toString();
+    let sminutes = minutes.toString();
+    let sseconds = seconds.toString();
+    sheures = heures < 10 ? '0' + sheures : sheures;
+    sminutes = minutes < 10 ? '0' + sminutes : sminutes;
+    sseconds = seconds < 10 ? '0' + sseconds : sseconds;
+    return sheures + ':' + sminutes;
+  }
+
   private drawChart(): void {
-    let chartxy = [];
-    chartxy.push(['Distance', 'Vitesse']);
+    let abscisse: number;
+
+    this.data = new google.visualization.DataTable();
+    this.data.addColumn('number', 'Distance');
+    this.data.addColumn('number', 'Vitesse');
+
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
-      chartxy.push([
-        this.gpxService.pointsCalcules[i].distance,
-        this.gpxService.pointsCalcules[i].vitesse,
-      ]);
+      if (this.modeTemps) {
+        abscisse = this.gpxService.pointsCalcules[i].temps;
+      } else {
+        abscisse = this.gpxService.pointsCalcules[i].distance;
+      }
+      this.data.addRow([abscisse, this.gpxService.pointsCalcules[i].vitesse]);
     }
 
-    if (chartxy.length == 0) {
-      return;
+    let hAxis = {}
+    
+    if (this.modeTemps) {
+      const range = this.data.getColumnRange(0);
+      const max = Math.ceil(range.max / 100) * 100;
+      var ticks = [];
+      for (let i = 600; i < max-600; i = i + 600) {
+        ticks.push({
+          v: i,
+          f: this.timeFormat(i),
+        });
+      }
+      hAxis = {
+        ticks: ticks,
+        slantedText: false,
+      }
     }
-
-    this.data = google.visualization.arrayToDataTable(chartxy);
-
-    const vAxisOptions = {
-      viewWindowMode: 'explicit',
-      viewWindow: { min: 0, max: this.gpxService.vmax },
-    };
 
     this.options = {
-      vAxis: vAxisOptions,
+      fontSize: 12,
+      hAxis: hAxis,
+      vAxis: {
+        viewWindowMode: 'explicit',
+        viewWindow: { min: 0, max: this.gpxService.vmax },
+      },
       pointSize: 0,
       legend: { position: 'none' },
       chartArea: { left: '30', right: '0', top: '10', bottom: '20' },
@@ -215,9 +249,7 @@ export class ChartComponent implements OnInit {
       lineWidth: 1,
     };
 
-    this.chart = new google.visualization.AreaChart(
-      document.querySelector('#chart')
-    );
+    this.chart = new google.visualization.AreaChart(this.chartElement());
 
     this.chart.draw(this.data, this.options);
   }
@@ -227,8 +259,18 @@ export class ChartComponent implements OnInit {
   clickChart(e: Event): void {
     e.preventDefault();
     const x = this.chartGetx((e as MouseEvent).clientX);
-    if (x >= 0 && x <= this.gpxService.dmax) {
-      this.iPosition = this.gpxService.getIndiceDistance(x);
+    if (x >= 0 && x <= this.xmax()) {
+      this.iPosition = this.getIndiceAbscisse(x);
+    }
+  }
+
+  private getIndiceAbscisse(x: number): number {
+    if (this.modeTemps) {
+      const d = new Date(this.gpxService.pointsGps[0].date);
+      d.setTime(d.getTime() + x * 1000);
+      return this.gpxService.getIndiceTemps(d);
+    } else {
+      return this.gpxService.getIndiceDistance(x);
     }
   }
 
@@ -240,18 +282,18 @@ export class ChartComponent implements OnInit {
     if (this.elementSelectionne) {
       if (this.elementSelectionne.classList.contains('ligne-verticale')) {
         const x = this.chartGetx((e as MouseEvent).clientX);
-        if (x >= 0 && x <= this.gpxService.dmax) {
+        if (x >= 0 && x <= this.xmax()) {
           if (this.elementSelectionne.classList.contains('ligne-position')) {
-            this.iPosition = this.gpxService.getIndiceDistance(x);
+            this.iPosition = this.getIndiceAbscisse(x);
           }
           if (this.elementSelectionne.classList.contains('ligne-gauche')) {
             this.fenetre.auto = false;
-            this.fenetre.a = this.gpxService.getIndiceDistance(x);
+            this.fenetre.a = this.getIndiceAbscisse(x);
             this.fenetreChange.emit(this.fenetre);
           }
           if (this.elementSelectionne.classList.contains('ligne-droite')) {
             this.fenetre.auto = false;
-            this.fenetre.b = this.gpxService.getIndiceDistance(x);
+            this.fenetre.b = this.getIndiceAbscisse(x);
             this.fenetreChange.emit(this.fenetre);
           }
         }
@@ -266,6 +308,7 @@ export class ChartComponent implements OnInit {
       }
     }
   }
+
   mouseUp(e: Event): void {
     this.elementSelectionne = null;
   }
@@ -278,13 +321,17 @@ export class ChartComponent implements OnInit {
     this.elementSelectionne = null;
   }
 
+  private xmax(): number {
+    return this.data.getValue(this.data.getNumberOfRows() - 1, 0);
+  }
+
   private chartGetx(X: number): number {
     const layout = this.chart.getChartLayoutInterface();
     const L = layout.getChartAreaBoundingBox().width;
-    const c = document.querySelector('#chart');
+    const c = this.chartElement();
     if (c) {
       const X2 = X - c.clientLeft - 40;
-      return (X2 * this.gpxService.dmax) / L;
+      return (X2 * this.xmax()) / L;
     }
     return -1;
   }
@@ -292,7 +339,7 @@ export class ChartComponent implements OnInit {
   private chartGety(Y: number): number {
     const layout = this.chart.getChartLayoutInterface();
     const H = layout.getChartAreaBoundingBox().height;
-    const c = document.querySelector('#chart') as HTMLElement;
+    const c = this.chartElement();
     if (c) {
       const Y2 = c.getBoundingClientRect().top + H - Y + 10;
       return (Y2 * this.gpxService.vmax) / H;
@@ -302,7 +349,7 @@ export class ChartComponent implements OnInit {
 
   get XPosition(): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.gpxService.x(this._iPosition)) - LARGEUR_LIGNE / 2;
+      return this.xLoc(this.x(this._iPosition)) - LARGEUR_LIGNE / 2;
     } else {
       return 0;
     }
@@ -328,7 +375,7 @@ export class ChartComponent implements OnInit {
 
   X(i: number): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.gpxService.x(i)) - 5;
+      return this.xLoc(this.x(i)) - 5;
     } else {
       return 25;
     }

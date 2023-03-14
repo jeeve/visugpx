@@ -87,7 +87,12 @@
   </div>
   <div class="controle2">
     <div *ngIf="afficheFenetre" class="fenetre">
-      <input type="checkbox" class="fenetre-auto" [(ngModel)]="fenetre.auto" (ngModelChange)="metAjourFenetre()"/>
+      <input
+        type="checkbox"
+        class="fenetre-auto"
+        [(ngModel)]="fenetre.auto"
+        (ngModelChange)="metAjourFenetre()"
+      />
       <label class="label-fenetre-auto">Fenêtre auto</label>
       <div *ngIf="fenetre.auto" class="div-fenetre-largeur">
         <input
@@ -112,12 +117,22 @@
     </div>
 
     <div class="stats">
-      <input class="calcule" type="checkbox" [(ngModel)]="visuStats" />
+      <input type="checkbox" [(ngModel)]="visuStats" />
       <label>Statistiques</label>
     </div>
     <div *ngIf="afficheBoutonChutes" class="stats">
-      <input class="calcule" type="checkbox" [(ngModel)]="visuChutes" />
+      <input type="checkbox" [(ngModel)]="visuChutes" />
       <label>Chutes</label>
+    </div>
+    <div *ngIf="visuGraphes" class="graphes">
+      <div class="stats graphe-distance">
+        <input type="checkbox" [(ngModel)]="visuGraphDistance" />
+        <label>Graphique v / x</label>
+      </div>
+      <div class="stats graphe-temps">
+        <input type="checkbox" [(ngModel)]="visuGraphTemps" />
+        <label>Graphique v / t</label>
+      </div>
     </div>
   </div>
 </div>

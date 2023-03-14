@@ -1,53 +1,51 @@
 .map-container {
-    position: absolute;
-    top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  margin: 10px;
+}
+
+.map-frame {
+  border: 2px solid black;
+  height: 100%;
+}
+
+#map {
+  height: 100%;
+}
+
+.time {
+  display: inline-block;
+  position: relative;
+  bottom: 18px;
+  z-index: 100000;
+  margin-right: 16px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+#auteur {
+  z-index: 100000;
+  position: relative;
+  bottom: 35px;
+  right: 180px;
+  text-align: right;
+  margin-bottom: 0;
+  font-size: 0.8rem;
+}
+
+@media screen and (max-width: 767px) {
+  .map-container {
+    display: block;
+    position: relative;
+    height: 250px;
+    margin-top: 5px;
+    width: 100%;
     left: 0;
+    margin-left: 0;
+    margin-right: 0;
     right: 0;
-    bottom: 150px;
-    margin: 10px;
   }
-
-  .map-frame {
-    border: 2px solid black;
-    height: 100%;
-  }
-  
-  #map {
-    height: 100%;
-  }
-
-  .time {
-    display: inline-block;
-    position: absolute;
-    bottom: -2px;
-    z-index: 100000;
-    margin-right: 16px;
-    padding-left: 10px;
-    padding-right: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-  }
-  
-  #auteur {
-    z-index: 100000;
-    position: absolute;
-    bottom: 0;
-    right: 180px;
-    text-align: right;
-    margin-bottom: 0;
-    font-size: 0.8rem;
-  }
-
-  @media screen and (max-width: 767px) {
-    .map-container {
-      display: block;
-      position: relative;
-      height: 250px;
-      margin-top: 5px;
-      width: 100%;
-      left: 0;
-      margin-left: 0;
-      margin-right: 0;
-      right: 0;
-    }
-  }
+}

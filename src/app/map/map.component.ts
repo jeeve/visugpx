@@ -37,7 +37,7 @@ export class MapComponent implements AfterViewInit {
   @Input()
   set calculStatOk(value: boolean) {
     if (value) {
-      this.dessineMarkerChutes();  
+      this.dessineMarkerChutes();
     }
   }
 
@@ -147,14 +147,14 @@ export class MapComponent implements AfterViewInit {
       this.dessinTracesStat = [];
 
       if (this._iStat > -1) {
-          for (let i = 9; i >= 0; i--) {
-            const L = this.dessineTraceVitesse(
-              this.statService.stats[this._iStat].v[i],
-              couleursStat[i]
-            );
-            this.dessinTracesStat.push(L);
-          }
+        for (let i = 9; i >= 0; i--) {
+          const L = this.dessineTraceVitesse(
+            this.statService.stats[this._iStat].v[i],
+            couleursStat[i]
+          );
+          this.dessinTracesStat.push(L);
         }
+      }
     }
     this.dessineTrace();
   }
@@ -282,20 +282,6 @@ export class MapComponent implements AfterViewInit {
       },
       error: (err) => console.log(err),
     });
-  }
-
-  private zoomSurTrace(): void {
-    if (this.gpxService.estOK) {
-      let xy = [];
-      const txy = this.gpxService.pointsGps;
-      for (let i = 0; i < txy.length; i++) {
-        let coord = new L.LatLng(txy[i].lat, txy[i].lon);
-        xy.push(coord);
-      }
-      let polyline = L.polyline(xy, { color: 'black' });
-      this.map.fitBounds(polyline.getBounds());
-      polyline.remove();
-    }
   }
 
   private updatePosition() {

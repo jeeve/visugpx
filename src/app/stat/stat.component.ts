@@ -35,6 +35,9 @@ export class StatComponent implements OnInit {
   calculOk = false;
 
   @Input()
+  bottom!: number
+
+  @Input()
   visuStats!: boolean;
 
   @Output()
@@ -59,7 +62,7 @@ export class StatComponent implements OnInit {
   get stats(): Stat[] {
     return this.statService.stats;
   }
-  
+ 
   constructor(private statService: StatService) {}
 
   ngOnInit(): void {
