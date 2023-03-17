@@ -148,7 +148,7 @@
     justify-content: space-between;
     position: relative;
     width: auto;
-    max-height: 175px;
+    max-height: 180px;
     left: 0;
     right: 15px;
     top: 0;
@@ -158,7 +158,7 @@
   .stats {
     display: none;
   }
-  
+
   .slider-wrapper input {
     width: 110px;
     height: 40px;
