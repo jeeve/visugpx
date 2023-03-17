@@ -73,15 +73,31 @@ export class StatService {
   }
 
   private calculeChutes(): void {
-    for (let i = 2; i < this.gpxService.pointsCalcules.length; i++) {
+    this.chutes = [];
+    for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
       const v0 = this.gpxService.pointsCalcules[i - 1].vitesse;
       const v = this.gpxService.pointsCalcules[i].vitesse;
-      const deltav = v - v0;
-      if (deltav < 0 && v0 > 12 && v < 3) {
-        this.chutes.push(i);
+      const dt = this.gpxService.pointsCalcules[i].deltat;
+      const deltav = (v - v0)/dt;
+      if (deltav < 0 && v0 > 12 && deltav < -3) {
+        if (!this.chuteAmoinDe(i - 1, 30)) {
+          this.chutes.push(i);
+        }
       }
     }
   }
+
+  private chuteAmoinDe(i: number, deltat: number): boolean {
+    const ti = this.gpxService.pointsCalcules[i].temps; 
+    for (let c = 0; c < this.chutes.length; c++) {
+      const tc = this.gpxService.pointsCalcules[this.chutes[c]].temps;
+      if (ti - tc <= deltat) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private calculeStat(
     nom: string,
     fonctionStat: FonctionStat,
