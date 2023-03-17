@@ -97,9 +97,10 @@
   .stat {
     position: relative;
     width: auto;
-    top: 0;
+    top: -8px;
     left: 0;
-    height: 100%;
+    overflow-y: scroll;
+    max-height: calc(100vh - 445px);
     bottom: auto;
     background-color:white;
     color: black;
