@@ -116,20 +116,20 @@
       <button class="stop" type="button" (click)="stop()">Stop</button>
     </div>
 
-    <div class="stats">
+    <div class="check stats">
       <input type="checkbox" [(ngModel)]="visuStats" />
       <label>Statistiques</label>
     </div>
-    <div *ngIf="afficheBoutonChutes" class="stats">
+    <div *ngIf="afficheBoutonChutes" class="check">
       <input type="checkbox" [(ngModel)]="visuChutes" />
       <label>Chutes</label>
     </div>
     <div *ngIf="visuGraphes" class="graphes">
-      <div class="stats graphe-distance">
+      <div class="check graphe-distance">
         <input type="checkbox" [(ngModel)]="visuGraphDistance" />
         <label>Graphique v / x</label>
       </div>
-      <div class="stats graphe-temps">
+      <div class="check graphe-temps">
         <input type="checkbox" [(ngModel)]="visuGraphTemps" />
         <label>Graphique v / t</label>
       </div>
