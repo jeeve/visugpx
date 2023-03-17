@@ -96,8 +96,9 @@
 @media screen and (max-width: 767px) {
   .stat {
     position: relative;
+    border: 0;
     width: auto;
-    top: -8px;
+    top: -6px;
     left: 0;
     overflow-y: scroll;
     max-height: calc(100vh - 445px);
