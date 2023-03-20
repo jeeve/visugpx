@@ -75,12 +75,12 @@ export class StatService {
   private calculeChutes(): void {
     this.chutes = [];
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
-      const v0 = this.gpxService.pointsCalcules[i - 1].vitesse;
+      const v0 = this.gpxService.pointsCalcules[i-1].vitesse;
       const v = this.gpxService.pointsCalcules[i].vitesse;
-      const dt = this.gpxService.pointsCalcules[i].deltat;
+      const dt = this.gpxService.pointsCalcules[i-1].deltat;
       const deltav = (v - v0)/dt;
-      if (deltav < 0 && v0 > 12 && deltav < -3) {
-        if (!this.chuteAmoinDe(i - 1, 30)) {
+      if (v0 > 12 && deltav < -3) {
+        if (!this.chuteAmoinDe(i-1, 30)) {
           this.chutes.push(i);
         }
       }
