@@ -42,6 +42,11 @@ export class ControlComponent implements OnInit {
   vitesse!: number;
   distanceSeuil!: number;
   rapidite = 10;
+
+  get url(): string {
+    return this.gpxService.urlFichier;
+  }
+
   private intervalSubscription!: Subscription;
 
   @Input()

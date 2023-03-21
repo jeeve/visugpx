@@ -27,6 +27,7 @@
 }
 
 .lire-gpx-lien {
+  display: inline-block;
   padding-top: 10px;
   padding-left: 10px;
   text-decoration: underline;
@@ -46,6 +47,20 @@
 
 .upload button {
   margin-top: 10px;
+}
+
+.icones {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  margin: 5px;
+}
+
+.icone-partage {
+  width: 20px;
+  margin-right: 10px;
+  vertical-align: top;
+  margin-top: 2px;
 }
 
 .reglages {

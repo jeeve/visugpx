@@ -6,6 +6,14 @@
     >
       Lire fichier GPX
     </div>
+    <div *ngIf="estOK" class="icones">
+      <a href="{{url}}" target="_blank" >
+        <img src="assets/icone-partage.png" alt="Partager" title="Partager" class="icone-partage">
+        </a>
+      <a href="{{url}}" target="_blank" >
+      <img src="assets/icone-gpx.png" alt="GPX" title="Télécharger fichier GPX">
+      </a>
+    </div>
 
     <div *ngIf="uploadGpx || !estOK" class="upload">
       <input
