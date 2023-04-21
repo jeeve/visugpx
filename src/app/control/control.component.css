@@ -145,14 +145,17 @@
   .control {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     position: relative;
-    width: auto;
-    max-height: 180px;
+    flex-wrap: nowrap;
+    max-width: 100%;
     left: 0;
     right: 15px;
     top: 0;
     font-size: 12px;
+  }
+
+  .fichier {
+    width: 200px;
   }
 
   .stats {
