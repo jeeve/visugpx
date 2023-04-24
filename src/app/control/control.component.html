@@ -17,7 +17,7 @@
       <button (click)="this.upload()" type="button">Envoyer</button>
     </div>
 
-    <div *ngIf="estOK">
+    <div *ngIf="estOK && !uploadGpx">
       <div class="reglages">
         <div class="slider-wrapper">
           <input
@@ -85,7 +85,7 @@
       </div>
     </div>
   </div>
-  <div class="controle2">
+  <div *ngIf="!uploadGpx" class="controle2">
     <div *ngIf="afficheFenetre" class="fenetre">
       <input
         type="checkbox"

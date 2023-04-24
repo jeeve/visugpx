@@ -148,7 +148,7 @@
     justify-content: space-between;
     position: relative;
     width: auto;
-    max-height: 180px;
+    min-height: 180px;
     left: 0;
     right: 15px;
     top: 0;
