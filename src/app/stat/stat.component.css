@@ -101,7 +101,7 @@
     top: -6px;
     left: 0;
     overflow-y: scroll;
-    max-height: calc(100vh - 445px);
+    max-height: calc(100vh - 465px);
     bottom: auto;
     background-color:white;
     color: black;
