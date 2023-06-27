@@ -137,11 +137,10 @@ export class StatService {
     return vmax;
   }
 
-  private calculeAlpha250(): Vitesse {
+  private calculeAlpha250(vReference: Vitesse, distanceReference: number, vitesses: Vitesse[]): Vitesse {
     let headings = [];
     let turns = [];
-    let jibe = [];
-    let totAngle: number = 0;
+    let totAngle = 0;
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       totAngle += this.gpxService.pointsCalcules[i].angle;
     }
@@ -150,25 +149,32 @@ export class StatService {
       headings.push(this.gpxService.pointsCalcules[i].angle - meanHeading);
     }
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
-      if ((headings[i-1] < 0 && headings[i] > 0) || (headings[i-1] > 0 && headings[i] < 0)) {
-        turns.push(i);
+      if ((headings[i-1] < 0 && headings[i] > 0) || (headings[i-1] > 0 && headings[i] < 0) && (!this.iAppartientTraces(i, vitesses, 0.1))) {
+        turns.push(i-1);
       }
     }
+    let jibe = [];
+    let vmax = 0;
     for (let i = 0; i < turns.length; i++) {
+      jibe = [];
       for (let j = 0; j < this.gpxService.pointsCalcules.length; j++) {
-          if (this.gpxService.calculeDistance(this.gpxService.pointsGps[turns[i]].lat, this.gpxService.pointsGps[turns[i]].lon, this.gpxService.pointsGps[j].lat, this.gpxService.pointsGps[j].lon) < 0.125) {
+          if (this.gpxService.calculeDistance(this.gpxService.pointsGps[turns[i]].lat, this.gpxService.pointsGps[turns[i]].lon, this.gpxService.pointsGps[j].lat, this.gpxService.pointsGps[j].lon) < distanceReference/2) {
             jibe.push(j);
           }
       }
-    }
-    let d: number = 0;
-    let t: number = 0;
-    for (let i = 0; i < jibe.length; i++) {
-      d += this.gpxService.pointsCalcules[jibe[i]].deltad;
-      t += this.gpxService.pointsCalcules[jibe[i]].deltat;
+      let d = 0;
+      let t = 0;
+      for (let i = 0; i < jibe.length; i++) {
+        d += this.gpxService.pointsCalcules[jibe[i]].deltad;
+        t += this.gpxService.pointsCalcules[jibe[i]].deltat;
+      }
+      let v = 1.94384*d*1000/t
+      if (v > vmax && v < vReference.v) {
+        vmax = v;
+      }
     }
 
-    return { v: 1.94384*d*1000/t, a: jibe[0], b: jibe[jibe.length-1] };
+    return { v: vmax, a: jibe[0], b: jibe[jibe.length-1] };
   }
 
   private calculeAlphaSur(
@@ -338,6 +344,7 @@ export class StatService {
     }
     stat.x10 = s / 10;
   }
+
   private iAppartientTraces(
     i: number,
     vitesses: Vitesse[],
