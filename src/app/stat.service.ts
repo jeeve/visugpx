@@ -156,7 +156,7 @@ export class StatService {
     }
     for (let i = 0; i < turns.length; i++) {
       for (let j = 0; j < this.gpxService.pointsCalcules.length; j++) {
-          if (this.gpxService.calculeDistance(this.gpxService.pointsGps[turns[i]].lat, this.gpxService.pointsGps[turns[i]].lon, this.gpxService.pointsGps[j].lat, this.gpxService.pointsGps[j].lon) < 125) {
+          if (this.gpxService.calculeDistance(this.gpxService.pointsGps[turns[i]].lat, this.gpxService.pointsGps[turns[i]].lon, this.gpxService.pointsGps[j].lat, this.gpxService.pointsGps[j].lon) < 0.125) {
             jibe.push(j);
           }
       }
