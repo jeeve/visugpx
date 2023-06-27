@@ -168,7 +168,7 @@ export class StatService {
       t += this.gpxService.pointsCalcules[jibe[i]].deltat;
     }
 
-    return { v: d/t, a: jibe[0], b: jibe[jibe.length-1] };
+    return { v: 1.94384*d*1000/t, a: jibe[0], b: jibe[jibe.length-1] };
   }
 
   private calculeAlphaSur(
