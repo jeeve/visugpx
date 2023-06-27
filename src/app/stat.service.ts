@@ -153,10 +153,9 @@ export class StatService {
         turns.push(i-1);
       }
     }
-    let jibe = [];
-    let vmax = 0;
+    let vmax: Vitesse = { v: 0, a: 0, b:0 };
     for (let i = 0; i < turns.length; i++) {
-      jibe = [];
+      let jibe = [];
       for (let j = 0; j < this.gpxService.pointsCalcules.length; j++) {
           if (this.gpxService.calculeDistance(this.gpxService.pointsGps[turns[i]].lat, this.gpxService.pointsGps[turns[i]].lon, this.gpxService.pointsGps[j].lat, this.gpxService.pointsGps[j].lon) < distanceReference/2) {
             jibe.push(j);
@@ -169,12 +168,14 @@ export class StatService {
         t += this.gpxService.pointsCalcules[jibe[i]].deltat;
       }
       let v = 1.94384*d*1000/t
-      if (v > vmax && v < vReference.v) {
-        vmax = v;
+      if (v > vmax.v && v < vReference.v) {
+        vmax.v = v;
+        vmax.a = jibe[0];
+        vmax.b = jibe[jibe.length-1];
       }
     }
 
-    return { v: vmax, a: jibe[0], b: jibe[jibe.length-1] };
+    return vmax;
   }
 
   private calculeAlphaSur(
