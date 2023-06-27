@@ -33,7 +33,6 @@ export class StatService {
 
   calcule(): Observable<void> {
     return new Observable((observer) => {
-
       if (this.calculOK) {
         observer.next();
         observer.complete();
@@ -58,7 +57,7 @@ export class StatService {
         this.calculeStat('250m', this.calculeVmaxSur.bind(this), 0.25);
         this.calculeStat('500m', this.calculeVmaxSur.bind(this), 0.5);
         this.calculeStat('1km', this.calculeVmaxSur.bind(this), 1);
-        this.calculeStat('α250', this.calculeAlphaSur.bind(this), 0.25);
+        this.calculeStat('α250', this.calculeAlpha250.bind(this), 0.25);
         this.calculeStat('α500', this.calculeAlphaSur.bind(this), 0.5);
         this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
 
@@ -75,12 +74,12 @@ export class StatService {
   private calculeChutes(): void {
     this.chutes = [];
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
-      const v0 = this.gpxService.pointsCalcules[i-1].vitesse;
+      const v0 = this.gpxService.pointsCalcules[i - 1].vitesse;
       const v = this.gpxService.pointsCalcules[i].vitesse;
-      const dt = this.gpxService.pointsCalcules[i-1].deltat;
-      const deltav = (v - v0)/dt;
+      const dt = this.gpxService.pointsCalcules[i - 1].deltat;
+      const deltav = (v - v0) / dt;
       if (v0 > 12 && deltav < -3) {
-        if (!this.chuteAmoinDe(i-1, 30)) {
+        if (!this.chuteAmoinDe(i - 1, 30)) {
           this.chutes.push(i);
         }
       }
@@ -88,7 +87,7 @@ export class StatService {
   }
 
   private chuteAmoinDe(i: number, deltat: number): boolean {
-    const ti = this.gpxService.pointsCalcules[i].temps; 
+    const ti = this.gpxService.pointsCalcules[i].temps;
     for (let c = 0; c < this.chutes.length; c++) {
       const tc = this.gpxService.pointsCalcules[this.chutes[c]].temps;
       if (ti - tc <= deltat) {
@@ -136,6 +135,40 @@ export class StatService {
       }
     }
     return vmax;
+  }
+
+  private calculeAlpha250(): Vitesse {
+    let headings = [];
+    let turns = [];
+    let jibe = [];
+    let totAngle: number = 0;
+    for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
+      totAngle += this.gpxService.pointsCalcules[i].angle;
+    }
+    const meanHeading = totAngle / this.gpxService.pointsGps.length;
+    for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
+      headings.push(this.gpxService.pointsCalcules[i].angle - meanHeading);
+    }
+    for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
+      if ((headings[i-1] < 0 && headings[i] > 0) || (headings[i-1] > 0 && headings[i] < 0)) {
+        turns.push(i);
+      }
+    }
+    for (let i = 0; i < turns.length; i++) {
+      for (let j = 0; j < this.gpxService.pointsCalcules.length; j++) {
+          if (this.gpxService.calculeDistance(this.gpxService.pointsGps[turns[i]].lat, this.gpxService.pointsGps[turns[i]].lon, this.gpxService.pointsGps[j].lat, this.gpxService.pointsGps[j].lon) < 125) {
+            jibe.push(j);
+          }
+      }
+    }
+    let d: number = 0;
+    let t: number = 0;
+    for (let i = 0; i < jibe.length; i++) {
+      d += this.gpxService.pointsCalcules[jibe[i]].deltad;
+      t += this.gpxService.pointsCalcules[jibe[i]].deltat;
+    }
+
+    return { v: d/t, a: jibe[0], b: jibe[jibe.length-1] };
   }
 
   private calculeAlphaSur(
