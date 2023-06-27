@@ -319,5 +319,10 @@ export class GpxService {
     } else {
       return -1;
     }
-  };
+  }
+
+  calculeTempsEntre(i: number, j: number): number  {
+    return Math.abs(this.pointsGps[i].date.getTime() - this.pointsGps[j].date.getTime()) / 1000;
+  }
+
 }

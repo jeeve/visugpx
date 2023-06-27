@@ -57,7 +57,7 @@ export class StatService {
         this.calculeStat('250m', this.calculeVmaxSur.bind(this), 0.25);
         this.calculeStat('500m', this.calculeVmaxSur.bind(this), 0.5);
         this.calculeStat('1km', this.calculeVmaxSur.bind(this), 1);
-        this.calculeStat('α250', this.calculeAlpha250.bind(this), 0.25);
+        this.calculeStat('α250', this.calculeAlphaSur.bind(this), 0.25);
         this.calculeStat('α500', this.calculeAlphaSur.bind(this), 0.5);
         this.calculeStat('α1000', this.calculeAlphaSur.bind(this), 1);
 
@@ -137,7 +137,11 @@ export class StatService {
     return vmax;
   }
 
-  private calculeAlpha250(vReference: Vitesse, distanceReference: number, vitesses: Vitesse[]): Vitesse {
+  private calculeAlphaSur(
+    vReference: Vitesse,
+    distanceReference: number,
+    vitesses: Vitesse[]
+  ): Vitesse {
     let headings = [];
     let turns = [];
     let totAngle = 0;
@@ -149,36 +153,50 @@ export class StatService {
       headings.push(this.gpxService.pointsCalcules[i].angle - meanHeading);
     }
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
-      if ((headings[i-1] < 0 && headings[i] > 0) || (headings[i-1] > 0 && headings[i] < 0) && (!this.iAppartientTraces(i, vitesses, 0.1))) {
-        turns.push(i-1);
+      if (
+        (headings[i - 1] < 0 && headings[i] > 0) ||
+        (headings[i - 1] > 0 &&
+          headings[i] < 0 &&
+          !this.iAppartientTraces(i, vitesses, 0.1))
+      ) {
+        turns.push(i - 1);
       }
     }
-    let vmax: Vitesse = { v: 0, a: 0, b:0 };
+    let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     for (let i = 0; i < turns.length; i++) {
       let jibe = [];
       for (let j = 0; j < this.gpxService.pointsCalcules.length; j++) {
-          if (this.gpxService.calculeDistance(this.gpxService.pointsGps[turns[i]].lat, this.gpxService.pointsGps[turns[i]].lon, this.gpxService.pointsGps[j].lat, this.gpxService.pointsGps[j].lon) < distanceReference/2) {
-            jibe.push(j);
-          }
+        if (
+          this.gpxService.calculeDistance(
+            this.gpxService.pointsGps[turns[i]].lat,
+            this.gpxService.pointsGps[turns[i]].lon,
+            this.gpxService.pointsGps[j].lat,
+            this.gpxService.pointsGps[j].lon
+          ) <
+            distanceReference / 2 &&
+          this.gpxService.calculeTempsEntre(turns[i], j) < distanceReference*500 // on s'assure qu'on est bien dans le jibe
+        ) {
+          jibe.push(j); // ajoute tous les points du jibe
+        }
       }
       let d = 0;
       let t = 0;
-      for (let i = 0; i < jibe.length; i++) {
-        d += this.gpxService.pointsCalcules[jibe[i]].deltad;
-        t += this.gpxService.pointsCalcules[jibe[i]].deltat;
+      for (let k = 0; k < jibe.length; k++) {
+        d += this.gpxService.pointsCalcules[jibe[k]].deltad;
+        t += this.gpxService.pointsCalcules[jibe[k]].deltat;
       }
-      let v = 1.94384*d*1000/t
+      let v = (1.94384 * d * 1000) / t; // vitesse moyenne du jibe
       if (v > vmax.v && v < vReference.v) {
         vmax.v = v;
-        vmax.a = jibe[0];
-        vmax.b = jibe[jibe.length-1];
+        vmax.a = jibe[0]; // debut du jibe
+        vmax.b = jibe[jibe.length - 1]; // fin du jibe
       }
     }
 
     return vmax;
   }
 
-  private calculeAlphaSur(
+  private calculeAlphaSurOld(
     vReference: Vitesse,
     distanceReference: number,
     vitesses: Vitesse[]
