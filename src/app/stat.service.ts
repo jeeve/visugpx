@@ -164,21 +164,40 @@ export class StatService {
     }
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
     for (let i = 0; i < turns.length; i++) {
+      let a, b: number;
       let jibe = [];
-      for (let j = 0; j < this.gpxService.pointsCalcules.length; j++) {
-        if (
-          this.gpxService.calculeDistance(
-            this.gpxService.pointsGps[turns[i]].lat,
-            this.gpxService.pointsGps[turns[i]].lon,
-            this.gpxService.pointsGps[j].lat,
-            this.gpxService.pointsGps[j].lon
-          ) <
-            distanceReference / 2 &&
-          this.gpxService.calculeTempsEntre(turns[i], j) < distanceReference*500 // on s'assure qu'on est bien dans le jibe
-        ) {
-          jibe.push(j); // ajoute tous les points du jibe
-        }
+      let j = turns[i];
+
+      while ( 
+        this.gpxService.calculeDistance(
+          this.gpxService.pointsGps[turns[i]].lat,
+          this.gpxService.pointsGps[turns[i]].lon,
+          this.gpxService.pointsGps[j].lat,
+          this.gpxService.pointsGps[j].lon
+        ) <
+          distanceReference / 2 &&
+        j < this.gpxService.pointsGps.length-1
+      ) {
+        jibe.push(j); // ajoute les points après jibe
+        j++;
       }
+      b = j - 1;
+      j = turns[i];
+      while (
+        this.gpxService.calculeDistance(
+          this.gpxService.pointsGps[turns[i]].lat,
+          this.gpxService.pointsGps[turns[i]].lon,
+          this.gpxService.pointsGps[j].lat,
+          this.gpxService.pointsGps[j].lon
+        ) <
+          distanceReference / 2 &&
+        j > 0
+      ) {
+        jibe.push(j); // ajoute les points avant le jibe
+        j--;
+      }
+      a = j + 1;
+
       let d = 0;
       let t = 0;
       for (let k = 0; k < jibe.length; k++) {
@@ -188,79 +207,12 @@ export class StatService {
       let v = (1.94384 * d * 1000) / t; // vitesse moyenne du jibe
       if (v > vmax.v && v < vReference.v) {
         vmax.v = v;
-        vmax.a = jibe[0]; // debut du jibe
-        vmax.b = jibe[jibe.length - 1]; // fin du jibe
+        vmax.a = a; // debut du jibe
+        vmax.b = b; // fin du jibe
       }
     }
 
     return vmax;
-  }
-
-  private calculeAlphaSurOld(
-    vReference: Vitesse,
-    distanceReference: number,
-    vitesses: Vitesse[]
-  ): Vitesse {
-    let vmax: Vitesse = { v: 0, a: 0, b: 0 };
-    for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
-      const va = this.calculeVetAlphaIndiceSur(i, distanceReference);
-      const deltai = va.vitesse.b - i;
-      if (va.vitesse.a > -1) {
-        if (
-          va.vitesse.v > vmax.v &&
-          !this.iAppartientTraces(i, vitesses, 0.1) &&
-          Math.abs(va.alpha) > 180 &&
-          va.ialpha > va.vitesse.a + deltai / 3 &&
-          va.ialpha < va.vitesse.b - deltai / 3 && // on regarde le moment où ca tourne
-          va.vitesse.v < vReference.v
-        ) {
-          vmax.v = va.vitesse.v;
-          vmax.a = va.vitesse.a;
-          vmax.b = va.vitesse.b;
-        }
-      }
-    }
-    return vmax;
-  }
-
-  private calculeVetAlphaIndiceSur(
-    n: number,
-    distanceReference: number
-  ): { vitesse: Vitesse; alpha: number; ialpha: number } {
-    let t1 = this.gpxService.pointsGps[n].date;
-    let t2, dt, vitesse;
-    let distance = 0;
-    let alpha = 0;
-    let ialpha = 0;
-
-    for (let i = n; i < this.gpxService.pointsCalcules.length; i++) {
-      if (distance >= distanceReference) {
-        t2 = this.gpxService.pointsGps[i].date;
-        dt = (t2.getTime() - t1.getTime()) / 1000;
-        if (dt != 0) {
-          vitesse = ((distance * 1000) / dt) * 1.94384;
-        } else {
-          vitesse = 0;
-        }
-        return {
-          vitesse: { v: vitesse, a: n, b: i },
-          alpha: alpha,
-          ialpha: ialpha,
-        };
-      }
-      if (i + 1 < this.gpxService.pointsCalcules.length) {
-        distance = distance + this.gpxService.pointsCalcules[i + 1].deltad;
-        if (this.alpha) {
-          if (Math.abs(this.alpha[i]) < 120) {
-            alpha = alpha + this.alpha[i];
-          }
-          if (ialpha == 0 && Math.abs(alpha) > 90) {
-            ialpha = i; // on enregistre le point de bascule
-          }
-        }
-      }
-    }
-    return { vitesse: { v: 0, a: -1, b: -1 }, alpha: 0, ialpha: -1 };
   }
 
   private calculeVmaxPendant(
