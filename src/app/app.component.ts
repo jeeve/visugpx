@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GpxService } from './gpx.service';
 import { MapComponent } from './map/map.component';
 import { StatComponent } from './stat/stat.component';
@@ -9,8 +9,7 @@ export class Fenetre {
   auto = true;
   largeur = 2;
 
-  constructor(private gpxService: GpxService) {
-  }
+  constructor(private gpxService: GpxService) {}
 
   calcule(i: number): void {
     if (this.auto) {
@@ -26,7 +25,7 @@ export class Fenetre {
       }
     }
   }
-};
+}
 
 @Component({
   selector: 'app-root',
@@ -48,7 +47,7 @@ export class AppComponent implements OnInit {
   iStat = -1;
 
   get ecranMini(): boolean {
-    return document.body.clientWidth <= 767; 
+    return document.body.clientWidth <= 767;
   }
 
   majPosition(position: number): void {
@@ -93,15 +92,30 @@ export class AppComponent implements OnInit {
     if (this.ecranMini) {
       return 0;
     } else {
-      return 130 + (this.visuGraphDistance ? 160 : 0) + (this.visuGraphTemps ? 160 : 0);
+      if (this.statComponent != null) {
+        if (this.statComponent.statComponentRef != null) {
+          const H =
+            this.statComponent.statComponentRef.nativeElement.offsetHeight;
+          const h =
+            130 +
+            (this.visuGraphDistance ? 160 : 0) +
+            (this.visuGraphTemps ? 160 : 0);
+   
+            console.log(this.appComponentRef.nativeElement.offsetHeight);
+            return this.appComponentRef.nativeElement.offsetHeight - 10;
+   
+        }
+      }
     }
+    return 0;
   }
 
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   @ViewChild(StatComponent) statComponent!: StatComponent;
 
-  constructor(private gpxService: GpxService) {
-  }
+  @ViewChild('appComponentRef') appComponentRef!: ElementRef;
+
+  constructor(private gpxService: GpxService) {}
 
   ngOnInit(): void {
     const url = this.getParameterByName('url');
