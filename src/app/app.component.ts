@@ -1,7 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { GpxService } from './gpx.service';
 import { MapComponent } from './map/map.component';
-import { StatComponent } from './stat/stat.component';
 
 export class Fenetre {
   a = 0.0;
@@ -92,18 +91,19 @@ export class AppComponent implements OnInit {
     if (this.ecranMini) {
       return 0;
     } else {
-      const h =
+      const H = 890;
+      const b =
         130 +
         (this.visuGraphDistance ? 160 : 10) +
         (this.visuGraphTemps ? 160 : 10);
-      return h;
+      if (window.innerHeight - b > H) {
+        return window.innerHeight - H - 30;
+      }
+      return b;
     }
   }
 
   @ViewChild(MapComponent) mapComponent!: MapComponent;
-  @ViewChild(StatComponent) statComponent!: StatComponent;
-
-  @ViewChild('appComponentRef') appComponentRef!: ElementRef;
 
   constructor(private gpxService: GpxService) {}
 
