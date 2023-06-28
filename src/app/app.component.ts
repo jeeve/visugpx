@@ -92,22 +92,12 @@ export class AppComponent implements OnInit {
     if (this.ecranMini) {
       return 0;
     } else {
-      if (this.statComponent != null) {
-        if (this.statComponent.statComponentRef != null) {
-          const H =
-            this.statComponent.statComponentRef.nativeElement.offsetHeight;
-          const h =
-            130 +
-            (this.visuGraphDistance ? 160 : 0) +
-            (this.visuGraphTemps ? 160 : 0);
-   
-            console.log(this.appComponentRef.nativeElement.offsetHeight);
-            return this.appComponentRef.nativeElement.offsetHeight - 10;
-   
-        }
-      }
+      const h =
+        130 +
+        (this.visuGraphDistance ? 160 : 10) +
+        (this.visuGraphTemps ? 160 : 10);
+      return h;
     }
-    return 0;
   }
 
   @ViewChild(MapComponent) mapComponent!: MapComponent;

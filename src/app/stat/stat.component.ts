@@ -21,7 +21,7 @@ export const couleursStat = [
 })
 export class StatComponent implements OnInit {
 
-  @ViewChild('statComponentRef', { static: true }) statComponentRef!: ElementRef;
+  @ViewChild('statComponentRef') statComponentRef!: ElementRef;
   
   get dmax(): number {
     return this.statService.dmax;
