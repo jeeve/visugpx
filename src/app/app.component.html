@@ -60,7 +60,7 @@
 </div>
 <app-stat 
   *ngIf="estOK"
-  [bottom]="ecranMini ? 0 : (130 + (visuGraphDistance ? 160 : 0) + (visuGraphTemps ? 160 : 0))"
+  [bottom]="getBottomStat()"
   [visuStats]="visuStats"
   [iStat]="iStat"
   (calculOkChange)="majCalculStatsOk($event)"

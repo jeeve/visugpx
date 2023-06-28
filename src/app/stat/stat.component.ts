@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Stat, StatService } from '../stat.service';
 
 export const couleursStat = [
@@ -21,6 +21,8 @@ export const couleursStat = [
 })
 export class StatComponent implements OnInit {
 
+  @ViewChild('statComponentRef', { static: true }) statComponentRef!: ElementRef;
+  
   get dmax(): number {
     return this.statService.dmax;
   }
