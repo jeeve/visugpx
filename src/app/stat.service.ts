@@ -152,14 +152,19 @@ export class StatService {
     for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
       headings.push(this.gpxService.pointsCalcules[i].angle - meanHeading);
     }
+    let deltad = 0;
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
-      if (
-        (headings[i - 1] < 0 && headings[i] > 0) ||
-        (headings[i - 1] > 0 &&
-          headings[i] < 0 &&
-          !this.iAppartientTraces(i, vitesses, 0.1))
-      ) {
-        turns.push(i - 1);
+      deltad += this.gpxService.pointsCalcules[i].deltad;
+      if (((headings[i - 1] < 0 && headings[i] > 0) || (headings[i - 1] > 0 && headings[i] < 0)) && !this.iAppartientTraces(i, vitesses, 0.1)) {
+        if (turns.length > 0) {
+          if (deltad > distanceReference + distanceReference/3) { // on s'assure une distance mini entre chaque changement de signe
+            turns.push(i-1);
+            deltad = 0;
+          }
+        } else {
+          turns.push(i-1);
+          deltad = 0;
+        }
       }
     }
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
