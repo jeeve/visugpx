@@ -325,4 +325,14 @@ export class GpxService {
     return Math.abs(this.pointsGps[i].date.getTime() - this.pointsGps[j].date.getTime()) / 1000;
   }
 
+  calculeDeltaAngleEntre(i: number, j: number): number  {
+    let delta = 0;
+    const a = i < 0 ? 0 : i;
+    const b = j > this.pointsCalcules.length-1 ? this.pointsCalcules.length-1 : j;
+    for (let k = a; k < b; k++) {
+      delta += Math.abs(this.pointsCalcules[k].deltaa);
+    }
+    return delta;
+  }
+
 }

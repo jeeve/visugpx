@@ -155,14 +155,21 @@ export class StatService {
     let deltad = 0;
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
       deltad += this.gpxService.pointsCalcules[i].deltad;
-      if (((headings[i - 1] < 0 && headings[i] > 0) || (headings[i - 1] > 0 && headings[i] < 0)) && !this.iAppartientTraces(i, vitesses, 0.1)) {
+      if (
+        ((headings[i - 1] < 0 && headings[i] > 0) ||
+          (headings[i - 1] > 0 && headings[i] < 0)) &&
+        !this.iAppartientTraces(i, vitesses, 0.1)
+      ) {
         if (turns.length > 0) {
-          if (deltad > distanceReference + distanceReference/3) { // on s'assure une distance mini entre chaque changement de signe
-            turns.push(i-1);
-            deltad = 0;
+          if (deltad > distanceReference + distanceReference/2) {
+            // on s'assure une distance mini entre chaque changement de signe
+            if (this.gpxService.calculeDeltaAngleEntre(i - 5, i + 5) > 2600) {
+              turns.push(i - 1);
+              deltad = 0;
+            }
           }
         } else {
-          turns.push(i-1);
+          turns.push(i - 1);
           deltad = 0;
         }
       }
@@ -173,7 +180,7 @@ export class StatService {
       let jibe = [];
       let j = turns[i];
 
-      while ( 
+      while (
         this.gpxService.calculeDistance(
           this.gpxService.pointsGps[turns[i]].lat,
           this.gpxService.pointsGps[turns[i]].lon,
@@ -181,7 +188,7 @@ export class StatService {
           this.gpxService.pointsGps[j].lon
         ) <
           distanceReference / 2 &&
-        j < this.gpxService.pointsGps.length-1
+        j < this.gpxService.pointsGps.length - 1
       ) {
         jibe.push(j); // ajoute les points après jibe
         j++;
