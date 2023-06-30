@@ -330,9 +330,9 @@ export class GpxService {
     const a = i < 0 ? 0 : i;
     const b = j > this.pointsCalcules.length-1 ? this.pointsCalcules.length-1 : j;
     for (let k = a; k < b; k++) {
-      delta += Math.abs(this.pointsCalcules[k].deltaa);
+      delta += this.pointsCalcules[k].deltaa;
     }
-    return delta;
+    return Math.abs(delta);
   }
 
 }
