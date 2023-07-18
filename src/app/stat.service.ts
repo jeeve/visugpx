@@ -163,7 +163,7 @@ export class StatService {
         if (turns.length > 0) {
           if (deltad > distanceReference + distanceReference/2) {
             // on s'assure une distance mini entre chaque changement de signe
-            if (this.gpxService.calculeDeltaAngleEntre(i - 5, i + 5) > 2600) {
+            /*if (this.gpxService.calculeDeltaAngleEntre(i - 5, i + 5) > 2600)*/ { 
               turns.push(i - 1);
               deltad = 0;
             }
