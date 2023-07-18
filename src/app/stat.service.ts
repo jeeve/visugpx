@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { GpxService, Vitesse } from './gpx.service';
 
 export type Stat = {
@@ -19,7 +19,7 @@ type FonctionStat = (
   providedIn: 'root',
 })
 export class StatService {
-  private alpha: number[] | null = [];
+ // private alpha: number[] | null = [];
 
   dmax!: number;
   tmax!: number;
@@ -48,7 +48,7 @@ export class StatService {
         for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
           a.push(this.gpxService.pointsCalcules[i].deltaa);
         }
-        this.alpha = this.movingAverage(a, 2);
+        //this.alpha = this.movingAverage(a, 2);
 
         this.calculeStat('2s', this.calculeVmaxPendant.bind(this), 2);
         this.calculeStat('5s', this.calculeVmaxPendant.bind(this), 5);
