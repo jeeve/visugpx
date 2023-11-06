@@ -19,7 +19,7 @@ type FonctionStat = (
   providedIn: 'root',
 })
 export class StatService {
- // private alpha: number[] | null = [];
+  // private alpha: number[] | null = [];
 
   dmax!: number;
   tmax!: number;
@@ -76,11 +76,13 @@ export class StatService {
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
       const v0 = this.gpxService.pointsCalcules[i - 1].vitesse;
       const v = this.gpxService.pointsCalcules[i].vitesse;
-      const dt = this.gpxService.pointsCalcules[i - 1].deltat;
-      const deltav = (v - v0) / dt;
-      if (v0 > 12 && deltav < -3) {
-        if (!this.chuteAmoinDe(i - 1, 30)) {
-          this.chutes.push(i);
+      if (v < 5) {
+        const dt = this.gpxService.pointsCalcules[i - 1].deltat;
+        const deltav = (v - v0) / dt;
+        if (v0 > 12 && deltav < -3) {
+          if (!this.chuteAmoinDe(i - 1, 30)) {
+            this.chutes.push(i);
+          }
         }
       }
     }
@@ -161,9 +163,9 @@ export class StatService {
         !this.iAppartientTraces(i, vitesses, 0.1)
       ) {
         if (turns.length > 0) {
-          if (deltad > distanceReference + distanceReference/2) {
+          if (deltad > distanceReference + distanceReference / 2) {
             // on s'assure une distance mini entre chaque changement de signe
-            /*if (this.gpxService.calculeDeltaAngleEntre(i - 5, i + 5) > 2600)*/ { 
+            /*if (this.gpxService.calculeDeltaAngleEntre(i - 5, i + 5) > 2600)*/ {
               turns.push(i - 1);
               deltad = 0;
             }
