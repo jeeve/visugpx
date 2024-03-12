@@ -116,11 +116,10 @@
 
   .ligne {
     border: 1px solid;
-    margin: 5px;
   }
   
   .ligne:hover, .selected {
-    background-color:lightyellow;
+    background-color:#ababab75;
     color:black;
   }
   

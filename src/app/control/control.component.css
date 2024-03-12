@@ -142,6 +142,7 @@
 }
 
 @media screen and (max-width: 767px) {
+
   .control {
     display: flex;
     flex-direction: row;
@@ -168,6 +169,12 @@
   }
 
   .stop {
-    margin-left: 5px;
+    margin-left: 0;
+    margin-top: 15px;
   }
+
+  .fenetre-auto {
+    margin: 0 0 15px 0;
+  }
+
 }
