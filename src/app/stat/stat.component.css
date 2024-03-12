@@ -101,7 +101,7 @@
     top: -6px;
     left: 0;
     overflow-y: scroll;
-    max-height: calc(100vh - 465px);
+    max-height: calc(100vh - 500px);
     bottom: auto;
     background-color:white;
     color: black;
@@ -119,7 +119,7 @@
   }
   
   .ligne:hover, .selected {
-    background-color:#ababab75;
+    background-color:#e5e5e5;
     color:black;
   }
   

@@ -43,5 +43,7 @@
 @media screen and (max-width: 767px) {
   .chart-container {
     position: relative;
+    height: 100px;
+    margin-top: -10px;
   }
 }
