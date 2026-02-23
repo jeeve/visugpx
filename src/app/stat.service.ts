@@ -144,68 +144,105 @@ export class StatService {
     distanceReference: number,
     vitesses: Vitesse[]
   ): Vitesse {
-    let headings = [];
-    let turns = [];
-    let totAngle = 0;
-    for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
-      totAngle += this.gpxService.pointsCalcules[i].angle;
+    let headings: number[] = [];
+    let turns: number[] = [];
+    const n = this.gpxService.pointsCalcules.length;
+    const pts = this.gpxService.pointsGps;
+    // calcule le heading lissé pour chaque point à partir d'un segment
+    // de ~5 points (évite le bruit GPS des angles point-à-point)
+    const demiF = 4;
+    for (let i = 0; i < n; i++) {
+      const i0 = Math.max(0, i - demiF);
+      const i1 = Math.min(n - 1, i + demiF);
+      const dlat = pts[i1].lat - pts[i0].lat;
+      const dlon = (pts[i1].lon - pts[i0].lon) * Math.cos(pts[i].lat * Math.PI / 180);
+      let brng = Math.atan2(dlat, dlon) * (180 / Math.PI);
+      brng = (brng + 360) % 360;
+      headings.push(brng);
     }
-    const meanHeading = totAngle / this.gpxService.pointsGps.length;
-    for (let i = 0; i < this.gpxService.pointsCalcules.length; i++) {
-      headings.push(this.gpxService.pointsCalcules[i].angle - meanHeading);
+    // moyenne circulaire pour gérer correctement le passage 0°/360°
+    let sumSin = 0;
+    let sumCos = 0;
+    for (let i = 0; i < n; i++) {
+      const rad = headings[i] * Math.PI / 180;
+      sumSin += Math.sin(rad);
+      sumCos += Math.cos(rad);
+    }
+    const meanHeading = Math.atan2(sumSin, sumCos) * 180 / Math.PI;
+    for (let i = 0; i < n; i++) {
+      let diff = headings[i] - meanHeading;
+      while (diff > 180) diff -= 360;
+      while (diff < -180) diff += 360;
+      headings[i] = diff;
     }
     let deltad = 0;
+    let lastSignificantSide = 0; // -1 = côté négatif, +1 = côté positif
+    const seuilAngle = 20; // seuil en degrés pour éviter les faux jibes
     for (let i = 1; i < this.gpxService.pointsCalcules.length; i++) {
       deltad += this.gpxService.pointsCalcules[i].deltad;
+      // détecte un vrai jibe : le heading était significativement d'un côté
+      // et passe significativement de l'autre
+      const isJibe =
+        (lastSignificantSide === -1 && headings[i] > seuilAngle) ||
+        (lastSignificantSide === 1 && headings[i] < -seuilAngle);
       if (
-        ((headings[i - 1] < 0 && headings[i] > 0) ||
-          (headings[i - 1] > 0 && headings[i] < 0)) &&
+        isJibe &&
         !this.iAppartientTraces(i, vitesses, 0.1)
       ) {
         if (turns.length > 0) {
           if (deltad > distanceReference + distanceReference / 2) {
-            // on s'assure une distance mini entre chaque changement de signe
-            /*if (this.gpxService.calculeDeltaAngleEntre(i - 5, i + 5) > 2600)*/ {
-              turns.push(i - 1);
-              deltad = 0;
-            }
+            turns.push(i - 1);
+            deltad = 0;
           }
         } else {
           turns.push(i - 1);
           deltad = 0;
         }
       }
+      // met à jour le côté significatif après la détection
+      if (headings[i] < -seuilAngle) lastSignificantSide = -1;
+      else if (headings[i] > seuilAngle) lastSignificantSide = 1;
     }
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
+    const seuilJibe = 60; // changement de direction minimum (degrés) pour valider un jibe
     for (let i = 0; i < turns.length; i++) {
+      // vérifie que le heading change vraiment de direction
+      // en comparant la direction ~10 points avant et après le virage
+      const idxAvant = Math.max(0, turns[i] - 10);
+      const idxApres = Math.min(n - 1, turns[i] + 10);
+      let diffJibe = headings[idxApres] - headings[idxAvant];
+      while (diffJibe > 180) diffJibe -= 360;
+      while (diffJibe < -180) diffJibe += 360;
+      if (Math.abs(diffJibe) < seuilJibe) continue;
+
       let a, b: number;
       let jibe = [];
       let j = turns[i];
 
       while (
+        j < this.gpxService.pointsGps.length &&
         this.gpxService.calculeDistance(
           this.gpxService.pointsGps[turns[i]].lat,
           this.gpxService.pointsGps[turns[i]].lon,
           this.gpxService.pointsGps[j].lat,
           this.gpxService.pointsGps[j].lon
         ) <
-          distanceReference / 2 &&
-        j < this.gpxService.pointsGps.length - 1
+          distanceReference / 2
       ) {
         jibe.push(j); // ajoute les points après jibe
         j++;
       }
       b = j - 1;
-      j = turns[i];
+      j = turns[i] - 1;
       while (
+        j >= 0 &&
         this.gpxService.calculeDistance(
           this.gpxService.pointsGps[turns[i]].lat,
           this.gpxService.pointsGps[turns[i]].lon,
           this.gpxService.pointsGps[j].lat,
           this.gpxService.pointsGps[j].lon
         ) <
-          distanceReference / 2 &&
-        j > 0
+          distanceReference / 2
       ) {
         jibe.push(j); // ajoute les points avant le jibe
         j--;
