@@ -204,17 +204,10 @@ export class StatService {
       else if (headings[i] > seuilAngle) lastSignificantSide = 1;
     }
     let vmax: Vitesse = { v: 0, a: 0, b: 0 };
-    const seuilJibe = 60; // changement de direction minimum (degrés) pour valider un jibe
+    // changement de direction minimum (degrés) pour valider un jibe
+    // 90° correspond au standard GPS-Speedsurfing
+    const seuilJibe = 90;
     for (let i = 0; i < turns.length; i++) {
-      // vérifie que le heading change vraiment de direction
-      // en comparant la direction ~10 points avant et après le virage
-      const idxAvant = Math.max(0, turns[i] - 10);
-      const idxApres = Math.min(n - 1, turns[i] + 10);
-      let diffJibe = headings[idxApres] - headings[idxAvant];
-      while (diffJibe > 180) diffJibe -= 360;
-      while (diffJibe < -180) diffJibe += 360;
-      if (Math.abs(diffJibe) < seuilJibe) continue;
-
       let a, b: number;
       let jibe = [];
       let j = turns[i];
@@ -248,6 +241,14 @@ export class StatService {
         j--;
       }
       a = j + 1;
+
+      // valide le jibe en comparant le heading aux bornes réelles du jibe
+      // (aux points a et b qui sont à distanceReference/2 du virage)
+      if (a >= n || b >= n || a === b) continue;
+      let diffJibe = headings[b] - headings[a];
+      while (diffJibe > 180) diffJibe -= 360;
+      while (diffJibe < -180) diffJibe += 360;
+      if (Math.abs(diffJibe) < seuilJibe) continue;
 
       let d = 0;
       let t = 0;
