@@ -98,8 +98,6 @@ export class GpxService {
       return a.date.getTime() - b.date.getTime();
     });
 
-    const dateVmax = this.calculeVmax();
-
     //filtre valeurs aberrante selon acceleration
     var k = 0;
     while (this.filtre() && k < 100) {
@@ -134,6 +132,10 @@ export class GpxService {
           this.pointsGps[i].lon
         );
         let vitesse = this.calculeVitesse(i, this.pointsGps);
+        if (vitesse > this.vmax) {
+          this.vmax = vitesse;
+          this.ivmax = i;
+        }
         const t0 = this.pointsGps[0].date.getTime();
         const ti = this.pointsGps[i].date.getTime();
         const deltat = (ti - this.pointsGps[i-1].date.getTime()) / 1000;
@@ -153,7 +155,6 @@ export class GpxService {
     }
 
     this.dmax = d - dd;
-    this.ivmax = Math.min(this.getIndiceTemps(dateVmax), this.pointsGps.length - 1);
 
     this._estOK = true;
   }
@@ -175,27 +176,6 @@ export class GpxService {
     brng = (brng + 360) % 360;
     brng = 360 - brng;
     return brng;
-  }
-
-  // vmax calculee comme GPSAR, sur les points bruts (avant filtre) : le GPS
-  // (montre a 1 Hz) decale parfois l'horodatage d'un point et la vitesse alterne
-  // alors d'une seconde a l'autre (ex. 16.7 -> 25.7 -> 21.5 nds). Un point est
-  // fiable si les vitesses avant et apres lui sont coherentes, et la vmax ne
-  // retient que les vitesses entre deux points fiables.
-  private calculeVmax(): Date {
-    const SEUIL_ECART_VITESSE = 2.0; // nds
-    const n = this.pointsGps.length;
-    const vitesses = this.pointsGps.map((p, i) => this.calculeVitesse(i, this.pointsGps));
-    const fiable = (k: number) =>
-      k == 0 || k == n - 1 || Math.abs(vitesses[k] - vitesses[k + 1]) <= SEUIL_ECART_VITESSE;
-    let ivmax = 0;
-    for (let i = 1; i < n; i++) {
-      if (vitesses[i] > this.vmax && fiable(i - 1) && fiable(i)) {
-        this.vmax = vitesses[i];
-        ivmax = i;
-      }
-    }
-    return n > 0 ? this.pointsGps[ivmax].date : new Date();
   }
 
   private filtre() {
@@ -244,25 +224,27 @@ export class GpxService {
     return vitesse;
   }
 
-  // distance en km sur l'ellipsoide WGS84 (comme GPSAR et les GPS) :
-  // approximation plane locale avec les rayons de courbure a la latitude
-  // moyenne, precise pour les distances de quelques km
   calculeDistance(
     lat1: number,
     lon1: number,
     lat2: number,
     lon2: number
   ): number {
-    const A = 6378.137; // demi grand axe (km)
-    const E2 = 0.00669437999014; // excentricite au carre
-    const phi = this.toRad((lat1 + lat2) / 2);
-    const s = Math.sin(phi);
-    const w = 1 - E2 * s * s;
-    const rayonMeridien = (A * (1 - E2)) / Math.pow(w, 1.5);
-    const rayonNormal = A / Math.sqrt(w);
-    const dy = this.toRad(lat2 - lat1) * rayonMeridien;
-    const dx = this.toRad(lon2 - lon1) * rayonNormal * Math.cos(phi);
-    return Math.sqrt(dx * dx + dy * dy);
+    let R = 6371; // km
+    let dLat = this.toRad(lat2 - lat1);
+    let dLon = this.toRad(lon2 - lon1);
+    let lat1r = this.toRad(lat1);
+    let lat2r = this.toRad(lat2);
+
+    let a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) *
+        Math.sin(dLon / 2) *
+        Math.cos(lat1r) *
+        Math.cos(lat2r);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c;
+    return d;
   }
 
   private toRad(value: number) {
