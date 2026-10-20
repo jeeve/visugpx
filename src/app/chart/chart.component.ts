@@ -238,7 +238,7 @@ export class ChartComponent implements AfterViewInit {
       hAxis: hAxis,
       vAxis: {
         viewWindowMode: 'explicit',
-        viewWindow: { min: 0, max: this.gpxService.vmax },
+        viewWindow: { min: 0, max: this.vmaxGraphe },
       },
       pointSize: 0,
       legend: { position: 'none' },
@@ -299,7 +299,7 @@ export class ChartComponent implements AfterViewInit {
       } else {
         if (this.elementSelectionne.classList.contains('ligne-horizontale')) {
           const y = this.chartGety((e as MouseEvent).clientY);
-          if (y >= 0 && y <= this.gpxService.vmax) {
+          if (y >= 0 && y <= this.vmaxGraphe) {
             if (this.elementSelectionne.classList.contains('ligne-seuil'))
               this.vSeuil = y;
           }
@@ -318,6 +318,16 @@ export class ChartComponent implements AfterViewInit {
 
   mouseLeave(): void {
     this.elementSelectionne = null;
+  }
+
+  // la vmax (calculee sur les points bruts) peut etre inferieure a certaines
+  // vitesses filtrees affichees : l'axe prend le max des deux
+  private get vmaxGraphe(): number {
+    let v = this.gpxService.vmax;
+    for (const p of this.gpxService.pointsCalcules) {
+      v = Math.max(v, p.vitesse);
+    }
+    return v;
   }
 
   private xmax(): number {
@@ -341,7 +351,7 @@ export class ChartComponent implements AfterViewInit {
     const c = this.chartElement();
     if (c) {
       const Y2 = c.getBoundingClientRect().top + H - Y + 10;
-      return (Y2 * this.gpxService.vmax) / H;
+      return (Y2 * this.vmaxGraphe) / H;
     }
     return -1;
   }
