@@ -6,6 +6,7 @@ export interface IPointGps {
   date: Date;
   lat: number;
   lon: number;
+  vitesseDoppler?: number; // kts, vitesse <speed> enregistree par le GPS
 }
 
 export interface IPointCalcule {
@@ -33,8 +34,15 @@ export class GpxService {
   ivmax!: number;
   dmax!: number;
   tmax!: number;
+  doppler = false; // demande : utiliser les vitesses Doppler du fichier
+  aDoppler = false; // le fichier contient une vitesse pour chaque point
+  static readonly TOLERANCE_DOPPLER = 1.5; // kts, ecart tolere positions / Doppler
  
   private _estOK = false;
+
+  get utiliseDoppler(): boolean {
+    return this.doppler && this.aDoppler;
+  }
 
   get estOK(): boolean {
     return this._estOK;
@@ -83,11 +91,16 @@ export class GpxService {
         let lat = elt.getAttribute('lat');
         let lon = elt.getAttribute('lon');
         if (lat != null && lon != null) {
-          let pointGPS = {
+          let pointGPS: IPointGps = {
             date: new Date(time),
             lat: parseFloat(lat),
             lon: parseFloat(lon),
           };
+          // <speed> en m/s, sous trkpt (GPX 1.0) ou dans TrackPointExtension
+          const speed = elt.getElementsByTagNameNS('*', 'speed')[0];
+          if (speed && speed.textContent) {
+            pointGPS.vitesseDoppler = parseFloat(speed.textContent) * 1.94384;
+          }
           this.pointsGps.push(pointGPS);
         }
       }
@@ -98,9 +111,14 @@ export class GpxService {
       return a.date.getTime() - b.date.getTime();
     });
 
+    this.aDoppler =
+      this.pointsGps.length > 0 &&
+      this.pointsGps.every((p) => p.vitesseDoppler !== undefined && !isNaN(p.vitesseDoppler));
+
     //filtre valeurs aberrante selon acceleration
+    // (inutile en Doppler : les vitesses aberrantes sont remplacees par le Doppler)
     var k = 0;
-    while (this.filtre() && k < 100) {
+    while (!this.utiliseDoppler && this.filtre() && k < 100) {
       k = k + 1;
     }
 
@@ -132,13 +150,23 @@ export class GpxService {
           this.pointsGps[i].lon
         );
         let vitesse = this.calculeVitesse(i, this.pointsGps);
+        const deltatPoint = (this.pointsGps[i].date.getTime() - this.pointsGps[i - 1].date.getTime()) / 1000;
+        if (this.utiliseDoppler) {
+          // comme GPSAR : la vitesse des positions n'est gardee que si elle
+          // concorde avec le Doppler, sinon on prend le Doppler
+          const vDoppler = (this.pointsGps[i - 1].vitesseDoppler! + this.pointsGps[i].vitesseDoppler!) / 2;
+          if (Math.abs(vitesse - vDoppler) > GpxService.TOLERANCE_DOPPLER) {
+            vitesse = vDoppler;
+            dd = (vDoppler / 1.94384) * deltatPoint / 1000;
+          }
+        }
         if (vitesse > this.vmax) {
           this.vmax = vitesse;
           this.ivmax = i;
         }
         const t0 = this.pointsGps[0].date.getTime();
         const ti = this.pointsGps[i].date.getTime();
-        const deltat = (ti - this.pointsGps[i-1].date.getTime()) / 1000;
+        const deltat = deltatPoint;
         this.pointsCalcules.push({
           distance: d,
           temps: (ti - t0) / 1000,

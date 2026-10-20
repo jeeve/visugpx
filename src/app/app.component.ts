@@ -112,6 +112,7 @@ export class AppComponent implements OnInit {
     if (url) {
       if (url != '') {
         this.gpxService.urlFichier = url;
+        this.gpxService.doppler = this.getParameterByName('doppler') == '1';
         this.estOK = true;
       }
     }

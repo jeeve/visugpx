@@ -116,6 +116,10 @@
       <button class="stop" type="button" (click)="stop()">Stop</button>
     </div>
 
+    <div *ngIf="aDoppler" class="check">
+      <input type="checkbox" [(ngModel)]="doppler" />
+      <label>Doppler</label>
+    </div>
     <div class="check stats">
       <input type="checkbox" [(ngModel)]="visuStats" />
       <label>Statistiques</label>

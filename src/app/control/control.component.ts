@@ -33,6 +33,25 @@ export class ControlComponent implements OnInit {
     return true;
   }
 
+  get aDoppler(): boolean {
+    return this.gpxService.estOK && this.gpxService.aDoppler;
+  }
+
+  get doppler(): boolean {
+    return this.gpxService.doppler;
+  }
+
+  // toutes les vitesses en dependent : on recharge avec le parametre doppler
+  set doppler(value: boolean) {
+    const url = new URL(window.location.href);
+    if (value) {
+      url.searchParams.set('doppler', '1');
+    } else {
+      url.searchParams.delete('doppler');
+    }
+    window.location.href = url.toString();
+  }
+
   uploadGpx = false;
   _visuStats = true;
   _visuChutes = true;
