@@ -18,7 +18,7 @@
   display: inline-block;
   position: relative;
   bottom: 18px;
-  z-index: 100000;
+  z-index: 10000;
   margin-right: 16px;
   padding-left: 10px;
   padding-right: 10px;
@@ -27,7 +27,7 @@
 }
 
 #auteur {
-  z-index: 100000;
+  z-index: 10000;
   position: relative;
   bottom: 36px;
   right: 180px;
