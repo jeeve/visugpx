@@ -224,27 +224,25 @@ export class GpxService {
     return vitesse;
   }
 
+  // distance en km sur l'ellipsoide WGS84 (comme GPSAR et les GPS) :
+  // approximation plane locale avec les rayons de courbure a la latitude
+  // moyenne, precise pour les distances de quelques km
   calculeDistance(
     lat1: number,
     lon1: number,
     lat2: number,
     lon2: number
   ): number {
-    let R = 6371; // km
-    let dLat = this.toRad(lat2 - lat1);
-    let dLon = this.toRad(lon2 - lon1);
-    let lat1r = this.toRad(lat1);
-    let lat2r = this.toRad(lat2);
-
-    let a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.sin(dLon / 2) *
-        Math.sin(dLon / 2) *
-        Math.cos(lat1r) *
-        Math.cos(lat2r);
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    let d = R * c;
-    return d;
+    const A = 6378.137; // demi grand axe (km)
+    const E2 = 0.00669437999014; // excentricite au carre
+    const phi = this.toRad((lat1 + lat2) / 2);
+    const s = Math.sin(phi);
+    const w = 1 - E2 * s * s;
+    const rayonMeridien = (A * (1 - E2)) / Math.pow(w, 1.5);
+    const rayonNormal = A / Math.sqrt(w);
+    const dy = this.toRad(lat2 - lat1) * rayonMeridien;
+    const dx = this.toRad(lon2 - lon1) * rayonNormal * Math.cos(phi);
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
   private toRad(value: number) {
