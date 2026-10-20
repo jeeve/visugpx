@@ -79,13 +79,25 @@ export class StatService {
       if (v < 5) {
         const dt = this.gpxService.pointsCalcules[i - 1].deltat;
         const deltav = (v - v0) / dt;
-        if (v0 > 12 && deltav < -3) {
+        if ((v0 > 12 && deltav < -3) || this.decelerationBrutaleAvant(i, 6)) {
           if (!this.chuteAmoinDe(i - 1, 30)) {
             this.chutes.push(i);
           }
         }
       }
     }
+  }
+
+  // le filtre GPS supprime les points de forte deceleration : une chute peut
+  // alors s'etaler sur plusieurs points, on regarde donc les secondes precedentes
+  private decelerationBrutaleAvant(i: number, deltat: number): boolean {
+    const p = this.gpxService.pointsCalcules;
+    for (let j = i - 1; j >= 0 && p[i].temps - p[j].temps <= deltat; j--) {
+      if (p[j].vitesse > 12 && (p[j].vitesse - p[i].vitesse) / (p[i].temps - p[j].temps) > 3) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private chuteAmoinDe(i: number, deltat: number): boolean {
