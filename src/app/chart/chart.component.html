@@ -2,7 +2,7 @@
   <div class="chart" #charttemplate></div>
   <svg id="controle-container" (click)="clickChart($event)" (mousemove)="mouseMove($event)" (mouseleave)="mouseLeave()">
     <svg *ngIf="visuStats">
-      <svg *ngFor="let c of chutes" [attr.x]="X(ivmax)" y="10" width="10" height="6">
+      <svg *ngIf="ivmax !== undefined" [attr.x]="X(ivmax)" y="10" width="10" height="6">
         <polygon points="0,0 10,0 5,5" fill="red" stroke="red"></polygon>
       </svg>
       <svg *ngFor="let v of vitesses; let i = index" class="indicateur plage"  [attr.x]="X(v.a)+3" y="10" [attr.width]="X(v.b)-X(v.a)+10" height="5">
