@@ -116,17 +116,19 @@
       <button class="stop" type="button" (click)="stop()">Stop</button>
     </div>
 
-    <div *ngIf="aDoppler" class="check">
-      <input type="checkbox" [(ngModel)]="doppler" />
-      <label>Doppler</label>
-    </div>
-    <div class="check stats">
-      <input type="checkbox" [(ngModel)]="visuStats" />
-      <label>Statistiques</label>
-    </div>
-    <div *ngIf="afficheBoutonChutes" class="check">
-      <input type="checkbox" [(ngModel)]="visuChutes" />
-      <label>Chutes</label>
+    <div class="options">
+      <div *ngIf="aDoppler" class="check">
+        <input type="checkbox" [(ngModel)]="doppler" />
+        <label>Doppler</label>
+      </div>
+      <div class="check stats">
+        <input type="checkbox" [(ngModel)]="visuStats" />
+        <label>Statistiques</label>
+      </div>
+      <div *ngIf="afficheBoutonChutes" class="check">
+        <input type="checkbox" [(ngModel)]="visuChutes" />
+        <label>Chutes</label>
+      </div>
     </div>
     <div *ngIf="visuGraphes" class="graphes">
       <div class="check graphe-distance">
