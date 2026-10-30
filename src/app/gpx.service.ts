@@ -39,6 +39,7 @@ export class GpxService {
   static readonly TOLERANCE_DOPPLER = 1.5; // kts, ecart tolere positions / Doppler
  
   private _estOK = false;
+  private xml: XmlString = ""; // garde pour recalculer sans recharger
 
   get utiliseDoppler(): boolean {
     return this.doppler && this.aDoppler;
@@ -74,7 +75,16 @@ export class GpxService {
     }
   }
 
+  // toutes les vitesses en dependent : on relit le fichier deja charge
+  changeDoppler(value: boolean): void {
+    this.doppler = value;
+    if (this.xml != "") {
+      this.litXml(this.xml);
+    }
+  }
+
   litXml(xml: XmlString): void {
+    this.xml = xml;
     const parser = new DOMParser();
     const doc = parser.parseFromString(xml, 'application/xml');
     this.pointsGps = [];

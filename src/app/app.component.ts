@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GpxService } from './gpx.service';
 import { MapComponent } from './map/map.component';
+import { StatService } from './stat.service';
 
 export class Fenetre {
   a = 0.0;
@@ -71,6 +72,30 @@ export class AppComponent implements OnInit {
     this.visuChutes = value;
   }
 
+  // toutes les vitesses en dependent : on recalcule et on recree carte,
+  // graphes et stats, sans recharger la page
+  majDoppler(value: boolean): void {
+    const date = this.gpxService.pointsGps[this.iPosition].date;
+    this.gpxService.changeDoppler(value);
+    this.statService.reinitialise();
+    this.iPosition = Math.min(
+      this.gpxService.getIndiceTemps(date),
+      this.gpxService.pointsGps.length - 1
+    );
+    this.calculStatsOk = false;
+
+    const url = new URL(window.location.href);
+    if (value) {
+      url.searchParams.set('doppler', '1');
+    } else {
+      url.searchParams.delete('doppler');
+    }
+    history.replaceState(null, '', url.toString());
+
+    this.estOK = false;
+    setTimeout(() => (this.estOK = true));
+  }
+
   majVisuGraphDistance(value: boolean): void {
     this.visuGraphDistance = value;
   }
@@ -105,7 +130,10 @@ export class AppComponent implements OnInit {
 
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
-  constructor(private gpxService: GpxService) {}
+  constructor(
+    private gpxService: GpxService,
+    private statService: StatService
+  ) {}
 
   ngOnInit(): void {
     const url = this.getParameterByName('url');

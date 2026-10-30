@@ -126,6 +126,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private metAJourStats(): void {
+    if (!this.map) return;
     if (this.markerVmax) {
       this.markerVmax.remove();
     }
@@ -197,6 +198,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private dessineMarkerChutes(): void {
+    if (!this.map) return; // carte recreee apres un changement Doppler
     for (let m of this.markersChutes) {
       if (m) {
         m.remove();
@@ -288,6 +290,7 @@ export class MapComponent implements AfterViewInit {
         this.fenetre.calcule(this._iPosition);
         this.dessineTrace();
         this.metAJourStats();
+        this.dessineMarkerChutes();
 
         this.observer = new ResizeObserver(entries => {
           this.map.invalidateSize();
@@ -319,7 +322,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private updatePosition() {
-    if (this.gpxService.estOK) {
+    if (this.gpxService.estOK && this.markerVitesse) {
       const i = this._iPosition;
       const lat = this.gpxService.pointsGps[i].lat;
       const lon = this.gpxService.pointsGps[i].lon;
@@ -334,7 +337,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   dessineTrace(): void {
-    if (!this.gpxService.estOK) return;
+    if (!this.gpxService.estOK || !this.map) return;
     let polylignes = [];
 
     let txy2: L.LatLng[] = [];

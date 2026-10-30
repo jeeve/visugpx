@@ -31,6 +31,12 @@ export class StatService {
 
   constructor(private gpxService: GpxService) {}
 
+  reinitialise(): void {
+    this.stats = [];
+    this.chutes = [];
+    this.calculOK = false;
+  }
+
   calcule(): Observable<void> {
     return new Observable((observer) => {
       if (this.calculOK) {
