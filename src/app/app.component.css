@@ -6,6 +6,8 @@
 
 .container {
   height: calc(100vh - 10px);
+  /* hauteur visible, barre d'adresse du navigateur mobile comprise */
+  height: calc(100dvh - 10px);
   width: 100%;
   display: flex;
   flex-direction: column;
