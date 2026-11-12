@@ -23,35 +23,6 @@
 .ligne {
   filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
   touch-action: none;
-  overflow: visible;
-}
-
-/* écrans tactiles : zone de saisie élargie autour des lignes */
-@media (pointer: coarse) {
-  .ligne-verticale rect {
-    x: -12px;
-    width: 34px;
-  }
-  .ligne-horizontale rect {
-    y: -12px;
-    height: 34px;
-  }
-}
-
-.ligne-seuil {
-  cursor: row-resize;
-}
-
-.ligne-position {
-  cursor: col-resize;
-}
-
-.ligne-gauche {
-  cursor: col-resize;
-}
-
-.ligne-droite {
-  cursor: col-resize;
 }
 
 @media screen and (max-width: 767px) {

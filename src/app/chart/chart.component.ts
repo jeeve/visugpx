@@ -15,7 +15,8 @@ import { StatService } from '../stat.service';
 import { couleursStat } from '../stat/stat.component';
 
 const SCRIPT_PATH = 'https://www.google.com/jsapi';
-const LARGEUR_LIGNE = 10;
+const LARGEUR_LIGNE_SOURIS = 10;
+const LARGEUR_LIGNE_TACTILE = 34;
 declare let google: any;
 
 @Component({
@@ -40,6 +41,14 @@ export class ChartComponent implements AfterViewInit {
   }
 
   private _vSeuil = 0;
+
+  // zone de saisie des lignes : plus large sur écran tactile (doigt)
+  readonly largeurLigne =
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(pointer: coarse)').matches
+      ? LARGEUR_LIGNE_TACTILE
+      : LARGEUR_LIGNE_SOURIS;
 
   @Input()
   get chutes(): number[] {
@@ -127,9 +136,9 @@ export class ChartComponent implements AfterViewInit {
   get XFenetreGauche(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
-        return this.xLoc(this.x(this.fenetre.a)) - LARGEUR_LIGNE / 2;
+        return this.xLoc(this.x(this.fenetre.a)) - this.largeurLigne / 2;
       } else {
-        return this.xLoc(this.x(this.fenetre.b)) - LARGEUR_LIGNE / 2;
+        return this.xLoc(this.x(this.fenetre.b)) - this.largeurLigne / 2;
       }
     } else {
       return 25;
@@ -139,9 +148,9 @@ export class ChartComponent implements AfterViewInit {
   get XFenetreDroite(): number {
     if (this.chart && this.gpxService.estOK) {
       if (this.fenetre.a <= this.fenetre.b) {
-        return this.xLoc(this.x(this.fenetre.b)) - LARGEUR_LIGNE / 2;
+        return this.xLoc(this.x(this.fenetre.b)) - this.largeurLigne / 2;
       } else {
-        return this.xLoc(this.x(this.fenetre.a)) - LARGEUR_LIGNE / 2;
+        return this.xLoc(this.x(this.fenetre.a)) - this.largeurLigne / 2;
       }
     } else {
       return 0;
@@ -277,6 +286,12 @@ export class ChartComponent implements AfterViewInit {
     const pe = e as PointerEvent;
     const cible = pe.target as Element;
     this.elementSelectionne = cible.closest('.ligne') as HTMLElement | null;
+    if (this.elementSelectionne?.classList.contains('ligne-verticale')) {
+      this.elementSelectionne = this.ligneVerticaleLaPlusProche(
+        this.elementSelectionne,
+        pe.clientX
+      );
+    }
     if (this.elementSelectionne) {
       // évite le défilement / zoom de la page pendant le glissé au doigt
       pe.preventDefault();
@@ -284,6 +299,45 @@ export class ChartComponent implements AfterViewInit {
       try {
         cible.setPointerCapture(pe.pointerId);
       } catch {}
+    }
+  }
+
+  // Les zones de saisie des lignes verticales se chevauchent (la fenêtre
+  // entoure la position de près) : on prend la ligne dont le trait est le
+  // plus proche du doigt, la ligne de position gagnant en cas d'égalité.
+  private ligneVerticaleLaPlusProche(
+    touchee: HTMLElement,
+    clientX: number
+  ): HTMLElement {
+    const conteneur = touchee.closest('#controle-container');
+    if (!conteneur) {
+      return touchee;
+    }
+    const lignes = Array.from(
+      conteneur.querySelectorAll<HTMLElement>('.ligne-verticale')
+    ).sort(
+      (a, b) =>
+        Number(b.classList.contains('ligne-position')) -
+        Number(a.classList.contains('ligne-position'))
+    );
+    let meilleure = touchee;
+    let dMin = Infinity;
+    for (const l of lignes) {
+      const r = l.getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - clientX);
+      if (d < dMin) {
+        dMin = d;
+        meilleure = l;
+      }
+    }
+    return meilleure;
+  }
+
+  // bloque le défilement natif dès que le doigt touche une ligne,
+  // sinon le navigateur annule le glissé (pointercancel)
+  toucheLigne(e: Event): void {
+    if (e.cancelable) {
+      e.preventDefault();
     }
   }
 
@@ -358,7 +412,7 @@ export class ChartComponent implements AfterViewInit {
 
   get XPosition(): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.xLoc(this.x(this._iPosition)) - LARGEUR_LIGNE / 2;
+      return this.xLoc(this.x(this._iPosition)) - this.largeurLigne / 2;
     } else {
       return 0;
     }
@@ -366,7 +420,7 @@ export class ChartComponent implements AfterViewInit {
 
   get YSeuil(): number {
     if (this.chart && this.gpxService.estOK) {
-      return this.yLoc(this._vSeuil) - LARGEUR_LIGNE / 2 + 10;
+      return this.yLoc(this._vSeuil) - this.largeurLigne / 2 + 10;
     } else {
       return 0;
     }

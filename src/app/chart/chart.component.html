@@ -24,86 +24,21 @@
       <rect [attr.x]="XFenetreDroite+5" y="10" [attr.width]="charttemplate.clientWidth-XFenetreDroite" height="135" stroke="#C0C0C0" stroke-width="0" fill-opacity="0.1" strock-opacity="0.1">
       </rect>
     </svg>
-    <svg class="ligne ligne-verticale ligne-position" [attr.x]="XPosition" y="10" width="10" height="135" (pointerdown)="mouseDown($event)" (click)="ligneClick($event)">
-        <rect
-          x="0"
-          y="0"
-          width="10"
-          height="100%"
-          strocke="FF0000"
-          stroke-width="1"
-          fill-opacity="0"
-          stroke-opacity="0"
-        ></rect>
-        <line
-          x1="5"
-          y1="0"
-          x2="5"
-          y2="135"
-          stroke="#000000"
-          stroke-width="3"
-          stroke-dasharray="5, 5"
-        ></line>
-      </svg>
-      <svg class="ligne ligne-horizontale ligne-seuil" x="30" [attr.y]="YSeuil" width="100%" height="10" (pointerdown)="mouseDown($event)" (click)="ligneClick($event)">
-        <rect
-          x="0"
-          y="0"
-          width="100%"
-          height="10"
-          strocke="FF0000"
-          stroke-width="1"
-          fill-opacity="0"
-          stroke-opacity="0"
-        ></rect>
-        <line
-          x1="0"
-          y1="5"
-          x2="100%"
-          y2="5"
-          stroke="#FF0000"
-          stroke-width="2"
-        ></line>
-      </svg>
-      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-gauche" [attr.x]="XFenetreGauche" y="10" width="10" height="135" (pointerdown)="mouseDown($event)" (click)="ligneClick($event)">
-        <rect
-          x="0"
-          y="0"
-          width="10"
-          height="100%"
-          strocke="FF0000"
-          stroke-width="1"
-          fill-opacity="0"
-          stroke-opacity="0"
-        ></rect>
-        <line
-          x1="5"
-          y1="0"
-          x2="5"
-          y2="135"
-          stroke="#000000"
-          stroke-width="3"
-        ></line>
-      </svg>
-      <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-droite" [attr.x]="XFenetreDroite" y="10" width="10" height="135" (pointerdown)="mouseDown($event)" (click)="ligneClick($event)">
-        <rect
-          x="0"
-          y="0"
-          width="10"
-          height="100%"
-          strocke="FF0000"
-          stroke-width="1"
-          fill-opacity="0"
-          stroke-opacity="0"
-        ></rect>
-        <line
-          x1="5"
-          y1="0"
-          x2="5"
-          y2="135"
-          stroke="#000000"
-          stroke-width="3"
-        ></line>
-      </svg>
+    <svg class="ligne ligne-verticale ligne-position" [attr.x]="XPosition" y="10" [attr.width]="largeurLigne" height="135" (pointerdown)="mouseDown($event)" (touchstart)="toucheLigne($event)" (click)="ligneClick($event)">
+      <rect x="0" y="0" [attr.width]="largeurLigne" height="100%" fill="transparent"></rect>
+      <line [attr.x1]="largeurLigne / 2" y1="0" [attr.x2]="largeurLigne / 2" y2="135" stroke="#000000" stroke-width="3" stroke-dasharray="5, 5"></line>
+    </svg>
+    <svg class="ligne ligne-horizontale ligne-seuil" x="30" [attr.y]="YSeuil" width="100%" [attr.height]="largeurLigne" (pointerdown)="mouseDown($event)" (touchstart)="toucheLigne($event)" (click)="ligneClick($event)">
+      <rect x="0" y="0" width="100%" [attr.height]="largeurLigne" fill="transparent"></rect>
+      <line x1="0" [attr.y1]="largeurLigne / 2" x2="100%" [attr.y2]="largeurLigne / 2" stroke="#FF0000" stroke-width="2"></line>
+    </svg>
+    <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-gauche" [attr.x]="XFenetreGauche" y="10" [attr.width]="largeurLigne" height="135" (pointerdown)="mouseDown($event)" (touchstart)="toucheLigne($event)" (click)="ligneClick($event)">
+      <rect x="0" y="0" [attr.width]="largeurLigne" height="100%" fill="transparent"></rect>
+      <line [attr.x1]="largeurLigne / 2" y1="0" [attr.x2]="largeurLigne / 2" y2="135" stroke="#000000" stroke-width="3"></line>
+    </svg>
+    <svg *ngIf="afficheFenetre" class="ligne ligne-verticale ligne-droite" [attr.x]="XFenetreDroite" y="10" [attr.width]="largeurLigne" height="135" (pointerdown)="mouseDown($event)" (touchstart)="toucheLigne($event)" (click)="ligneClick($event)">
+      <rect x="0" y="0" [attr.width]="largeurLigne" height="100%" fill="transparent"></rect>
+      <line [attr.x1]="largeurLigne / 2" y1="0" [attr.x2]="largeurLigne / 2" y2="135" stroke="#000000" stroke-width="3"></line>
+    </svg>
     </svg>
 </div>
