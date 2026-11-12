@@ -274,7 +274,17 @@ export class ChartComponent implements AfterViewInit {
   }
 
   mouseDown(e: Event): void {
-    this.elementSelectionne = (e.target as Element).parentElement;
+    const pe = e as PointerEvent;
+    const cible = pe.target as Element;
+    this.elementSelectionne = cible.closest('.ligne') as HTMLElement | null;
+    if (this.elementSelectionne) {
+      // évite le défilement / zoom de la page pendant le glissé au doigt
+      pe.preventDefault();
+      // le glissé continue même si le doigt (ou la souris) sort de la ligne
+      try {
+        cible.setPointerCapture(pe.pointerId);
+      } catch {}
+    }
   }
 
   mouseMove(e: Event): void {
