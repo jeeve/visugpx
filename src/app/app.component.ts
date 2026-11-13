@@ -3,6 +3,13 @@ import { GpxService } from './gpx.service';
 import { MapComponent } from './map/map.component';
 import { StatService } from './stat.service';
 
+// valeur saisie au clavier (virgule ou point décimal) -> nombre
+export function versNombre(valeur: number | string): number {
+  return typeof valeur === 'number'
+    ? valeur
+    : parseFloat(String(valeur).replace(',', '.'));
+}
+
 export class Fenetre {
   a = 0.0;
   b = 0.0;
@@ -15,8 +22,9 @@ export class Fenetre {
     if (this.auto) {
       if (!this.gpxService.estOK) return;
       const d = this.gpxService.pointsCalcules[i].distance;
-      this.a = this.gpxService.getIndiceDistance(d - this.largeur / 2);
-      this.b = this.gpxService.getIndiceDistance(d + this.largeur / 2);
+      const largeur = versNombre(this.largeur);
+      this.a = this.gpxService.getIndiceDistance(d - largeur / 2);
+      this.b = this.gpxService.getIndiceDistance(d + largeur / 2);
       if (this.a < 0) {
         this.a = 0;
       }

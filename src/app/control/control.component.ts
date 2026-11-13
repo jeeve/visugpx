@@ -6,7 +6,7 @@ import {
   Output
 } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
-import { Fenetre } from '../app.component';
+import { Fenetre, versNombre } from '../app.component';
 import { GpxService } from '../gpx.service';
 import { StatService } from '../stat.service';
 import { UploadService } from '../upload.service';
@@ -219,7 +219,7 @@ export class ControlComponent implements OnInit {
   lecture(): void {
     if (this.intervalSubscription)
       if (!this.intervalSubscription.closed) return;
-    this.intervalSubscription = interval(1000 / this.rapidite).subscribe(() => {
+    this.intervalSubscription = interval(1000 / versNombre(this.rapidite)).subscribe(() => {
       let d = this.gpxService.pointsGps[this._iPosition].date;
       d.setTime(d.getTime() + 1000);
       const i = this.gpxService.getIndiceTemps(d);
@@ -233,6 +233,11 @@ export class ControlComponent implements OnInit {
     if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
+  }
+
+  // clavier numérique mobile : accepte la virgule décimale
+  versNombre(valeur: number | string): number {
+    return versNombre(valeur);
   }
 
   rapiditeChange(): void {

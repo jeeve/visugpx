@@ -36,10 +36,11 @@
               <td>
                 <input
                   type="text"
+                  inputmode="decimal"
                   class="seuil"
                   [ngModel]="vSeuil | number : '1.2-2'"
                   [ngModelOptions]="{ updateOn: 'blur' }"
-                  (ngModelChange)="vSeuil = $event"
+                  (ngModelChange)="vSeuil = versNombre($event)"
                 />
               </td>
               <td>kts</td>
@@ -97,6 +98,7 @@
       <div *ngIf="fenetre.auto" class="div-fenetre-largeur">
         <input
           type="text"
+          inputmode="decimal"
           class="fenetre-largeur"
           [(ngModel)]="fenetre.largeur"
           (ngModelChange)="metAjourFenetre()"
@@ -109,6 +111,7 @@
       <label>x</label>
       <input
         type="text"
+        inputmode="decimal"
         class="rapidite"
         [(ngModel)]="rapidite"
         (ngModelChange)="rapiditeChange()"
