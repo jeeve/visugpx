@@ -153,16 +153,175 @@
     left: 0;
     right: 15px;
     top: 0;
+    margin: 8px;
+    padding: 6px 4px 4px 4px;
+    font-size: 12px;
+    color: #1f2937;
+    background-color: #ffffff;
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+  }
+
+  .control input[type="range"],
+  .control input[type="checkbox"] {
+    accent-color: #2563eb;
+  }
+
+  .control input[type="text"] {
+    padding: 3px 4px;
+    font: inherit;
+    color: inherit;
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    outline: none;
+  }
+
+  .control input[type="text"]:focus {
+    border-color: #2563eb;
+    background-color: #ffffff;
+  }
+
+  .control td {
+    padding: 4px 3px;
+  }
+
+  .lire-gpx-lien {
+    width: auto;
+    height: auto;
+    padding: 4px 0 6px 10px;
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .lire-gpx {
+    padding: 4px 0 6px 10px;
+  }
+
+  .upload {
+    width: auto;
+    margin: 0;
+  }
+
+  .control label {
+    padding: 0 3px;
+  }
+
+  .control input.seuil,
+  .distance-seuil {
+    color: #dc2626;
+  }
+
+  .control input.seuil {
+    font-weight: 600;
+  }
+
+  .control input.rapidite {
+    width: 22px;
+  }
+
+  .vitesse {
+    color: #2563eb;
+    font-size: 15px;
+  }
+
+  .lecture,
+  .stop,
+  .upload button {
+    padding: 5px 10px;
+    font: inherit;
+    font-weight: 600;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .lecture,
+  .upload button {
+    color: #ffffff;
+    background-color: #2563eb;
+  }
+
+  .lecture::before {
+    content: "\25B6\00A0";
+    font-size: 10px;
+  }
+
+  .stop {
+    color: #1f2937;
+    background-color: #e5e7eb;
+  }
+
+  .stop::before {
+    content: "\25A0\00A0";
+    font-size: 10px;
+  }
+
+  .lecture:active,
+  .stop:active,
+  .upload button:active {
+    filter: brightness(0.9);
+  }
+
+  .magneto {
+    margin: 10px 8px 6px 15px;
+  }
+
+  .magneto {
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+
+  .control {
+    padding-right: 8px;
+  }
+
+  /* Stop sur la ligne de Lecture, icône seule */
+  .magneto .stop {
+    margin: 0 0 0 4px;
+    padding: 5px 9px;
+    font-size: 0;
+    vertical-align: middle;
+  }
+
+  .magneto .stop::before {
+    content: "\25A0";
     font-size: 12px;
   }
 
-  .stats {
-    display: none;
+  .magneto .lecture {
+    vertical-align: middle;
+  }
+
+  .fenetre {
+    margin-top: 8px;
+    margin-bottom: 4px;
   }
 
   .options {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  /* une option par ligne, alignée sur Distance / Temps / Vitesse */
+  .options {
+    flex-direction: column;
+    margin-top: 4px;
+  }
+
+  .options .check {
+    display: flex;
+    align-items: center;
+    height: 27px;
+    padding-left: 8px;
+    padding-bottom: 0;
+  }
+
+  .options .check input {
+    margin: 0 3px 0 0;
   }
 
   .slider-wrapper input {
@@ -192,6 +351,59 @@
 
   .fenetre-largeur {
     width: 26px;
+  }
+
+  /* grille fixe de 27 px dans les deux colonnes : les options restent
+     alignées sur Distance / Temps / Vitesse quelle que soit la police
+     ligne 0 : Lire fichier GPX | Fenêtre auto
+     lignes 1-2 : Seuil, km     | Lecture x 10 Stop
+     lignes 3-5 : Distance...   | Doppler, Statistiques, Chutes */
+  .lire-gpx-lien,
+  .lire-gpx {
+    box-sizing: border-box;
+    height: 27px;
+    line-height: 27px;
+    padding: 0 0 0 10px;
+  }
+
+  .div-seuil table {
+    border-spacing: 0;
+  }
+
+  .div-seuil tr {
+    height: 27px;
+  }
+
+  .div-seuil td {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .fenetre {
+    display: flex;
+    align-items: center;
+    height: 27px;
+    margin: 0;
+  }
+
+  .fenetre .fenetre-auto {
+    margin: 0 3px 0 0;
+  }
+
+  .magneto {
+    display: flex;
+    align-items: center;
+    height: 54px;
+    margin: 0 8px;
+  }
+
+  .options {
+    margin-top: 0;
+  }
+
+  .control {
+    min-height: 0;
+    padding-bottom: 2px;
   }
 
 }

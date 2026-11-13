@@ -14,7 +14,7 @@
   (visuGraphDistanceChange)="majVisuGraphDistance($event)"
   (visuGraphTempsChange)="majVisuGraphTemps($event)"
 ></app-control>
-<div class="container">
+<div class="container" [class.avec-stats]="visuStats">
   <div class="map-container">
     <app-map
       *ngIf="estOK"

@@ -29,6 +29,11 @@
 }
 
 @media screen and (max-width: 767px) {
+  ::ng-deep body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #1f2937;
+  }
+
   .container {
     height: auto;
     margin: 0;
@@ -36,6 +41,19 @@
   }
 
   .charts-container {
+    min-height: 0;
+  }
+
+  /* sans stats, la carte prend toute la hauteur restante */
+  .map-container {
+    flex-grow: 0;
+    height: calc(100vh - 353px);
+    height: calc(100dvh - 353px);
+    min-height: 220px;
+  }
+
+  .avec-stats .map-container {
+    height: 200px;
     min-height: 0;
   }
 }

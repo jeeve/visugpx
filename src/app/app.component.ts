@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
   iPosition: number = 0;
   vSeuil: number = 12;
   fenetre: Fenetre = new Fenetre(this.gpxService);
-  visuStats = true;
+  visuStats = document.body.clientWidth > 767; // stats en option sur mobile
   visuChutes = true;
   visuGraphDistance = true;
   visuGraphTemps = false;

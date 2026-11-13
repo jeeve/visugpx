@@ -40,12 +40,32 @@
   .map-container {
     display: block;
     position: relative;
-    height: 200px;
+    height: 100%;
     margin-top: -2px;
     width: 100%;
     left: 0;
     margin-left: 0;
     margin-right: 0;
     right: 0;
+  }
+
+  .map-frame {
+    margin: 0 8px;
+    border: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+  }
+
+  .time {
+    left: 8px;
+    bottom: 22px;
+    border-radius: 0 8px 0 14px;
+    font-size: 12px;
+    padding: 2px 10px;
+  }
+
+  #auteur {
+    display: none;
   }
 }

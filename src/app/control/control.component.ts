@@ -51,7 +51,7 @@ export class ControlComponent implements OnInit {
   }
 
   uploadGpx = false;
-  _visuStats = true;
+  _visuStats = document.body.clientWidth > 767; // stats en option sur mobile
   _visuChutes = true;
   _visuGraphDistance = true;
   _visuGraphTemps = false;

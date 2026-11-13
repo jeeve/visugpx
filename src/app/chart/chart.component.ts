@@ -55,8 +55,28 @@ export class ChartComponent implements AfterViewInit {
     return this.statService.chutes;
   }
 
+  private _visuStats = true;
+
+  // sur mobile le graphe est réduit quand les stats sont affichées (CSS) :
+  // on le redessine une fois la nouvelle hauteur appliquée
   @Input()
-  visuStats = true;
+  get visuStats(): boolean {
+    return this._visuStats;
+  }
+
+  set visuStats(value: boolean) {
+    const change = value !== this._visuStats;
+    this._visuStats = value;
+    if (change) {
+      setTimeout(() => this.resize());
+    }
+  }
+
+  // hauteur des lignes verticales : celle du graphe moins l'axe des x
+  get hauteurLignes(): number {
+    const c = this.chartElement();
+    return c && c.clientHeight > 20 ? c.clientHeight - 20 : 135;
+  }
 
   @Input()
   iStat = -1;
@@ -242,13 +262,23 @@ export class ChartComponent implements AfterViewInit {
       }
     }
 
+    const vAxis: any = {
+      viewWindowMode: 'explicit',
+      viewWindow: { min: 0, max: this.gpxService.vmax },
+    };
+    // graphe réduit : graduations rondes, sinon Google tronque les libellés
+    const c = this.chartElement();
+    if (c && c.clientHeight < 120) {
+      vAxis.ticks = [];
+      for (let v = 0; v <= this.gpxService.vmax; v += 10) {
+        vAxis.ticks.push(v);
+      }
+    }
+
     this.options = {
       fontSize: 12,
       hAxis: hAxis,
-      vAxis: {
-        viewWindowMode: 'explicit',
-        viewWindow: { min: 0, max: this.gpxService.vmax },
-      },
+      vAxis: vAxis,
       pointSize: 0,
       legend: { position: 'none' },
       chartArea: { left: '30', right: '0', top: '10', bottom: '20' },
