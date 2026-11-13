@@ -98,15 +98,20 @@
     position: relative;
     border: 0;
     width: auto;
-    top: -6px;
+    top: 4px;
     left: 0;
     overflow-y: scroll;
-    max-height: calc(100vh - 470px);
-    max-height: calc(100dvh - 470px);
+    max-height: calc(100vh - 492px);
+    max-height: calc(100dvh - 492px);
     bottom: auto;
     background-color:white;
     color: black;
     overflow-y: auto;
+    /* même cadre léger que le panneau de contrôle */
+    margin: 0 8px;
+    padding: 6px 0;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
   }
 
   .entete, .liste1 {
