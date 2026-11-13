@@ -182,4 +182,16 @@
     margin: 0 0 15px 0;
   }
 
+  .div-fenetre-largeur {
+    white-space: nowrap;
+  }
+
+  .div-fenetre-largeur span {
+    padding-left: 4px;
+  }
+
+  .fenetre-largeur {
+    width: 26px;
+  }
+
 }
