@@ -227,6 +227,11 @@
     font-size: 15px;
   }
 
+  /* vitesse au-dessus du seuil : même rouge que le seuil */
+  .vitesse.au-seuil {
+    color: #dc2626;
+  }
+
   .lecture,
   .stop,
   .upload button {

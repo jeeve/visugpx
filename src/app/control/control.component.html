@@ -77,7 +77,7 @@
             <tr>
               <td><label>Vitesse</label></td>
               <td>
-                <div class="vitesse">{{ vitesse | number : "1.2-2" }}</div>
+                <div class="vitesse" [class.au-seuil]="vitesse >= vSeuil">{{ vitesse | number : "1.2-2" }}</div>
               </td>
               <td>kts</td>
             </tr>
