@@ -115,6 +115,12 @@
   width: 60px;
   text-align: right;
   font-weight: bold;
+  color: #2563eb;
+}
+
+/* vitesse au-dessus du seuil : rouge du seuil (PC et mobile) */
+.vitesse.au-seuil {
+  color: #dc2626;
 }
 
 .distance-seuil {
@@ -223,13 +229,7 @@
   }
 
   .vitesse {
-    color: #2563eb;
     font-size: 15px;
-  }
-
-  /* vitesse au-dessus du seuil : même rouge que le seuil */
-  .vitesse.au-seuil {
-    color: #dc2626;
   }
 
   .lecture,
